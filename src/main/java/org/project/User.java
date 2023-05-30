@@ -11,16 +11,16 @@ public class User {
     private  String surname;
     private String password;
     private Date birthDate;
-    private String sex;
+    private String gender;
     private List<Product> cart;
 
-    public User(String name, String nickName, String surname, String password, Date birthDate, String sex) {
+    public User(String name, String nickName, String surname, String password, Date birthDate, String gender) {
         this.nickName = nickName;
         this.name = name;
         this.surname = surname;
         this.password = password;
         this.birthDate = birthDate;
-        this.sex = sex; //ahaha sex (just the gender)
+        this.gender = gender; 
         cart = new ArrayList<>();
     }
     public User(){

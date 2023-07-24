@@ -1,5 +1,6 @@
 package org.project;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -35,6 +36,11 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        APIData testObj = new APIData();
+        testObj.fetchData();
+        double result = testObj.maxAge();
+        System.out.println(result);
+
         launch(args);
     }
 }

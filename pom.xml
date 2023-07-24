@@ -40,6 +40,11 @@
             <version>2.15.0</version>
         </dependency>
         <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>16</version>
+        </dependency>
+        <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20210307</version>

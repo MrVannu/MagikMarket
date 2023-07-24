@@ -11,7 +11,7 @@ class APIDataTest {
 
         // exercise
         APIData marketData = new APIData();
-        double result = marketData.postMarketChangePercent();
+       double result = marketData.postMarketChangePercent();
 
         // assert
         assertEquals( result, -0.46);

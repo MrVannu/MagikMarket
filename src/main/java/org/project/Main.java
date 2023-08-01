@@ -58,7 +58,7 @@ public class Main extends Application {
 
             System.out.println("Username: " + username);
             System.out.println("Password: " + password);
-            
+
         });
 
         // Window layout
@@ -83,6 +83,12 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        APIData testObj = new APIData(); // WARNING: this line requires API usage
+        /*
+        testObj.fetchData();
+        double resultOfTest = testObj.maxAge();
+        System.out.println(resultOfTest);
+        */
         launch(args);
     }
 }

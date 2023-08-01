@@ -25,8 +25,27 @@ public class Main extends Application {
         Label usernameLabel = new Label("Username:");
         Label passwordLabel = new Label("Password:");
 
+        
+        // Create a TextField for the username with a maximum length of 15 characters
         TextField usernameField = new TextField();
+        usernameField.setPromptText("Enter your username (max 15 characters)");
+        usernameField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.length() > 15) {
+                usernameField.setText(oldValue); // Prevent entering more than 15 characters
+            }
+        });
+
+        // Create a PasswordField for the password with a maximum length of 15 characters
         PasswordField passwordField = new PasswordField();
+        passwordField.setPromptText("Enter your password (max 15 characters)");
+        passwordField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.length() > 15) {
+                passwordField.setText(oldValue); // Prevent entering more than 15 characters
+            }
+        });
+
+
+
 
         // Button - login
         Button loginButton = new Button("Login");

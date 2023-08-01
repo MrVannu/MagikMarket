@@ -18,7 +18,6 @@ public class APIData {
     private ObjectMapper mapper = new ObjectMapper();
 
 
-
     //Requesting APIData (live)
     public void fetchData() {
         HttpRequest request = HttpRequest.newBuilder()
@@ -44,7 +43,7 @@ public class APIData {
     }
 
 
-    //EXAMPLE OF RESPONSE:
+    //EXAMPLE OF API RESPONSE:
     //private data responseBody = "{\"maxAge\":1,\"preMarketChange\":{},\"preMarketPrice\":{},\"preMarketSource\":\"FREE_REALTIME\",
     // \"postMarketChangePercent\":{\"raw\":-0.0046434025,\"fmt\":\"-0.46%\"},\"postMarketChange\":{\"raw\":-0.7799988,\"fmt\":\"-0.78\"},
     // \"postMarketTime\":1683935999,\"postMarketPrice\":{\"raw\":167.2,\"fmt\":\"167.20\"},\"postMarketSource\":\"DELAYED\",\
@@ -239,7 +238,7 @@ public class APIData {
         return value;
     }
 
-    
+
 }
 
 

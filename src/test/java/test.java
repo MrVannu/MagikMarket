@@ -1,7 +1,7 @@
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.project.Product;
+import org.project.Stock;
 import org.project.User;
 
 public class test {
@@ -13,7 +13,7 @@ public class test {
     }
     @Test
     void addToCartTest(){
-        Product p = new Product();
+        Stock p = new Stock();
         user.addToCart(p);
         Assertions.assertTrue(user.getCart().contains(p));
     }

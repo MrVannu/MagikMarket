@@ -12,7 +12,7 @@ public class User {
     private String password;
     private Date birthDate;
     private String gender;
-    private List<Product> cart;
+    private List<Stock> cart;
 
     public User(String name, String nickName, String surname, String password, Date birthDate, String gender) {
         this.nickName = nickName;
@@ -27,16 +27,16 @@ public class User {
         cart = new ArrayList<>();
     }
 
-    public boolean addToCart(Product p){
+    public boolean addToCart(Stock p){
         return cart.add(p);
     }
-    public boolean removeFromCart(Product p){
+    public boolean removeFromCart(Stock p){
         return cart.add(p);
     }
-    public Product getFromCart(){
+    public Stock getFromCart(){
         return cart.get(0);
     }
-    public Product getFromCart(int index){
+    public Stock getFromCart(int index){
         return cart.get(index);
     }
     public boolean cartIsVoid(){
@@ -45,7 +45,7 @@ public class User {
         return false;
     }
 
-    public List<Product> getCart(){
+    public List<Stock> getCart(){
         return cart;
     }
 

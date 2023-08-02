@@ -107,7 +107,7 @@ public class Main extends Application implements Authentication {
         return false; // Not found
     }
 
-    boolean passwordCorresponds(String usernameInserted, String passwordInserted, String pathToUse){
+    public boolean passwordCorresponds(String usernameInserted, String passwordInserted, String pathToUse){
         try (CSVReader reader = new CSVReader(new FileReader(pathToUse))) {
             String[] nextLine;
 
@@ -135,4 +135,5 @@ public class Main extends Application implements Authentication {
 
         launch(args);
     }
+
 }

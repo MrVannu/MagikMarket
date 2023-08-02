@@ -4,7 +4,7 @@ public interface Authentication {
 
     boolean usernameExists(String usernameInserted, String pathToUse);
 
-   /* boolean passwordCorresponds(String passwordInserted);*/
+   boolean passwordCorresponds(String usernameInserted, String passwordInserted, String pathToUse);
 
 }
 

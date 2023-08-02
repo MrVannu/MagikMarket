@@ -17,7 +17,9 @@ import com.opencsv.CSVReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class Main extends Application {
+public class Main extends Application implements Authentication {
+
+    private final String pathUserDB = "src/main/resources/userDB.csv";
 
     @Override
     public void start(Stage primaryStage) {
@@ -53,11 +55,15 @@ public class Main extends Application {
             String username = usernameField.getText();
             String password = passwordField.getText();
 
+            if(usernameExists(username, pathUserDB) && passwordCorresponds(username, password, pathUserDB)) System.out.println("esiste");
+            else System.out.println(" non esiste");
+
             // Authentication logic
             // Db
 
-            System.out.println("Username: " + username);
-            System.out.println("Password: " + password);
+            //System.out.println("Username: " + username);
+            //git add .
+            // System.out.println("Password: " + password);
 
         });
 
@@ -82,6 +88,39 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    public boolean usernameExists(String usernameInserted, String pathToUse){
+        try (CSVReader reader = new CSVReader(new FileReader(pathToUse))) {
+            String[] nextLine;
+            while ((nextLine = reader.readNext()) != null) {
+                if (nextLine[0].equals(usernameInserted)) {
+                    return true; // If found
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (CsvValidationException e) {
+            throw new RuntimeException(e);
+        }
+        return false; // Not found
+    }
+
+    boolean passwordCorresponds(String usernameInserted, String passwordInserted, String pathToUse){
+        try (CSVReader reader = new CSVReader(new FileReader(pathToUse))) {
+            String[] nextLine;
+            while ((nextLine = reader.readNext()) != null) {
+                if (nextLine[0].equals(usernameInserted) && nextLine[1].equals(passwordInserted)) {
+                    return true; // If found
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (CsvValidationException e) {
+            throw new RuntimeException(e);
+        }
+        return false; // Not found
+    }
+
+
     public static void main(String[] args) {
         APIData testObj = new APIData(); // WARNING: this line requires API usage
         /*
@@ -89,6 +128,8 @@ public class Main extends Application {
         double resultOfTest = testObj.maxAge();
         System.out.println(resultOfTest);
         */
+
+
         launch(args);
     }
 }

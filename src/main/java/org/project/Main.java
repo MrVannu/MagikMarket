@@ -1,5 +1,6 @@
 package org.project;
 
+import org.mindrot.jbcrypt.BCrypt;
 import com.opencsv.exceptions.CsvValidationException;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -54,16 +55,17 @@ public class Main extends Application implements Authentication {
         loginButton.setOnAction(e -> {
             String username = usernameField.getText();
             String password = passwordField.getText();
+            String hashedPassword = BCrypt.hashpw(passwordField.getText(), BCrypt.gensalt());  // Just to test
 
             if(usernameExists(username, pathUserDB) && passwordCorresponds(username, password, pathUserDB)) System.out.println("esiste");
-            else System.out.println(" non esiste");
+            else System.out.println("non esiste");
 
             // Authentication logic
             // Db
 
-            //System.out.println("Username: " + username);
-            //git add .
-            // System.out.println("Password: " + password);
+            System.out.println("Username: " + username);
+            System.out.println("Password: " + password);
+            System.out.println("PasswordInHash: " + hashedPassword);
 
         });
 
@@ -91,6 +93,7 @@ public class Main extends Application implements Authentication {
     public boolean usernameExists(String usernameInserted, String pathToUse){
         try (CSVReader reader = new CSVReader(new FileReader(pathToUse))) {
             String[] nextLine;
+
             while ((nextLine = reader.readNext()) != null) {
                 if (nextLine[0].equals(usernameInserted)) {
                     return true; // If found
@@ -107,8 +110,9 @@ public class Main extends Application implements Authentication {
     boolean passwordCorresponds(String usernameInserted, String passwordInserted, String pathToUse){
         try (CSVReader reader = new CSVReader(new FileReader(pathToUse))) {
             String[] nextLine;
+
             while ((nextLine = reader.readNext()) != null) {
-                if (nextLine[0].equals(usernameInserted) && nextLine[1].equals(passwordInserted)) {
+                if (nextLine[0].equals(usernameInserted) && BCrypt.checkpw(passwordInserted, nextLine[1])) {
                     return true; // If found
                 }
             }
@@ -122,13 +126,12 @@ public class Main extends Application implements Authentication {
 
 
     public static void main(String[] args) {
-        APIData testObj = new APIData(); // WARNING: this line requires API usage
+        APIData testObj = new APIData();
         /*
-        testObj.fetchData();
+        testObj.fetchData(); // WARNING: this line requires API usage
         double resultOfTest = testObj.maxAge();
         System.out.println(resultOfTest);
         */
-
 
         launch(args);
     }

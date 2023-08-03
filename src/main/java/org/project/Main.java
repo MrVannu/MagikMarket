@@ -1,37 +1,38 @@
 package org.project;
 
 import com.opencsv.exceptions.CsvValidationException;
-import org.mindrot.jbcrypt.BCrypt;
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.application.Application;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.control.Button;
+import org.mindrot.jbcrypt.BCrypt;
+import javafx.scene.control.Label;
+import javafx.geometry.Insets;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
+import javafx.scene.text.Font;
 import com.opencsv.CSVReader;
-
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import java.io.*;
 
 public class Main extends Application implements Authentication {
 
-    // Paths to databases
-    private final String pathUserDB = "src/main/resources/userDB.csv";
-    private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";
-    private short dataToUpdateIndex = 0;
+    // Paths to databases (CSV files)
+    private final String pathUserDB = "src/main/resources/userDB.csv";  // Path to DB for users tracking
+    private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";  // Path to DB for data history
+
+    private short dataToUpdateIndex = 0;  // Index of row to be overwritten (most remote in the db)
 
 
     // Authentication functionalities
+    // Checks if username already exists
     public boolean usernameExists(String usernameInserted, String pathToUse){
         try (CSVReader reader = new CSVReader(new FileReader(pathToUse))) {
-            String[] nextLine;
+            String[] nextLine;  // Stores what is contained in the row
 
-            while ((nextLine = reader.readNext()) != null) {
+            while ((nextLine = reader.readNext()) != null) {  // Splits by comma
                 if (nextLine[0].equals(usernameInserted)) {
                     return true; // If found
                 }
@@ -41,15 +42,18 @@ public class Main extends Application implements Authentication {
         } catch (CsvValidationException e) {
             throw new RuntimeException(e);
         }
-        return false; // Not found
+        return false; // If not found
     }
+
+    // Checks if password is correct
     public boolean passwordCorresponds(String usernameInserted, String passwordInserted, String pathToUse){
         try (CSVReader reader = new CSVReader(new FileReader(pathToUse))) {
-            String[] nextLine;
+            String[] nextLine;  // Stores what is contained in the row
 
             while ((nextLine = reader.readNext()) != null) {
+                // If username is related to the password inserted
                 if (nextLine[0].equals(usernameInserted) && BCrypt.checkpw(passwordInserted, nextLine[1])) {
-                    return true; // If found
+                    return true; // If it does correspond
                 }
             }
         } catch (IOException ex) {
@@ -57,23 +61,26 @@ public class Main extends Application implements Authentication {
         } catch (CsvValidationException e) {
             throw new RuntimeException(e);
         }
-        return false; // Not found
+        return false; // If it does not correspond
     }
+
+    // Creates a new account
     public boolean registerNewUser(String pathToUse, String username, String hashedPassword, String email) throws IOException {
 
         if(usernameExists(username, pathToUse)) {
             System.out.println("Username already exists!");
-            // Display an alert to tell the user to change their username
+
+            // Display an alert to tell the user to change their username [GUI by Enri]
 
             return false;
         }
 
         else{
             try (FileWriter writer = new FileWriter(pathToUse)) {
-                String toRecord = username + "," + hashedPassword + "," + email;
+                String toRecord = username + "," + hashedPassword + "," + email;  // What is to be added to the DB
                 writer.append(toRecord);
 
-                writer.append("\n"); // Divides data rows to be read
+                writer.append("\n");  // Divides data rows
             }
 
             return true;
@@ -81,16 +88,20 @@ public class Main extends Application implements Authentication {
     }
 
 
-    // Method to update database data history
+    // Data history management
+    // Method to update data history database
     public void updateDataHistory(String pathToUse, String... strings) throws IOException {
         String toWrite = "";
+
+        // Concatenates the string to be written in the DB
         for (String item : strings) {
             toWrite=item+",";
         }
 
         try (FileWriter writer = new FileWriter(pathToUse)) {
 
-            if(dataToUpdateIndex>=20) dataToUpdateIndex=0;
+            if(dataToUpdateIndex>=20) dataToUpdateIndex=0;  // If out of data bound
+
             else{
                 // Writing items in the csv
                 try (BufferedReader reader = new BufferedReader(new FileReader(pathToUse))) {
@@ -99,14 +110,14 @@ public class Main extends Application implements Authentication {
                     while((reader.readLine()) != null) {
                         ++localCounter;
 
-                        if(localCounter==dataToUpdateIndex){
-                            writer.write(toWrite);
+                        if(localCounter==dataToUpdateIndex){  // If most remote line is found
+                            writer.write(toWrite);  // Overwrites the line
                             break;
                         }
                     }
                 }
                 writer.append("\n"); // Splits the data rows
-                ++dataToUpdateIndex;
+                ++dataToUpdateIndex; // Increments the counter of the most remote index
             }
         }
     }
@@ -177,7 +188,6 @@ public class Main extends Application implements Authentication {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-
 
 
     public static void main(String[] args) {

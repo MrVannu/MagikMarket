@@ -124,38 +124,68 @@ public class Main extends Application implements Authentication {
 
     @Override
     public void start(Stage primaryStage) {
+
+        // Defining the panes
+        GridPane layoutLogin = new GridPane();
+        GridPane layoutRegister = new GridPane();
+
         // Title
-        Text title = new Text("Login");
-        title.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        Text titleLogin = new Text("Login");
+        Text titleRegister = new Text("Register");
+        titleLogin.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        titleRegister.setFont(Font.font("Arial", FontWeight.BOLD, 24));
 
-        // Textfields
-        Label usernameLabel = new Label("Username:");
-        Label passwordLabel = new Label("Password:");
+        // Labels
+        Label usernameLabelLogin = new Label("Username:");
+        Label passwordLabelLogin = new Label("Password:");
+        Label usernameLabelRegister = new Label("Username:");
+        Label passwordLabelRegister = new Label("Password:");
+        Label emailLabelRegister = new Label("Password:");
 
-        // Create a TextField for the username with a maximum length of 15 characters
-        TextField usernameField = new TextField();
-        usernameField.setPromptText("Enter your username (max 15 characters)");
-        usernameField.textProperty().addListener((observable, oldValue, newValue) -> {
+        // Create a TextField for the username with a maximum length of 15 characters for the LoginScene
+        TextField usernameFieldLogin = new TextField();
+        usernameFieldLogin.setPromptText("Enter your username (max 15 characters)");
+        usernameFieldLogin.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.length() > 15) {
-                usernameField.setText(oldValue); // Prevent entering more than 15 characters
+                usernameFieldLogin.setText(oldValue); // Prevent entering more than 15 characters
+            }
+        });
+        // Create a TextField for the username with a maximum length of 15 characters for the RegisterScene
+        TextField usernameFieldRegister = new TextField();
+        usernameFieldRegister.setPromptText("Enter your username (max 15 characters)");
+        usernameFieldRegister.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.length() > 15) {
+                usernameFieldRegister.setText(oldValue); // Prevent entering more than 15 characters
             }
         });
 
-        // Create a PasswordField for the password with a maximum length of 15 characters
-        PasswordField passwordField = new PasswordField();
-        passwordField.setPromptText("Enter your password (max 15 characters)");
-        passwordField.textProperty().addListener((observable, oldValue, newValue) -> {
+        // Create a PasswordField for the password with a maximum length of 15 characters of the LoginScene
+        PasswordField passwordFieldLogin = new PasswordField();
+        passwordFieldLogin.setPromptText("Enter your password (max 15 characters)");
+        passwordFieldLogin.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.length() > 15) {
-                passwordField.setText(oldValue); // Prevent entering more than 15 characters
+                passwordFieldLogin.setText(oldValue); // Prevent entering more than 15 characters
             }
         });
+
+        // Create a PasswordField for the password with a maximum length of 15 characters of the RegisterScene
+        TextField passwordFieldRegister = new TextField();
+        passwordFieldRegister.setPromptText("Enter your password (max 15 characters)");
+        passwordFieldRegister.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.length() > 15) {
+                passwordFieldRegister.setText(oldValue); // Prevent entering more than 15 characters
+            }
+        });
+
+
+        TextField emailFieldRegister = new TextField();
 
         // Button -> login
         Button loginButton = new Button("Login");
         loginButton.setOnAction(e -> {
-            String username = usernameField.getText();
-            String password = passwordField.getText();
-            String hashedPassword = BCrypt.hashpw(passwordField.getText(), BCrypt.gensalt());  // Just to test
+            String username = usernameFieldLogin.getText();
+            String password = passwordFieldLogin.getText();
+            String hashedPassword = BCrypt.hashpw(passwordFieldLogin.getText(), BCrypt.gensalt());  // Just to test
 
             if(usernameExists(username, pathUserDB) && passwordCorresponds(username, password, pathUserDB)) System.out.println("esiste");
             else System.out.println("non esiste");
@@ -165,29 +195,59 @@ public class Main extends Application implements Authentication {
             System.out.println("Username: " + username);
             System.out.println("Password: " + password);
             System.out.println("PasswordInHash: " + hashedPassword);
-
         });
 
-        // Window layout
-        GridPane layout = new GridPane();
-        layout.setPadding(new Insets(20));
-        layout.setHgap(10);
-        layout.setVgap(10);
+        // Button -> Register
+        Button registerButton = new Button("Register");
+        Button confirmButton = new Button("Confirm");
 
-        layout.add(title, 0, 0, 2, 1);
-        layout.add(usernameLabel, 0, 1);
-        layout.add(usernameField, 1, 1);
-        layout.add(passwordLabel, 0, 2);
-        layout.add(passwordField, 1, 2);
-        layout.add(loginButton, 1, 3);
+        // Login scene
+        layoutLogin.setPadding(new Insets(20));
+        layoutLogin.setHgap(10);
+        layoutLogin.setVgap(10);
 
-        Scene scene = new Scene(layout, 300, 200);
+        layoutLogin.add(titleLogin, 0, 0, 2, 1);
+        layoutLogin.add(usernameLabelLogin, 0, 1);
+        layoutLogin.add(usernameFieldLogin, 1, 1);
+        layoutLogin.add(passwordLabelLogin, 0, 2);
+        layoutLogin.add(passwordFieldLogin, 1, 2);
+        layoutLogin.add(loginButton, 1, 3);
+        layoutLogin.add(registerButton, 1 ,4);
+
+        Scene LoginScene = new Scene(layoutLogin, 300, 200);
+
+        // Register scene
+        layoutRegister.setPadding(new Insets(20));
+        layoutRegister.setHgap(10);
+        layoutRegister.setVgap(10);
+        layoutRegister.add(titleRegister, 0, 0, 2, 1);
+        layoutRegister.add(usernameLabelRegister, 0, 1);
+        layoutRegister.add(usernameFieldRegister, 1, 1);
+        layoutRegister.add(passwordLabelRegister, 0, 2);
+        layoutRegister.add(passwordFieldRegister, 1, 2);
+        layoutRegister.add(emailLabelRegister, 0, 3);
+        layoutRegister.add(emailFieldRegister,1,3);
+        layoutRegister.add(confirmButton,1,4);
+
+        Scene RegisterScene = new Scene(layoutRegister, 300, 200);
 
         // Options of window
         primaryStage.setTitle("Login Form");
-        primaryStage.setScene(scene);
+        primaryStage.setScene(LoginScene);
         primaryStage.show();
+
+        // Actions of the buttons
+
+        registerButton.setOnAction(e -> {// Hides the LoginScene and shows the RegisterScene
+            primaryStage.setTitle("Register Form");
+            primaryStage.setScene(RegisterScene);
+        });
+        confirmButton.setOnAction(e->{// Hides the RegisterScene and shows the LoginScene
+            primaryStage.setTitle("Login Form");
+            primaryStage.setScene(LoginScene);
+        });
     }
+
 
 
     public static void main(String[] args) {

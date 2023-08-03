@@ -1,7 +1,7 @@
 package org.project;
 
-import org.mindrot.jbcrypt.BCrypt;
 import com.opencsv.exceptions.CsvValidationException;
+import org.mindrot.jbcrypt.BCrypt;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -15,12 +15,101 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import com.opencsv.CSVReader;
-import java.io.FileReader;
-import java.io.IOException;
+
+import java.io.*;
 
 public class Main extends Application implements Authentication {
 
+    // Paths to databases
     private final String pathUserDB = "src/main/resources/userDB.csv";
+    private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";
+    private short dataToUpdateIndex = 0;
+
+
+    // Authentication functionalities
+    public boolean usernameExists(String usernameInserted, String pathToUse){
+        try (CSVReader reader = new CSVReader(new FileReader(pathToUse))) {
+            String[] nextLine;
+
+            while ((nextLine = reader.readNext()) != null) {
+                if (nextLine[0].equals(usernameInserted)) {
+                    return true; // If found
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (CsvValidationException e) {
+            throw new RuntimeException(e);
+        }
+        return false; // Not found
+    }
+    public boolean passwordCorresponds(String usernameInserted, String passwordInserted, String pathToUse){
+        try (CSVReader reader = new CSVReader(new FileReader(pathToUse))) {
+            String[] nextLine;
+
+            while ((nextLine = reader.readNext()) != null) {
+                if (nextLine[0].equals(usernameInserted) && BCrypt.checkpw(passwordInserted, nextLine[1])) {
+                    return true; // If found
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (CsvValidationException e) {
+            throw new RuntimeException(e);
+        }
+        return false; // Not found
+    }
+    public boolean registerNewUser(String pathToUse, String username, String hashedPassword, String email) throws IOException {
+
+        if(usernameExists(username, pathToUse)) {
+            System.out.println("Username already exists!");
+            // Display an alert to tell the user to change their username
+
+            return false;
+        }
+
+        else{
+            try (FileWriter writer = new FileWriter(pathToUse)) {
+                String toRecord = username + "," + hashedPassword + "," + email;
+                writer.append(toRecord);
+
+                writer.append("\n"); // Divides data rows to be read
+            }
+
+            return true;
+        }
+    }
+
+
+    // Method to update database data history
+    public void updateDataHistory(String pathToUse, String... strings) throws IOException {
+        String toWrite = "";
+        for (String item : strings) {
+            toWrite=item+",";
+        }
+
+        try (FileWriter writer = new FileWriter(pathToUse)) {
+
+            if(dataToUpdateIndex>=20) dataToUpdateIndex=0;
+            else{
+                // Writing items in the csv
+                try (BufferedReader reader = new BufferedReader(new FileReader(pathToUse))) {
+                    int localCounter = 0;
+
+                    while((reader.readLine()) != null) {
+                        ++localCounter;
+
+                        if(localCounter==dataToUpdateIndex){
+                            writer.write(toWrite);
+                            break;
+                        }
+                    }
+                }
+                writer.append("\n"); // Splits the data rows
+                ++dataToUpdateIndex;
+            }
+        }
+    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -61,7 +150,6 @@ public class Main extends Application implements Authentication {
             else System.out.println("non esiste");
 
             // Authentication logic
-            // Db
 
             System.out.println("Username: " + username);
             System.out.println("Password: " + password);
@@ -90,39 +178,6 @@ public class Main extends Application implements Authentication {
         primaryStage.show();
     }
 
-    public boolean usernameExists(String usernameInserted, String pathToUse){
-        try (CSVReader reader = new CSVReader(new FileReader(pathToUse))) {
-            String[] nextLine;
-
-            while ((nextLine = reader.readNext()) != null) {
-                if (nextLine[0].equals(usernameInserted)) {
-                    return true; // If found
-                }
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (CsvValidationException e) {
-            throw new RuntimeException(e);
-        }
-        return false; // Not found
-    }
-
-    public boolean passwordCorresponds(String usernameInserted, String passwordInserted, String pathToUse){
-        try (CSVReader reader = new CSVReader(new FileReader(pathToUse))) {
-            String[] nextLine;
-
-            while ((nextLine = reader.readNext()) != null) {
-                if (nextLine[0].equals(usernameInserted) && BCrypt.checkpw(passwordInserted, nextLine[1])) {
-                    return true; // If found
-                }
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (CsvValidationException e) {
-            throw new RuntimeException(e);
-        }
-        return false; // Not found
-    }
 
 
     public static void main(String[] args) {

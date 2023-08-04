@@ -109,12 +109,7 @@ public class Main extends Application implements Authentication {
     // Validator for email fomrat (example@hello.world)
     public boolean emailValidator (String email){
         String regex = "^[A-Za-z0-9._-]+@[A-Za-z0-9-]+\\.[A-Za-z]+$";
-        if(!(checkRegexMatch(regex, email))){
-            // Scene handling by Enri
-
-            return false;
-        }
-        else return true;
+        return checkRegexMatch(regex, email);
     }
 
     // Validator for password (cannot be empty)
@@ -322,7 +317,6 @@ public class Main extends Application implements Authentication {
 
             if(!(globalValidator(username, password, hashedPassword, email))){
                 System.out.println("globalValidator failed");
-                // Scene handling by Enri
             } else {
                 try {
                     registerNewUser(pathUserDB, username, hashedPassword, email);

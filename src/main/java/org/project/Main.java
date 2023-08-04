@@ -1,5 +1,6 @@
 package org.project;
 
+import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
 import javafx.scene.control.PasswordField;
 import javafx.application.Application;
@@ -67,25 +68,25 @@ public class Main extends Application implements Authentication {
     // Creates a new account
     public boolean registerNewUser(String pathToUse, String username, String hashedPassword, String email) throws IOException {
 
-        if(usernameExists(username, pathToUse)) {
-            System.out.println("Username already exists!");
+        if(usernameExists(username, pathToUse)) return false;  // Check no user with alias exist
 
-            // Display an alert to tell the user to change their username [GUI by Enri]
-
-            return false;
+        try (CSVReader reader = new CSVReader(new FileReader(pathToUse))) {
+            String[] nextLine;
+            while ((nextLine = reader.readNext()) != null) {
+                if (nextLine.length > 0) break;  // Breaks if the line is empty (end of file)
+            }
+        } catch (Exception e) {  // Exception occured while reading
+            System.out.println("Exception occurred");
         }
 
-        else{
-            try (FileWriter writer = new FileWriter(pathToUse)) {
-                String toRecord = username + "," + hashedPassword + "," + email;  // What is to be added to the DB
-                writer.append(toRecord);
-
-                writer.append("\n");  // Divides data rows
-            }
+        try (CSVWriter writer = new CSVWriter(new FileWriter(pathToUse, true))) {
+            String[] toRecord = {username, hashedPassword, email};  // Compose the string to be saved
+            writer.writeNext(toRecord);  // Writes the string composed
 
             return true;
         }
     }
+
 
 
     // Data history management
@@ -140,7 +141,7 @@ public class Main extends Application implements Authentication {
         Label passwordLabelLogin = new Label("Password:");
         Label usernameLabelRegister = new Label("Username:");
         Label passwordLabelRegister = new Label("Password:");
-        Label emailLabelRegister = new Label("Password:");
+        Label emailLabelRegister = new Label("Email:");
 
         // Create a TextField for the username with a maximum length of 15 characters for the LoginScene
         TextField usernameFieldLogin = new TextField();
@@ -198,8 +199,9 @@ public class Main extends Application implements Authentication {
         });
 
         // Button -> Register
+        Button switchScenesRegister = new Button("Switch to Register");
+        Button switchScenesLogin = new Button("Switch to Login");
         Button registerButton = new Button("Register");
-        Button confirmButton = new Button("Confirm");
 
         // Login scene
         layoutLogin.setPadding(new Insets(20));
@@ -211,10 +213,10 @@ public class Main extends Application implements Authentication {
         layoutLogin.add(usernameFieldLogin, 1, 1);
         layoutLogin.add(passwordLabelLogin, 0, 2);
         layoutLogin.add(passwordFieldLogin, 1, 2);
-        layoutLogin.add(loginButton, 1, 3);
-        layoutLogin.add(registerButton, 1 ,4);
+        layoutLogin.add(loginButton, 0, 3);
+        layoutLogin.add(switchScenesRegister, 1, 3);
 
-        Scene LoginScene = new Scene(layoutLogin, 300, 200);
+        Scene LoginScene = new Scene(layoutLogin, 500, 300);
 
         // Register scene
         layoutRegister.setPadding(new Insets(20));
@@ -227,9 +229,10 @@ public class Main extends Application implements Authentication {
         layoutRegister.add(passwordFieldRegister, 1, 2);
         layoutRegister.add(emailLabelRegister, 0, 3);
         layoutRegister.add(emailFieldRegister,1,3);
-        layoutRegister.add(confirmButton,1,4);
+        layoutRegister.add(registerButton, 3, 4);
+        layoutRegister.add(switchScenesLogin,4,4);
 
-        Scene RegisterScene = new Scene(layoutRegister, 300, 200);
+        Scene RegisterScene = new Scene(layoutRegister, 500, 300);
 
         // Options of window
         primaryStage.setTitle("Login Form");
@@ -237,15 +240,30 @@ public class Main extends Application implements Authentication {
         primaryStage.show();
 
         // Actions of the buttons
-
-        registerButton.setOnAction(e -> {// Hides the LoginScene and shows the RegisterScene
+        switchScenesRegister.setOnAction(e -> {
             primaryStage.setTitle("Register Form");
             primaryStage.setScene(RegisterScene);
         });
-        confirmButton.setOnAction(e->{// Hides the RegisterScene and shows the LoginScene
+        switchScenesLogin.setOnAction(e->{
             primaryStage.setTitle("Login Form");
             primaryStage.setScene(LoginScene);
         });
+
+        registerButton.setOnAction(e -> {// Hides the LoginScene and shows the RegisterScene
+
+            String username = usernameFieldRegister.getText();
+            String password = passwordFieldRegister.getText();
+            String hashedPassword = BCrypt.hashpw(passwordFieldRegister.getText(), BCrypt.gensalt());  // Just to test
+            String email = emailFieldRegister.getText();
+
+            try {
+                if(registerNewUser(pathUserDB, username, hashedPassword, email)) System.out.println("tutto ok");
+                else System.out.println("non ok");
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
     }
 
 

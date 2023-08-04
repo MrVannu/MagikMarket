@@ -17,6 +17,8 @@ import com.opencsv.CSVReader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main extends Application implements Authentication {
 
@@ -24,7 +26,9 @@ public class Main extends Application implements Authentication {
     private final String pathUserDB = "src/main/resources/userDB.csv";  // Path to DB for users tracking
     private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";  // Path to DB for data history
 
-    private short dataToUpdateIndex = 0;  // Index of row to be overwritten (most remote in the db)
+    // Index of row to be overwritten (most remote in the db)
+    private short dataToUpdateIndex = 0;
+
 
 
     // Authentication functionalities
@@ -89,6 +93,56 @@ public class Main extends Application implements Authentication {
 
 
 
+    // Register process validation
+    // Regex validation
+    public boolean checkRegexMatch(String regex, String textToMatch) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(textToMatch);
+        return matcher.matches();
+    }
+
+    //Validator for username (no spaces allowed)
+    public boolean usernameValidator (String username){
+        return !username.contains(" ");
+    }
+
+    // Validator for email fomrat (example@hello.world)
+    public boolean emailValidator (String email){
+        String regex = "^[A-Za-z0-9._-]+@[A-Za-z0-9-]+\\.[A-Za-z]+$";
+        if(!(checkRegexMatch(regex, email))){
+            // Scene handling by Enri
+
+            return false;
+        }
+        else return true;
+    }
+
+    // Validator for password (cannot be empty)
+    public boolean passwordValidator (String password){
+        return !password.isEmpty();
+    }
+
+    // Global validator
+    public boolean globalValidator (String username, String password, String hashedPassword, String email){
+        if(usernameValidator(username) && emailValidator(email) && passwordValidator(password)) return true;
+        else if (!usernameValidator(username)){
+            System.out.println("Username not allowed");
+            // Scene handling by Enri
+
+        } else if (!passwordValidator(password)){
+            System.out.println("Password not allowed");
+            // Scene handling by Enri
+
+        }else if (!emailValidator(email)){
+            System.out.println("Email not allowed");
+            // Scene handling by Enri
+
+        }
+        return false;
+    }
+
+
+
     // Data history management
     // Method to update data history database
     public void updateDataHistory(String pathToUse, String... strings) throws IOException {
@@ -122,6 +176,7 @@ public class Main extends Application implements Authentication {
             }
         }
     }
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -170,7 +225,7 @@ public class Main extends Application implements Authentication {
         });
 
         // Create a PasswordField for the password with a maximum length of 15 characters of the RegisterScene
-        TextField passwordFieldRegister = new TextField();
+        TextField passwordFieldRegister = new PasswordField();
         passwordFieldRegister.setPromptText("Enter your password (max 15 characters)");
         passwordFieldRegister.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.length() > 15) {
@@ -180,6 +235,15 @@ public class Main extends Application implements Authentication {
 
 
         TextField emailFieldRegister = new TextField();
+        emailFieldRegister.setPromptText("Enter your email (max 30 characters)");
+        emailFieldRegister.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.length() > 30) {
+                emailFieldRegister.setText(oldValue); // Prevent entering more than 15 characters
+            }
+
+        });
+
+
 
         // Button -> login
         Button loginButton = new Button("Login");
@@ -256,12 +320,17 @@ public class Main extends Application implements Authentication {
             String hashedPassword = BCrypt.hashpw(passwordFieldRegister.getText(), BCrypt.gensalt());  // Just to test
             String email = emailFieldRegister.getText();
 
-            try {
-                if(registerNewUser(pathUserDB, username, hashedPassword, email)) System.out.println("tutto ok");
-                else System.out.println("non ok");
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
+            if(!(globalValidator(username, password, hashedPassword, email))){
+                System.out.println("globalValidator failed");
+                // Scene handling by Enri
+            } else {
+                try {
+                    registerNewUser(pathUserDB, username, hashedPassword, email);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
+
         });
 
     }

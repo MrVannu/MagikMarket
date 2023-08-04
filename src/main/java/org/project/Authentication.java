@@ -11,6 +11,14 @@ public interface Authentication {
 
    boolean registerNewUser(String pathToUse, String username, String hashedPassword, String email) throws IOException;
 
+   boolean checkRegexMatch(String regex, String textToMatch);
+
+    boolean usernameValidator (String username);
+
+    boolean emailValidator (String username);
+
+    boolean globalValidator (String username, String password, String hashedPassword, String email);
+
 }
 
 

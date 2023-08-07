@@ -6,26 +6,18 @@ import java.util.Date;
 import java.util.List;
 
 public class User {
-    private String nickName;
-    private String name;
-    private  String surname;
+    private String username;
     private String password;
-    private Date birthDate;
-    private String gender;
+    private String email;
     private List<Stock> cart;
 
-    public User(String name, String nickName, String surname, String password, Date birthDate, String gender) {
-        this.nickName = nickName;
-        this.name = name;
-        this.surname = surname;
+    public User(String username, String password, String email) {
+        this.username = username;
         this.password = password;
-        this.birthDate = birthDate;
-        this.gender = gender; 
+        this.email = email;
         cart = new ArrayList<>();
     }
-    public User(){
-        cart = new ArrayList<>();
-    }
+
 
     public boolean addToCart(Stock p){
         return cart.add(p);

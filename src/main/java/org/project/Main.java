@@ -1,6 +1,6 @@
 package org.project;
 
-import com.opencsv.CSVWriter;
+
 import com.opencsv.exceptions.CsvValidationException;
 import javafx.scene.control.PasswordField;
 import javafx.application.Application;
@@ -10,15 +10,20 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.control.Button;
 import org.mindrot.jbcrypt.BCrypt;
 import javafx.scene.control.Label;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.geometry.Insets;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 public class Main extends Application implements Authentication {
 
@@ -140,37 +145,37 @@ public class Main extends Application implements Authentication {
 
     // Data history management
     // Method to update data history database
-    public void updateDataHistory(String pathToUse, String... strings) throws IOException {
-        String toWrite = "";
+    public void updateDataHistory(String pathToUse, String a, String b) throws IOException {
+        String toWrite = a + "," + b;
 
-        // Concatenates the string to be written in the DB
-        for (String item : strings) {
-            toWrite=item+",";
-        }
-
-        try (FileWriter writer = new FileWriter(pathToUse)) {
-
-            if(dataToUpdateIndex>=20) dataToUpdateIndex=0;  // If out of data bound
-
-            else{
-                // Writing items in the csv
-                try (BufferedReader reader = new BufferedReader(new FileReader(pathToUse))) {
-                    int localCounter = 0;
-
-                    while((reader.readLine()) != null) {
-                        ++localCounter;
-
-                        if(localCounter==dataToUpdateIndex){  // If most remote line is found
-                            writer.write(toWrite);  // Overwrites the line
-                            break;
-                        }
-                    }
-                }
-                writer.append("\n"); // Splits the data rows
-                ++dataToUpdateIndex; // Increments the counter of the most remote index
+        // Read all lines from the file
+        List<String> lines = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(pathToUse))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
             }
         }
+
+        // Pad the list with empty lines up to 20 elements
+        while (lines.size() < 20) {
+            lines.add("");
+        }
+
+        // Update the data at the specified index
+        lines.set(dataToUpdateIndex, toWrite);
+        // Write the modified lines back to the file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathToUse))) {
+            for (String line : lines) {
+                writer.write(line + "\n");
+            }
+        }
+
+        ++dataToUpdateIndex; // Increment the counter of the most remote index
+        if(dataToUpdateIndex>=20)dataToUpdateIndex=0;
+        System.out.println(dataToUpdateIndex);
     }
+
 
 
     @Override
@@ -332,6 +337,25 @@ public class Main extends Application implements Authentication {
                 }
             }
 
+        });
+
+        Button test = new Button("Test");
+        layoutLogin.add(test,0,4);
+        test.setOnAction(e->{
+            APIData testObj = new APIData();
+            testObj.fetchData(); // WARNING: this line requires API usage
+
+            String p1 = testObj.extractSymbolOfCompany();
+            String p2 = testObj.extractNameOfCompany();
+            //String aa= String.valueOf(p1);
+
+            //double p2 = testObj.postMarketChangePercent();
+            //String bb = String.valueOf(p2);
+            try {
+                updateDataHistory(pathDataHistoryDB,p1,p2);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         });
 
     }

@@ -143,38 +143,7 @@ public class Main extends Application implements Authentication {
 
 
 
-    // Data history management
-    // Method to update data history database
-    public void updateDataHistory(String pathToUse, String a, String b) throws IOException {
-        String toWrite = a + "," + b;
 
-        // Read all lines from the file
-        List<String> lines = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(pathToUse))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                lines.add(line);
-            }
-        }
-
-        // Pad the list with empty lines up to 20 elements
-        while (lines.size() < 20) {
-            lines.add("");
-        }
-
-        // Update the data at the specified index
-        lines.set(dataToUpdateIndex, toWrite);
-        // Write the modified lines back to the file
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathToUse))) {
-            for (String line : lines) {
-                writer.write(line + "\n");
-            }
-        }
-
-        ++dataToUpdateIndex; // Increment the counter of the most remote index
-        if(dataToUpdateIndex>=20)dataToUpdateIndex=0;
-        System.out.println(dataToUpdateIndex);
-    }
 
 
 
@@ -244,7 +213,7 @@ public class Main extends Application implements Authentication {
         });
 
 
-
+        Scene LoginScene = new Scene(layoutLogin, 500, 300);
         // Button -> login
         Button loginButton = new Button("Login");
         loginButton.setOnAction(e -> {
@@ -254,6 +223,9 @@ public class Main extends Application implements Authentication {
 
             if(usernameExists(username, pathUserDB) && passwordCorresponds(username, password, pathUserDB)) {
                 //switc
+                WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene);
+                primaryStage.setTitle("Start App");
+                primaryStage.setScene(welcomePane.getScene());
                 System.out.println("esiste");
             }
             else System.out.println("non esiste");
@@ -265,8 +237,6 @@ public class Main extends Application implements Authentication {
             System.out.println("PasswordInHash: " + hashedPassword);
 
 
-            primaryStage.setTitle("Start App");
-            //primaryStage.setScene(RegisterScene);
         });
 
         // Button -> Register
@@ -287,7 +257,7 @@ public class Main extends Application implements Authentication {
         layoutLogin.add(loginButton, 0, 3);
         layoutLogin.add(switchScenesRegister, 1, 3);
 
-        Scene LoginScene = new Scene(layoutLogin, 500, 300);
+        //Scene LoginScene = new Scene(layoutLogin, 500, 300);
 
         // Register scene
         layoutRegister.setPadding(new Insets(20));
@@ -339,24 +309,7 @@ public class Main extends Application implements Authentication {
 
         });
 
-        Button test = new Button("Test");
-        layoutLogin.add(test,0,4);
-        test.setOnAction(e->{
-            APIData testObj = new APIData();
-            testObj.fetchData(); // WARNING: this line requires API usage
 
-            String p1 = testObj.extractSymbolOfCompany();
-            String p2 = testObj.extractNameOfCompany();
-            //String aa= String.valueOf(p1);
-
-            //double p2 = testObj.postMarketChangePercent();
-            //String bb = String.valueOf(p2);
-            try {
-                updateDataHistory(pathDataHistoryDB,p1,p2);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
 
     }
 

@@ -247,7 +247,10 @@ public class Main extends Application implements Authentication {
             String password = passwordFieldLogin.getText();
             String hashedPassword = BCrypt.hashpw(passwordFieldLogin.getText(), BCrypt.gensalt());  // Just to test
 
-            if(usernameExists(username, pathUserDB) && passwordCorresponds(username, password, pathUserDB)) System.out.println("esiste");
+            if(usernameExists(username, pathUserDB) && passwordCorresponds(username, password, pathUserDB)) {
+                //switc
+                System.out.println("esiste");
+            }
             else System.out.println("non esiste");
 
             // Authentication logic
@@ -255,6 +258,10 @@ public class Main extends Application implements Authentication {
             System.out.println("Username: " + username);
             System.out.println("Password: " + password);
             System.out.println("PasswordInHash: " + hashedPassword);
+
+
+            primaryStage.setTitle("Start App");
+            //primaryStage.setScene(RegisterScene);
         });
 
         // Button -> Register

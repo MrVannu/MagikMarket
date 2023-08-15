@@ -10,6 +10,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.control.Button;
 import org.mindrot.jbcrypt.BCrypt;
 import javafx.scene.control.Label;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -106,7 +107,8 @@ public class Main extends Application implements Authentication {
 
     //Validator for username (no spaces allowed)
     public boolean usernameValidator (String username){
-        return !username.contains(" ");
+        if (username.contains(" ") || (username =="")) return false;
+        else return true;
     }
 
     // Validator for email fomrat (example@hello.world)
@@ -212,7 +214,8 @@ public class Main extends Application implements Authentication {
             String password = passwordFieldLogin.getText();
             String hashedPassword = BCrypt.hashpw(passwordFieldLogin.getText(), BCrypt.gensalt());  // Just to test
 
-            if(usernameExists(username, pathUserDB) && passwordCorresponds(username, password, pathUserDB)) {
+
+            if(usernameExists(username, pathUserDB) && usernameValidator(username) && passwordCorresponds(username, password, pathUserDB)) {
                 //switch
                 WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene);
                 primaryStage.setTitle("Start App");

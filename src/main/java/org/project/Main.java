@@ -10,7 +10,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.control.Button;
 import org.mindrot.jbcrypt.BCrypt;
 import javafx.scene.control.Label;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -97,7 +96,6 @@ public class Main extends Application implements Authentication {
     }
 
 
-
     // Register process validation
     // Regex validation
     public boolean checkRegexMatch(String regex, String textToMatch) {
@@ -140,11 +138,6 @@ public class Main extends Application implements Authentication {
         }
         return false;
     }
-
-
-
-
-
 
 
     @Override
@@ -202,7 +195,6 @@ public class Main extends Application implements Authentication {
             }
         });
 
-
         TextField emailFieldRegister = new TextField();
         emailFieldRegister.setPromptText("Enter your email (max 30 characters)");
         emailFieldRegister.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -211,7 +203,6 @@ public class Main extends Application implements Authentication {
             }
 
         });
-
 
         Scene LoginScene = new Scene(layoutLogin, 500, 300);
         // Button -> login
@@ -222,7 +213,7 @@ public class Main extends Application implements Authentication {
             String hashedPassword = BCrypt.hashpw(passwordFieldLogin.getText(), BCrypt.gensalt());  // Just to test
 
             if(usernameExists(username, pathUserDB) && passwordCorresponds(username, password, pathUserDB)) {
-                //switc
+                //switch
                 WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene);
                 primaryStage.setTitle("Start App");
                 primaryStage.setScene(welcomePane.getScene());
@@ -235,8 +226,6 @@ public class Main extends Application implements Authentication {
             System.out.println("Username: " + username);
             System.out.println("Password: " + password);
             System.out.println("PasswordInHash: " + hashedPassword);
-
-
         });
 
         // Button -> Register

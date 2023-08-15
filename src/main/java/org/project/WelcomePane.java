@@ -6,7 +6,11 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.SplitPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -16,21 +20,21 @@ import java.util.List;
 
 
 public class WelcomePane {
+    private static final int MAX_SELECTED_CHECKBOXES = 4;
     Scene WelcomeScene;
     private final String pathUserDB = "src/main/resources/userDB.csv";  // Path to DB for users tracking
     private ArrayList<String> symbols = new ArrayList<String>();
-
-
     private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";  // Path to DB for data history
 
     // Index of row to be overwritten (most remote in the db)
     private short dataToUpdateIndex = 0;
+
     public WelcomePane(Stage primaryStage, Scene LoginScene){
         GridPane layoutStartApp = new GridPane();
-        WelcomeScene = new Scene(layoutStartApp, 500, 300);
         Text example = new Text("Test for pane");
         Button logOut = new  Button("LogOut");
 
+        List<CheckBox> checkBoxes = new ArrayList<>();
         symbols.add("amc");
         symbols.add("ape");
         symbols.add("x");
@@ -42,6 +46,33 @@ public class WelcomePane {
         symbols.add("amd");
         symbols.add("f");
         symbols.add("googl");
+
+        // Creating checkBoxes
+        for (String symbol : symbols) {
+            CheckBox checkBox = new CheckBox(symbol);
+
+            checkBox.setOnAction(event -> {
+                int selectedCount = (int) checkBoxes.stream().filter(CheckBox::isSelected).count();
+                if (selectedCount > MAX_SELECTED_CHECKBOXES) {
+                    checkBox.setSelected(false);
+                }
+            });
+
+            checkBoxes.add(checkBox);
+        }
+
+        VBox leftPane = new VBox();
+        leftPane.getChildren().addAll(checkBoxes);
+
+        // Creazione dello SplitPane
+        SplitPane splitPane = new SplitPane();
+        splitPane.getItems().addAll(leftPane, layoutStartApp);
+
+        // Configurazione delle dimensioni dei pannelli all'interno dello SplitPane
+        splitPane.setDividerPositions(0.2); // Imposta la posizione del divisore
+
+        WelcomeScene = new Scene(splitPane, 800, 600);
+
 
         layoutStartApp.setPadding(new Insets(20));
         layoutStartApp.setHgap(10);

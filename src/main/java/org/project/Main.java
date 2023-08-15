@@ -317,7 +317,7 @@ public class Main extends Application implements Authentication {
 
 
     public static void main(String[] args) {
-        APIData testObj = new APIData();
+        //APIData testObj = new APIData();
         /*
         testObj.fetchData(); // WARNING: this line requires API usage
         double resultOfTest = testObj.maxAge();

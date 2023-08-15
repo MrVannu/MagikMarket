@@ -14,14 +14,17 @@ import java.net.http.HttpResponse;
 //Fetch the data + return a list
 public class APIData {
 
+    private String symbol;
     private JSONObject data;
     private ObjectMapper mapper = new ObjectMapper();
 
-
+    public APIData(String symbol){
+        this.symbol= symbol;
+    }
     //Requesting APIData (live)
-    public void fetchData() {
+    public void fetchData(/*String symbol*/) {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://yahoo-finance127.p.rapidapi.com/price/eth-usd"))
+                .uri(URI.create("https://yahoo-finance127.p.rapidapi.com/price/"+symbol))
                 .header("content-type", "application/octet-stream")
                 .header("X-RapidAPI-Key", "7fd9cfb8dbmshb2f9a3cb3aba987p14eec2jsn31f2b3486328")
                 .header("X-RapidAPI-Host", "yahoo-finance127.p.rapidapi.com")

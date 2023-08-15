@@ -18,6 +18,9 @@ import java.util.List;
 public class WelcomePane {
     Scene WelcomeScene;
     private final String pathUserDB = "src/main/resources/userDB.csv";  // Path to DB for users tracking
+    private ArrayList<String> symbols = new ArrayList<String>();
+
+
     private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";  // Path to DB for data history
 
     // Index of row to be overwritten (most remote in the db)
@@ -28,6 +31,17 @@ public class WelcomePane {
         Text example = new Text("Test for pane");
         Button logOut = new  Button("LogOut");
 
+        symbols.add("amc");
+        symbols.add("ape");
+        symbols.add("x");
+        symbols.add("tsla");
+        symbols.add("kvue");
+        symbols.add("nio");
+        symbols.add("nvda");
+        symbols.add("jnj");
+        symbols.add("amd");
+        symbols.add("f");
+        symbols.add("googl");
 
         layoutStartApp.setPadding(new Insets(20));
         layoutStartApp.setHgap(10);
@@ -42,7 +56,7 @@ public class WelcomePane {
         Button test = new Button("Test");
         layoutStartApp.add(test,0,4);
         test.setOnAction(e->{
-            APIData testObj = new APIData();
+            APIData testObj = new APIData(symbols.get(1));
             testObj.fetchData(); // WARNING: this line requires API usage
 
             String p1 = testObj.extractSymbolOfCompany();

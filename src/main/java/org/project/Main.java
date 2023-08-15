@@ -108,7 +108,8 @@ public class Main extends Application implements Authentication {
 
     //Validator for username (no spaces allowed)
     public boolean usernameValidator (String username){
-        return !username.contains(" ");
+        if (username.contains(" ") || (username =="")) return false;
+        else return true;
     }
 
     // Validator for email fomrat (example@hello.world)
@@ -221,8 +222,8 @@ public class Main extends Application implements Authentication {
             String password = passwordFieldLogin.getText();
             String hashedPassword = BCrypt.hashpw(passwordFieldLogin.getText(), BCrypt.gensalt());  // Just to test
 
-            if(usernameExists(username, pathUserDB) && passwordCorresponds(username, password, pathUserDB)) {
-                //switc
+            if(usernameExists(username, pathUserDB) && usernameValidator(username) && passwordCorresponds(username, password, pathUserDB)) {
+                //switch
                 WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene);
                 primaryStage.setTitle("Start App");
                 primaryStage.setScene(welcomePane.getScene());

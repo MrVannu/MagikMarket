@@ -1,0 +1,7 @@
+/* styles.css */
+
+.checkbox {
+    -fx-font-family: "Helvetica";
+    -fx-font-size: 14px;
+    -fx-text-fill: blue;
+}

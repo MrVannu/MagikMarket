@@ -2,14 +2,11 @@ package org.project;
 
 
 import com.opencsv.exceptions.CsvValidationException;
-import javafx.scene.control.PasswordField;
+import javafx.scene.control.*;
 import javafx.application.Application;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.FontWeight;
-import javafx.scene.control.Button;
 import org.mindrot.jbcrypt.BCrypt;
-import javafx.scene.control.Label;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,6 +138,15 @@ public class Main extends Application implements Authentication {
         return false;
     }
 
+    // Defining method to show an alert
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -216,16 +222,19 @@ public class Main extends Application implements Authentication {
 
 
             if(usernameExists(username, pathUserDB) && usernameValidator(username) && passwordCorresponds(username, password, pathUserDB)) {
-                //switch
+                //The user exists and the stage changes
                 WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene);
                 primaryStage.setTitle("Start App");
                 primaryStage.setScene(welcomePane.getScene());
-                System.out.println("esiste");
+                System.out.println("Exists");
             }
-            else System.out.println("non esiste");
+            else {
+                // The user does not exist
+                System.out.println("Does not exist");
+                showAlert("Autentication error", "User not found or incorrect credentials.");
+            }
 
             // Authentication logic
-
             System.out.println("Username: " + username);
             System.out.println("Password: " + password);
             System.out.println("PasswordInHash: " + hashedPassword);

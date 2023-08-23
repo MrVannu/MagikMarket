@@ -31,6 +31,7 @@ public class Main extends Application implements Authentication {
     // Index of row to be overwritten (most remote in the db)
     private short dataToUpdateIndex = 0;
     private double userCredit = 1000;
+    private User userRegistered;
 
 
 
@@ -105,7 +106,7 @@ public class Main extends Application implements Authentication {
 
     //Validator for username (no spaces allowed)
     public boolean usernameValidator (String username){
-        if (username.contains(" ") || (username =="")) return false;
+        if (username.contains(" ") || (username == "")) return false;
         else return true;
     }
 
@@ -122,7 +123,10 @@ public class Main extends Application implements Authentication {
 
     // Global validator
     public boolean globalValidator (String username, String password, String hashedPassword, String email){
-        if(usernameValidator(username) && emailValidator(email) && passwordValidator(password)) return true;
+        if(usernameValidator(username) && emailValidator(email) && passwordValidator(password)) {
+            userRegistered = new User (username, password, hashedPassword, email, String.valueOf(userCredit));
+            return true;
+        }
         else if (!usernameValidator(username)){
             System.out.println("Username not allowed");
             // Scene handling by Enri
@@ -139,6 +143,12 @@ public class Main extends Application implements Authentication {
         return false;
     }
 
+    // Method to modify the userCredit value into the UserDB
+    public void setUserCredit(Double valueToSet){
+
+    }
+
+
     // Defining method to show an alert
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -151,6 +161,7 @@ public class Main extends Application implements Authentication {
 
     @Override
     public void start(Stage primaryStage) {
+        //User userRegistered = new User();
 
         // Defining the panes
         GridPane layoutLogin = new GridPane();
@@ -224,7 +235,7 @@ public class Main extends Application implements Authentication {
 
             if(usernameExists(username, pathUserDB) && usernameValidator(username) && passwordCorresponds(username, password, pathUserDB)) {
                 //The user exists and the stage changes
-                WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene);
+                WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, userRegistered);
                 primaryStage.setTitle("Start App");
                 primaryStage.setScene(welcomePane.getScene());
                 System.out.println("Exists");
@@ -232,7 +243,7 @@ public class Main extends Application implements Authentication {
             else {
                 // The user does not exist
                 System.out.println("Does not exist");
-                showAlert("Autentication error", "User not found or incorrect credentials.");
+                showAlert("Authentication error", "User not found or incorrect credentials.");
             }
 
             // Authentication logic

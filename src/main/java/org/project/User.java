@@ -8,15 +8,20 @@ import java.util.List;
 public class User {
     private String username;
     private String password;
+    private String hashedPassword;
     private String email;
     private List<Stock> cart;
 
-    public User(String username, String password, String email) {
+
+    public User(){}
+
+    public User(String username, String password, String hashedPassword, String email, String userCredit) {
         this.username = username;
         this.password = password;
         this.email = email;
         cart = new ArrayList<>();
     }
+
 
 
     public boolean addToCart(Stock p){
@@ -32,9 +37,7 @@ public class User {
         return cart.get(index);
     }
     public boolean cartIsVoid(){
-        if (cart == null)
-            return true;
-        return false;
+        return cart == null;
     }
 
     public List<Stock> getCart(){

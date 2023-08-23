@@ -26,7 +26,9 @@ public class WelcomePane {
     // Index of row to be overwritten (most remote in the db)
     private short dataToUpdateIndex = 0;
     private Map<CheckBox, XYChart.Series<Number, Number>> checkBoxSeriesMap;
-    public WelcomePane(Stage primaryStage, Scene LoginScene){
+    public WelcomePane(Stage primaryStage, Scene LoginScene, User userRegistered){
+        super();
+
 
         // Defining a list of checkBoxes
         List<CheckBox> checkBoxes = new ArrayList<>();

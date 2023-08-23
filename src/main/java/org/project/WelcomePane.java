@@ -44,6 +44,38 @@ public class WelcomePane {
 
         checkBoxSeriesMap = new HashMap<>();
 
+        // Defining VBox for the right split pane
+        VBox rightPane = new VBox();
+
+        // Defining internal panes of the vertical split pane
+        StackPane topInternalPane = new StackPane(new Label("Top Internal Pane"));
+        StackPane bottomInternalPane = new StackPane(new Label("Bottom Internal Pane"));
+
+        // Defining the new vertical SplitPane
+        SplitPane internalVerticalSplitPane = new SplitPane();
+        internalVerticalSplitPane.setDividerPositions(0.1); // Configuring SplitPane dimension
+        internalVerticalSplitPane.getItems().addAll(topInternalPane, bottomInternalPane);
+        internalVerticalSplitPane.setOrientation(javafx.geometry.Orientation.VERTICAL);
+        // Adding the new verticalSplitPane to the right pane (of the horizontal splitPane)
+        rightPane.getChildren().add(internalVerticalSplitPane);
+
+        VBox.setVgrow(internalVerticalSplitPane, Priority.ALWAYS);
+
+
+        // Defining logOut button
+        Button logOut = new  Button("LogOut");
+
+        // Defining HBox for the bottomInternalPane
+        HBox bottomBox = new HBox(logOut);
+        bottomInternalPane.getChildren().addAll(bottomBox);
+
+        // Defining test button
+        Button test = new Button("Extract");
+        bottomBox.getChildren().add(test);// Adding the button to the rightPane
+
+
+
+
     // Creating checkboxes
         for (String symbol : symbols) {
             CheckBox checkBox = new CheckBox(symbol);
@@ -64,42 +96,86 @@ public class WelcomePane {
                     checkBox.setSelected(false);
                 }
 
+                LineChart<Number, Number> lineChart= createLineChart("nameOfCompany");
+
+                //Placeholders values in case something goes wrong
+                String sym = "phSymbol";
+                String nameOfCompany = "phNameOfCompany";
+
                 //For adding new line
                 if (checkBox.isSelected()) {
 
-                        // Adding data into the serie when the checkbox is selected
-                        // Add here your data
-                    
-                        series.getData().add(new XYChart.Data<>(1, 10));
-                        series.getData().add(new XYChart.Data<>(2, 20));
-                        series.getData().add(new XYChart.Data<>(3, 100));
-                        series.getData().add(new XYChart.Data<>(4, 30));
 
+                        //test.setOnAction(e->{
+
+
+                            boolean callMade = false;
+                            APIData testObj = null;
+                            // API CALL!!
+                            /*testObj = new APIData(symbol);
+                            testObj.fetchData(); // !WARNING: this line requires API usage
+                            sym = testObj.extractSymbolOfCompany();
+                            nameOfCompany = testObj.extractNameOfCompany();
+                            callMade = true;*/
+
+
+                            //String aa= String.valueOf(p1);
+                            //double p2 = testObj.postMarketChangePercent();
+                            //String bb = String.valueOf(p2);
+
+                            //test.setVisible(false);
+
+                            lineChart = createLineChart(nameOfCompany);
+                            //bottomInternalPane.getChildren().add(lineChart);
+
+
+                            try {
+                                updateDataHistory(pathDataHistoryDB,sym,nameOfCompany);
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        //});
+
+                    // Create a new series for this checkbox
+                    XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
+                    newSeries.setName(nameOfCompany);
+
+
+
+                    if (callMade) {
+                        newSeries.getData().addAll(
+                                new XYChart.Data<>(1, testObj.regularMarketDayLow()),
+                                new XYChart.Data<>(2, testObj.regularMarketDayHigh()),
+                                new XYChart.Data<>(3, testObj.regularMarketPreviousClose())
+                        );
                     } else {
-                        // Remove data from the serie when it is deselected
-                        series.getData().clear();
+                        newSeries.getData().addAll(
+                                new XYChart.Data<>(1, 50),
+                                new XYChart.Data<>(2, 50),
+                                new XYChart.Data<>(3, 200)
+                        );
                     }
+                    // Add the new series to the line chart
+
+                    lineChart = createLineChart(nameOfCompany);
+                    bottomInternalPane.getChildren().add(lineChart);
+                    lineChart.getData().add(newSeries);
+                    //bottomInternalPane.getChildren().add(lineChart);
+
+
+                } else {
+                    final String temp = nameOfCompany;
+                    lineChart.getData().removeIf(serie -> serie.getName().equals(temp));
+                }
             });
 
             checkBoxes.add(checkBox);
         }
 
-        // Defining VBox for the right split pane
-        VBox rightPane = new VBox();
-
-        // Defining internal panes of the vertical split pane
-        StackPane topInternalPane = new StackPane(new Label("Top Internal Pane"));
-        StackPane bottomInternalPane = new StackPane(new Label("Bottom Internal Pane"));
-
-        // Defining the new vertical SplitPane
-        SplitPane internalVerticalSplitPane = new SplitPane();
-        internalVerticalSplitPane.setDividerPositions(0.1); // Configuring SplitPane dimension
-        internalVerticalSplitPane.getItems().addAll(topInternalPane, bottomInternalPane);
-        internalVerticalSplitPane.setOrientation(javafx.geometry.Orientation.VERTICAL);
-        // Adding the new verticalSplitPane to the right pane (of the horizontal splitPane)
-        rightPane.getChildren().add(internalVerticalSplitPane);
-
-        VBox.setVgrow(internalVerticalSplitPane, Priority.ALWAYS);
+        logOut.setOnAction(e ->{
+            primaryStage.setTitle("Login");
+            primaryStage.setScene(LoginScene);
+        });
 
 
         // Defining VBox for the left split pane and inserting checkBoxes inside
@@ -117,45 +193,6 @@ public class WelcomePane {
         // Instantiating the whole scene as Scene and defining its dimension
         WelcomeScene = new Scene(splitPane, 800, 600);
         WelcomeScene.getStylesheets().add("styles.css");// Reference to the CSS file
-
-        // Defining logOut button
-        Button logOut = new  Button("LogOut");
-
-        // Defining HBox for the bottomInternalPane
-        HBox bottomBox = new HBox(logOut);
-        bottomInternalPane.getChildren().addAll(bottomBox);
-
-        logOut.setOnAction(e ->{
-            primaryStage.setTitle("Login");
-            primaryStage.setScene(LoginScene);
-        });
-
-        // Defining test button
-        Button test = new Button("Test");
-        bottomBox.getChildren().add(test);// Adding the button to the rightPane
-
-        test.setOnAction(e->{
-            // API CALL!!
-//                APIData testObj = new APIData(symbols.get(1));
-//                testObj.fetchData(); // !WARNING: this line requires API usage
-//                String p1 = testObj.extractSymbolOfCompany();
-//                String nameOfCompany = testObj.extractNameOfCompany();
-
-            //String aa= String.valueOf(p1);
-            //double p2 = testObj.postMarketChangePercent();
-            //String bb = String.valueOf(p2);
-
-            test.setVisible(false);
-
-            LineChart<Number, Number> lineChart = createLineChart("company");
-            bottomInternalPane.getChildren().add(lineChart);
-
-            try {
-                updateDataHistory(pathDataHistoryDB,"symbolOfCompany","nameOfCompany");
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
 
     } // Closing WelcomePane
 
@@ -210,10 +247,10 @@ public class WelcomePane {
         series.setName("Data History");
 
         // Add data points to the series (for demonstration)
-//        series.getData().add(new XYChart.Data<>(1, 10));
-//        series.getData().add(new XYChart.Data<>(2, 20));
-//        series.getData().add(new XYChart.Data<>(3, 15));
-//        series.getData().add(new XYChart.Data<>(4, 25));
+        series.getData().add(new XYChart.Data<>(1, 10));
+        series.getData().add(new XYChart.Data<>(2, 20));
+        series.getData().add(new XYChart.Data<>(3, 15));
+        series.getData().add(new XYChart.Data<>(4, 25));
 //        series.getData().add(new XYChart.Data<>(5, 18));
 
         // Add the series to the line chart

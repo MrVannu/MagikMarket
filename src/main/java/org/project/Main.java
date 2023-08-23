@@ -30,6 +30,7 @@ public class Main extends Application implements Authentication {
 
     // Index of row to be overwritten (most remote in the db)
     private short dataToUpdateIndex = 0;
+    private double userCredit = 1000;
 
 
 
@@ -72,7 +73,7 @@ public class Main extends Application implements Authentication {
     }
 
     // Creates a new account
-    public boolean registerNewUser(String pathToUse, String username, String hashedPassword, String email) throws IOException {
+    public boolean registerNewUser(String pathToUse, String username, String hashedPassword, String email, Double credit) throws IOException {
 
         if(usernameExists(username, pathToUse)) return false;  // Check no user with alias exist
 
@@ -86,7 +87,7 @@ public class Main extends Application implements Authentication {
         }
 
         try (CSVWriter writer = new CSVWriter(new FileWriter(pathToUse, true))) {
-            String[] toRecord = {username, hashedPassword, email};  // Compose the string to be saved
+            String[] toRecord = {username, hashedPassword, email, String.valueOf(credit)};  // Compose the string to be saved
             writer.writeNext(toRecord);  // Writes the string composed
 
             return true;
@@ -302,7 +303,7 @@ public class Main extends Application implements Authentication {
                 System.out.println("globalValidator failed");
             } else {
                 try {
-                    registerNewUser(pathUserDB, username, hashedPassword, email);
+                    registerNewUser(pathUserDB, username, hashedPassword, email, userCredit);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }

@@ -103,9 +103,16 @@ public class WelcomePane {
                 //Adding a limit of selection of "MAX_SELECTED_CHECKBOXES" (for instance  max 4 check boxes)
                 if (selectedCount > MAX_SELECTED_CHECKBOXES) {
                     checkBox.setSelected(false);
+
+                    //Disable the not selected checkboxes when limit is reached
+                    for (CheckBox cb : checkBoxes) {
+                        if (!cb.isSelected()) {
+                            cb.setDisable(true);
+                        }
+                    }
+                } else {
+                    checkBoxes.forEach(cb -> cb.setDisable(false));
                 }
-
-
 
                 //Placeholders values in case something goes wrong
                 String sym = "phSymbol";

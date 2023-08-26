@@ -7,6 +7,8 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import java.io.*;
@@ -26,7 +28,10 @@ public class WelcomePane {
     // Index of row to be overwritten (most remote in the db)
     private short dataToUpdateIndex = 0;
     private Map<CheckBox, XYChart.Series<Number, Number>> checkBoxSeriesMap;
-    public WelcomePane(Stage primaryStage, Scene LoginScene, User person){
+
+    public WelcomePane(Stage primaryStage, Scene LoginScene, User userRegistered){
+        super();
+
 
         // Defining a list of checkBoxes
         List<CheckBox> checkBoxes = new ArrayList<>();
@@ -46,39 +51,41 @@ public class WelcomePane {
         checkBoxSeriesMap = new HashMap<>();
 
         // Defining VBox for the right split pane
-        VBox rightPane = new VBox();
+        VBox rightPaneBox = new VBox();
 
-        // Defining internal panes of the vertical split pane
-        StackPane topInternalPane = new StackPane(new Label("Top Internal Pane"));
-        StackPane bottomInternalPane = new StackPane(new Label("Bottom Internal Pane"));
+            // Defining internal panes of the vertical split pane
+            StackPane topRightPane = new StackPane();
+            StackPane bottomRightPane = new StackPane();
 
-        // Defining the new vertical SplitPane
-        SplitPane internalVerticalSplitPane = new SplitPane();
-        internalVerticalSplitPane.setDividerPositions(0.1); // Configuring SplitPane dimension
-        internalVerticalSplitPane.getItems().addAll(topInternalPane, bottomInternalPane);
-        internalVerticalSplitPane.setOrientation(javafx.geometry.Orientation.VERTICAL);
-        // Adding the new verticalSplitPane to the right pane (of the horizontal splitPane)
-        rightPane.getChildren().add(internalVerticalSplitPane);
+            // Defining the vertical SplitPane
+            SplitPane internalVerticalSplitPane = new SplitPane();
+            internalVerticalSplitPane.setDividerPositions(0.1); // Configuring SplitPane dimension
+            internalVerticalSplitPane.getItems().addAll(topRightPane, bottomRightPane);
+            internalVerticalSplitPane.setOrientation(javafx.geometry.Orientation.VERTICAL);
+            // Adding the new verticalSplitPane to the right pane (of the horizontal splitPane)
+            rightPaneBox.getChildren().add(internalVerticalSplitPane);
 
-        VBox.setVgrow(internalVerticalSplitPane, Priority.ALWAYS);
+            VBox.setVgrow(internalVerticalSplitPane, Priority.ALWAYS);
 
 
         // Defining logOut button
         Button logOut = new  Button("LogOut");
+        logOut.setOnAction(e->{
+            primaryStage.setTitle("Start App");
+            primaryStage.setScene(LoginScene);
+        });
 
-        // Defining HBox for the bottomInternalPane
+        // Defining HBox for the bottomRightPane
         HBox bottomBox = new HBox(logOut);
-        bottomInternalPane.getChildren().addAll(bottomBox);
+        bottomRightPane.getChildren().addAll(bottomBox);
 
         // Defining test button
         Button test = new Button("Extract");
-        bottomBox.getChildren().add(test);// Adding the button to the rightPane
-
-
-
+        bottomBox.getChildren().add(test);// Adding the button to the rightPaneBox
 
         LineChart<Number, Number> lineChart= createLineChart("nameOfCompany");
     // Creating checkboxes
+
         for (String symbol : symbols) {
             CheckBox checkBox = new CheckBox(symbol);
             checkBox.getStyleClass().add("checkbox");
@@ -114,11 +121,11 @@ public class WelcomePane {
                             boolean callMade = false;
                             APIData testObj = null;
                             // API CALL!!
-                            testObj = new APIData(symbol);
+                            /*testObj = new APIData(symbol);
                             testObj.fetchData(); // !WARNING: this line requires API usage
                             sym = testObj.extractSymbolOfCompany();
                             nameOfCompany = testObj.extractNameOfCompany();
-                            callMade = true;
+                            callMade = true;*/
 
 
                             //String aa= String.valueOf(p1);
@@ -126,9 +133,6 @@ public class WelcomePane {
                             //String bb = String.valueOf(p2);
 
                             //test.setVisible(false);
-
-                            //lineChart = createLineChart(nameOfCompany);
-                            //bottomInternalPane.getChildren().add(lineChart);
 
 
                             try {
@@ -162,7 +166,7 @@ public class WelcomePane {
                     lineChart.setTitle(nameOfCompany);
 
                     lineChart.getData().add(newSeries);
-                    //bottomInternalPane.getChildren().add(lineChart);
+                    //bottomRightPane.getChildren().add(lineChart);
 
 
                 } else {
@@ -172,30 +176,68 @@ public class WelcomePane {
             });
 
             checkBoxes.add(checkBox);
-        }
+        } // CLOSING FOR
 
-        bottomInternalPane.getChildren().add(lineChart);
+
+        bottomRightPane.getChildren().add(lineChart);
         logOut.setOnAction(e ->{
             primaryStage.setTitle("Login");
             primaryStage.setScene(LoginScene);
         });
 
+            // Defining VBox for the left split pane and inserting checkBoxes inside
+    //        VBox topLeftPane = new  VBox(10); //Box for other purpose
+            VBox bottomLeftPane = new  VBox(10);//Box for the checkboxes
+            VBox leftPaneBox = new VBox(bottomLeftPane);
+            leftPaneBox.setAlignment(Pos.CENTER_LEFT);
+            leftPaneBox.setPadding(new Insets(10));
+    //        topLeftPane.getChildren().addAll();
+            bottomLeftPane.getChildren().addAll(checkBoxes);
 
-        // Defining VBox for the left split pane and inserting checkBoxes inside
-        VBox leftPane = new VBox(10);
-        leftPane.setAlignment(Pos.CENTER_LEFT);
-        leftPane.setPadding(new Insets(10));
-        leftPane.getChildren().addAll(checkBoxes);
 
-        VBox.setVgrow(leftPane, Priority.ALWAYS);
+            VBox.setVgrow(leftPaneBox, Priority.ALWAYS);
+
         // Defining SplitPane that contains the left and right panes (that are VBoxes)
         SplitPane splitPane = new SplitPane();
-        splitPane.getItems().addAll(leftPane, rightPane);
+        splitPane.getItems().addAll(leftPaneBox, rightPaneBox);
         splitPane.setDividerPositions(0.2); // Configuring SplitPane dimension
+        splitPane.setMinWidth(1000); // Minimum width for the pane
+        splitPane.setMinHeight(700); // Minimum height for the pane
 
-        // Instantiating the whole scene as Scene and defining its dimension
-        WelcomeScene = new Scene(splitPane, 800, 600);
-        WelcomeScene.getStylesheets().add("styles.css");// Reference to the CSS file
+        // Instantiating the whole scene and defining its dimension
+        WelcomeScene = new Scene(splitPane, 1000, 700); // <---- Dimention of the WelcomePane
+        WelcomeScene.getStylesheets().add("styles.css");// Reference to the CSS file0
+
+        // Defining elements and HBox for the topRightPane
+        Label username = new Label("Username");
+
+        // Create an ImageView for the user image
+        Image image = new Image("file:src/main/resources/AccountImg.png");
+        ImageView imgView = new ImageView(image);
+        imgView.setFitWidth(40);
+        imgView.setFitHeight(30);
+
+        // Create a label for the amount of money
+        Label moneyLabel = new Label("$1000"); // Replace with the actual amount
+        moneyLabel.getStyleClass().add("money-label"); // You can define a CSS class for styling
+
+        // Defining an HBox to hold the elements inside the underGridPane(GridPane),see declaration below
+        HBox topBox = new HBox(10); // Adjust the spacing as needed
+        topBox.setAlignment(Pos.CENTER);
+        topBox.setSpacing(10);
+        topBox.getChildren().addAll(imgView,username, moneyLabel);
+
+        // Defining an GridPane to better align logOut button. It contains the topBox
+        GridPane underGridPane = new GridPane();
+        underGridPane.setPadding(new Insets(10));
+        underGridPane.setHgap(10);
+        underGridPane.setVgap(10);
+        underGridPane.setAlignment(Pos.CENTER);
+
+        underGridPane.add(topBox, 0, 0);
+        underGridPane.add(logOut, 6, 6);
+
+        topRightPane.getChildren().addAll(underGridPane);
 
     } // Closing WelcomePane
 

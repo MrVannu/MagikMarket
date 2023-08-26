@@ -167,9 +167,11 @@ public class APIData {
         try {
             JsonNode toRead = mapper.readTree(data.toString());
             JsonNode maxAgeNode = toRead.get("regularMarketDayHigh");
+
             System.out.println(maxAgeNode);
             toRead= mapper.readTree(maxAgeNode.toString());
             maxAgeNode = toRead.get("raw");
+
             // Check if maxAgeNode is null or if it can be converted to a double
             if (maxAgeNode != null) {
                 value = maxAgeNode.asDouble();

@@ -1,7 +1,73 @@
 /* styles.css */
 
-.checkbox {
-    -fx-font-family: "Helvetica";
+/* Style for checkboxes */
+    .checkbox {
+        -fx-font-size: 14px;
+        -fx-text-fill: black;
+        -fx-padding: 5px;
+    }
+
+    .checkbox:selected .box {
+        -fx-background-color: #007bff;
+        -fx-border-color: #007bff;
+    }
+
+    .checkbox:disabled .text {
+        -fx-fill: gray;
+    }
+
+/* Style for invalid input */
+.text-field:invalid {
+    -fx-border-color: red;
+}
+
+/* Style for the top section */
+.top-box {
+    -fx-background-color: #f4f4f4;
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+}
+
+/* Style for the user image */
+.user-image {
+    -fx-fit-width: 40px;
+    -fx-fit-height: 30px;
+}
+
+/* Style for the money label */
+.money-label {
+    -fx-font-size: 18px;
+    -fx-text-fill: green;
+}
+
+/* Style for the logOut button */
+.log-out-button {
     -fx-font-size: 14px;
-    -fx-text-fill: blue;
+}
+
+/* Style for the test button */
+.test-button {
+    -fx-font-size: 14px;
+}
+
+/* Style for the line chart */
+.chart-view {
+    -fx-background-color: white;
+}
+
+/* Style for the left pane (checkboxes) */
+.left-pane {
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+}
+
+/* Style for the right pane (line chart) */
+.right-pane {
+    -fx-padding: 10px;
+}
+
+/* Style for the internal split pane divider */
+.split-pane-divider {
+    -fx-padding: 5px;
+    -fx-background-color: #cccccc;
 }

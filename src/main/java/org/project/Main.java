@@ -8,8 +8,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.FontWeight;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.geometry.Insets;
@@ -24,7 +22,7 @@ import java.io.*;
 
 public class Main extends Application implements Authentication {
 
-    User person = new User("", "", "");
+
     // Paths to databases (CSV files)
     private final String pathUserDB = "src/main/resources/userDB.csv";  // Path to DB for users tracking
     private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";  // Path to DB for data history
@@ -32,6 +30,9 @@ public class Main extends Application implements Authentication {
     // Index of row to be overwritten (most remote in the db)
     private short dataToUpdateIndex = 0;
     private double userCredit = 1000;
+    private User userRegistered = new User("", "", "", "", "");;
+
+    private boolean checkField[];
 
 
 
@@ -52,6 +53,7 @@ public class Main extends Application implements Authentication {
             throw new RuntimeException(e);
         }
         return false; // If not found
+
     }
 
     // Checks if password is correct
@@ -106,7 +108,7 @@ public class Main extends Application implements Authentication {
 
     //Validator for username (no spaces allowed)
     public boolean usernameValidator (String username){
-        if (username.contains(" ") || (username =="")) return false;
+        if (username.contains(" ") || (username == "")) return false;
         else return true;
     }
 
@@ -123,35 +125,37 @@ public class Main extends Application implements Authentication {
 
     // Global validator
     public boolean globalValidator (String username, String password, String hashedPassword, String email){
-        if(usernameValidator(username) && emailValidator(email) && passwordValidator(password)) return true;
+        checkField = new boolean[3];
+        if(usernameValidator(username) && emailValidator(email) && passwordValidator(password)) {
+            userRegistered = new User (username, password, hashedPassword, email, String.valueOf(userCredit));
+            return true;
+        }
         else if (!usernameValidator(username)){
             System.out.println("Username not allowed");
-            // Scene handling by Enri
+            checkField[0]=true;
 
         } else if (!passwordValidator(password)){
             System.out.println("Password not allowed");
-            // Scene handling by Enri
+            checkField[1]=true;
 
         }else if (!emailValidator(email)){
             System.out.println("Email not allowed");
-            // Scene handling by Enri
+            checkField[2]=true;
 
         }
         return false;
     }
 
-    // Defining method to show an alert
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+
+    // Method to modify the userCredit value into the UserDB
+    public void setUserCredit(Double valueToSet){
+
     }
 
 
     @Override
     public void start(Stage primaryStage) {
+        //User userRegistered = new User();
 
         // Defining the panes
         GridPane layoutLogin = new GridPane();
@@ -205,6 +209,7 @@ public class Main extends Application implements Authentication {
             }
         });
 
+        // Create a emailField for the email with a maximum length of 30 characters in the RegisterScene
         TextField emailFieldRegister = new TextField();
         emailFieldRegister.setPromptText("Enter your email (max 30 characters)");
         emailFieldRegister.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -214,7 +219,10 @@ public class Main extends Application implements Authentication {
 
         });
 
-        Scene LoginScene = new Scene(layoutLogin, 500, 300);
+        //Defining the LoginScene which is the FIRST SCENE
+        Scene LoginScene = new Scene(layoutLogin, 700, 400); // <---- Dimention of the LoginPane
+
+
         // Button -> login
         Button loginButton = new Button("Login");
         loginButton.setOnAction(e -> {
@@ -225,15 +233,19 @@ public class Main extends Application implements Authentication {
 
             if(usernameExists(username, pathUserDB) && usernameValidator(username) && passwordCorresponds(username, password, pathUserDB)) {
                 //The user exists and the stage changes
-                WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, person);
+
+                WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, userRegistered);
+
                 primaryStage.setTitle("Start App");
                 primaryStage.setScene(welcomePane.getScene());
                 System.out.println("Exists");
+                AlertField.resetField(usernameFieldLogin,passwordFieldLogin);
             }
             else {
                 // The user does not exist
                 System.out.println("Does not exist");
-                showAlert("Autentication error", "User not found or incorrect credentials.");
+                AlertField.showAlert("Autentication error", "User not found or incorrect credentials.");
+                AlertField.invalidField(usernameFieldLogin, passwordFieldLogin);
             }
 
             // Authentication logic
@@ -243,9 +255,17 @@ public class Main extends Application implements Authentication {
         });
 
         // Button -> Register
-        Button switchScenesRegister = new Button("Switch to Register");
-        Button switchScenesLogin = new Button("Switch to Login");
+        Button switchScenesRegister = new Button("Sign in");
+        Button switchScenesLogin = new Button("Return to Login");
         Button registerButton = new Button("Register");
+
+        //Temporary button for GUI test
+        Button gui = new Button("GUI");
+        gui.setOnAction(e->{
+            WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, userRegistered);
+            primaryStage.setTitle("Start App");
+            primaryStage.setScene(welcomePane.getScene());
+        });
 
         // Login scene
         layoutLogin.setPadding(new Insets(20));
@@ -259,6 +279,7 @@ public class Main extends Application implements Authentication {
         layoutLogin.add(passwordFieldLogin, 1, 2);
         layoutLogin.add(loginButton, 0, 3);
         layoutLogin.add(switchScenesRegister, 1, 3);
+        layoutLogin.add(gui, 2, 4);
 
         //Scene LoginScene = new Scene(layoutLogin, 500, 300);
 
@@ -287,10 +308,12 @@ public class Main extends Application implements Authentication {
         switchScenesRegister.setOnAction(e -> {
             primaryStage.setTitle("Register Form");
             primaryStage.setScene(RegisterScene);
+            AlertField.resetField(usernameFieldLogin,passwordFieldLogin);
         });
         switchScenesLogin.setOnAction(e->{
             primaryStage.setTitle("Login Form");
             primaryStage.setScene(LoginScene);
+            AlertField.resetField(usernameFieldRegister,passwordFieldRegister,emailFieldRegister);
         });
 
         registerButton.setOnAction(e -> {// Hides the LoginScene and shows the RegisterScene
@@ -300,19 +323,42 @@ public class Main extends Application implements Authentication {
             String hashedPassword = BCrypt.hashpw(passwordFieldRegister.getText(), BCrypt.gensalt());  // Just to test
             String email = emailFieldRegister.getText();
 
+            // Checking that the registration credential meet the requirements
             if(!(globalValidator(username, password, hashedPassword, email))){
+
+                // If the registration was not successful then it will follow one of the 3 cases below
                 System.out.println("globalValidator failed");
+                if(checkField[0]==true){ // If the username already exists then the field is red
+                    AlertField.showAlert("Username error","Use another username.");
+                    AlertField.invalidField(usernameFieldRegister);
+                    checkField[0]=false; // Resetting the check to false
+                }
+                if(checkField[1]==true){// If the password is empty then the field is red
+                    AlertField.showAlert("Password error","The password you inserted is not allowed or the field is empty.");
+                    AlertField.invalidField(passwordFieldRegister);
+                    checkField[1]=false; // Resetting the check to false
+                }
+                if(checkField[2]==true){// If the email does not match the regex (so is not valid) then the field is red
+                    AlertField.showAlert("Email error","The email you inserted is not an email.");
+                    AlertField.invalidField(emailFieldRegister);
+                    checkField[2]=false; // Resetting the check to false
+                }
+
             } else {
+                // If the registration was successful
                 try {
-                    registerNewUser(pathUserDB, username, hashedPassword, email, userCredit);
+
+                    registerNewUser(pathUserDB, username, hashedPassword, email, userCredit); // The credentials of the user are saved into the database
+                    AlertField.resetField(usernameFieldRegister,passwordFieldRegister,emailFieldRegister); // Resetting the fields
+                    AlertField.showSuccessAlert("Registration successful","Your registration was successful!");
+                    primaryStage.setScene(LoginScene); // Changing scene to LoginScene
+
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             }
 
         });
-
-
 
     }
 

@@ -24,6 +24,7 @@ import java.io.*;
 
 public class Main extends Application implements Authentication {
 
+    User person = new User("", "", "");
     // Paths to databases (CSV files)
     private final String pathUserDB = "src/main/resources/userDB.csv";  // Path to DB for users tracking
     private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";  // Path to DB for data history
@@ -224,7 +225,7 @@ public class Main extends Application implements Authentication {
 
             if(usernameExists(username, pathUserDB) && usernameValidator(username) && passwordCorresponds(username, password, pathUserDB)) {
                 //The user exists and the stage changes
-                WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene);
+                WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, person);
                 primaryStage.setTitle("Start App");
                 primaryStage.setScene(welcomePane.getScene());
                 System.out.println("Exists");

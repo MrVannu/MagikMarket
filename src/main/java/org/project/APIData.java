@@ -42,7 +42,7 @@ public class APIData {
         //System.out.println(response.body());
         JSONObject jsonResponse = new JSONObject(response.body());
         data = jsonResponse;
-        //System.out.println("RESPONSE is: " + response.body());
+        System.out.println("RESPONSE is: " + response.body());
     }
 
 
@@ -65,17 +65,19 @@ public class APIData {
     public int maxAge() {
         int value = 101;
         try {
-            JsonNode toRead = mapper.readTree(data.toString());  //Reads from the Tree
-            JsonNode maxAgeNode = toRead.get("maxAge"); //Locates the reuired field
-
+            JsonNode toRead = mapper.readTree(data.toString());
+            JsonNode maxAgeNode = toRead.get("maxAge");
+            System.out.println(maxAgeNode);
+            toRead= mapper.readTree(maxAgeNode.toString());
+            maxAgeNode = toRead.get("raw");
             // Check if maxAgeNode is null or if it can be converted to a double
-            if (maxAgeNode != null && maxAgeNode.isNumber()) {
-                value = maxAgeNode.asInt(); //Convert the type of what is extracted
-            } else System.out.println("Value not available: maxAge"); //If not found (not always available)
+            if (maxAgeNode != null) {
+                value = maxAgeNode.asInt();
+            } else System.out.println("Value not available: regularMarketPreviousClose");
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e); //If try block fails
+            throw new RuntimeException(e);
         }
-        System.out.println(value); //For testing purposes
+        System.out.println(value);
         return value;
     }
 
@@ -85,11 +87,13 @@ public class APIData {
         try {
             JsonNode toRead = mapper.readTree(data.toString());
             JsonNode maxAgeNode = toRead.get("postMarketChangePercent");
-
-            // Check if postMarketChangePercent is null or if it can be converted to a double
-            if (maxAgeNode != null && maxAgeNode.isNumber()) {
+            System.out.println(maxAgeNode);
+            toRead= mapper.readTree(maxAgeNode.toString());
+            maxAgeNode = toRead.get("raw");
+            // Check if maxAgeNode is null or if it can be converted to a double
+            if (maxAgeNode != null) {
                 value = maxAgeNode.asDouble();
-            } else System.out.println("Value not available: postMarketChangePercent");
+            } else System.out.println("Value not available: regularMarketPreviousClose");
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -103,11 +107,13 @@ public class APIData {
         try {
             JsonNode toRead = mapper.readTree(data.toString());
             JsonNode maxAgeNode = toRead.get("regularMarketChangePercent");
-
+            System.out.println(maxAgeNode);
+            toRead= mapper.readTree(maxAgeNode.toString());
+            maxAgeNode = toRead.get("raw");
             // Check if maxAgeNode is null or if it can be converted to a double
-            if (maxAgeNode != null && maxAgeNode.isNumber()) {
+            if (maxAgeNode != null) {
                 value = maxAgeNode.asDouble();
-            } else System.out.println("Value not available: regularMarketChangePercent");
+            } else System.out.println("Value not available: regularMarketPreviousClose");
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -121,11 +127,13 @@ public class APIData {
         try {
             JsonNode toRead = mapper.readTree(data.toString());
             JsonNode maxAgeNode = toRead.get("preMarketChange");
-
+            System.out.println(maxAgeNode);
+            toRead= mapper.readTree(maxAgeNode.toString());
+            maxAgeNode = toRead.get("raw");
             // Check if maxAgeNode is null or if it can be converted to a double
-            if (maxAgeNode != null && maxAgeNode.isNumber()) {
+            if (maxAgeNode != null) {
                 value = maxAgeNode.asDouble();
-            } else System.out.println("Value not available: preMarketChange");
+            } else System.out.println("Value not available: regularMarketPreviousClose");
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -139,11 +147,13 @@ public class APIData {
         try {
             JsonNode toRead = mapper.readTree(data.toString());
             JsonNode maxAgeNode = toRead.get("shortName");
-
+            System.out.println(maxAgeNode);
+            toRead= mapper.readTree(maxAgeNode.toString());
+            maxAgeNode = toRead.get("raw");
             // Check if maxAgeNode is null or if it can be converted to a double
             if (maxAgeNode != null) {
                 value = maxAgeNode.toString();
-            } else System.out.println("Value not available: shortName");
+            } else System.out.println("Value not available: regularMarketPreviousClose");
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -157,11 +167,13 @@ public class APIData {
         try {
             JsonNode toRead = mapper.readTree(data.toString());
             JsonNode maxAgeNode = toRead.get("regularMarketDayHigh");
-
+            System.out.println(maxAgeNode);
+            toRead= mapper.readTree(maxAgeNode.toString());
+            maxAgeNode = toRead.get("raw");
             // Check if maxAgeNode is null or if it can be converted to a double
-            if (maxAgeNode != null && maxAgeNode.isNumber()) {
+            if (maxAgeNode != null) {
                 value = maxAgeNode.asDouble();
-            } else System.out.println("Value not available: regularMarketDayHigh");
+            } else System.out.println("Value not available: regularMarketPreviousClose");
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -175,11 +187,13 @@ public class APIData {
         try {
             JsonNode toRead = mapper.readTree(data.toString());
             JsonNode maxAgeNode = toRead.get("regularMarketDayLow");
-
+            System.out.println(maxAgeNode);
+            toRead= mapper.readTree(maxAgeNode.toString());
+            maxAgeNode = toRead.get("raw");
             // Check if maxAgeNode is null or if it can be converted to a double
-            if (maxAgeNode != null && maxAgeNode.isNumber()) {
+            if (maxAgeNode != null) {
                 value = maxAgeNode.asDouble();
-            } else System.out.println("Value not available: regularMarketDayLow");
+            } else System.out.println("Value not available: regularMarketPreviousClose");
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -193,9 +207,11 @@ public class APIData {
         try {
             JsonNode toRead = mapper.readTree(data.toString());
             JsonNode maxAgeNode = toRead.get("regularMarketPreviousClose");
-
+            System.out.println(maxAgeNode);
+            toRead= mapper.readTree(maxAgeNode.toString());
+            maxAgeNode = toRead.get("raw");
             // Check if maxAgeNode is null or if it can be converted to a double
-            if (maxAgeNode != null && maxAgeNode.isNumber()) {
+            if (maxAgeNode != null) {
                 value = maxAgeNode.asDouble();
             } else System.out.println("Value not available: regularMarketPreviousClose");
         } catch (JsonProcessingException e) {
@@ -211,11 +227,13 @@ public class APIData {
         try {
             JsonNode toRead = mapper.readTree(data.toString());
             JsonNode maxAgeNode = toRead.get("symbol");
-
+            System.out.println(maxAgeNode);
+            toRead= mapper.readTree(maxAgeNode.toString());
+            maxAgeNode = toRead.get("raw");
             // Check if maxAgeNode is null or if it can be converted to a double
             if (maxAgeNode != null) {
                 value = maxAgeNode.toString();
-            } else System.out.println("Value not available: symbol");
+            } else System.out.println("Value not available: regularMarketPreviousClose");
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -229,11 +247,13 @@ public class APIData {
         try {
             JsonNode toRead = mapper.readTree(data.toString());
             JsonNode maxAgeNode = toRead.get("currencySymbol");
-
+            System.out.println(maxAgeNode);
+            toRead= mapper.readTree(maxAgeNode.toString());
+            maxAgeNode = toRead.get("raw");
             // Check if maxAgeNode is null or if it can be converted to a double
             if (maxAgeNode != null) {
                 value = maxAgeNode.toString();
-            } else System.out.println("Value not available: currencySymbol");
+            } else System.out.println("Value not available: regularMarketPreviousClose");
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

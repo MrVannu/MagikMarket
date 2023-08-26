@@ -26,7 +26,7 @@ public class WelcomePane {
     // Index of row to be overwritten (most remote in the db)
     private short dataToUpdateIndex = 0;
     private Map<CheckBox, XYChart.Series<Number, Number>> checkBoxSeriesMap;
-    public WelcomePane(Stage primaryStage, Scene LoginScene){
+    public WelcomePane(Stage primaryStage, Scene LoginScene, User person){
 
         // Defining a list of checkBoxes
         List<CheckBox> checkBoxes = new ArrayList<>();
@@ -41,6 +41,7 @@ public class WelcomePane {
         symbols.add("amd");
         symbols.add("f");
         symbols.add("googl");
+        symbols.add("ENL.BE");
 
         checkBoxSeriesMap = new HashMap<>();
 
@@ -76,6 +77,7 @@ public class WelcomePane {
 
 
 
+        LineChart<Number, Number> lineChart= createLineChart("nameOfCompany");
     // Creating checkboxes
         for (String symbol : symbols) {
             CheckBox checkBox = new CheckBox(symbol);
@@ -96,7 +98,7 @@ public class WelcomePane {
                     checkBox.setSelected(false);
                 }
 
-                LineChart<Number, Number> lineChart= createLineChart("nameOfCompany");
+
 
                 //Placeholders values in case something goes wrong
                 String sym = "phSymbol";
@@ -112,11 +114,11 @@ public class WelcomePane {
                             boolean callMade = false;
                             APIData testObj = null;
                             // API CALL!!
-                            /*testObj = new APIData(symbol);
+                            testObj = new APIData(symbol);
                             testObj.fetchData(); // !WARNING: this line requires API usage
                             sym = testObj.extractSymbolOfCompany();
                             nameOfCompany = testObj.extractNameOfCompany();
-                            callMade = true;*/
+                            callMade = true;
 
 
                             //String aa= String.valueOf(p1);
@@ -125,7 +127,7 @@ public class WelcomePane {
 
                             //test.setVisible(false);
 
-                            lineChart = createLineChart(nameOfCompany);
+                            //lineChart = createLineChart(nameOfCompany);
                             //bottomInternalPane.getChildren().add(lineChart);
 
 
@@ -157,8 +159,8 @@ public class WelcomePane {
                     }
                     // Add the new series to the line chart
 
-                    lineChart = createLineChart(nameOfCompany);
-                    bottomInternalPane.getChildren().add(lineChart);
+                    lineChart.setTitle(nameOfCompany);
+
                     lineChart.getData().add(newSeries);
                     //bottomInternalPane.getChildren().add(lineChart);
 
@@ -172,6 +174,7 @@ public class WelcomePane {
             checkBoxes.add(checkBox);
         }
 
+        bottomInternalPane.getChildren().add(lineChart);
         logOut.setOnAction(e ->{
             primaryStage.setTitle("Login");
             primaryStage.setScene(LoginScene);
@@ -242,19 +245,6 @@ public class WelcomePane {
 
         lineChart.getData().addAll(checkBoxSeriesMap.values());
 
-        // Create a data series for the line chart
-        XYChart.Series<Number, Number> series = new XYChart.Series<>();
-        series.setName("Data History");
-
-        // Add data points to the series (for demonstration)
-        series.getData().add(new XYChart.Data<>(1, 10));
-        series.getData().add(new XYChart.Data<>(2, 20));
-        series.getData().add(new XYChart.Data<>(3, 15));
-        series.getData().add(new XYChart.Data<>(4, 25));
-//        series.getData().add(new XYChart.Data<>(5, 18));
-
-        // Add the series to the line chart
-        lineChart.getData().add(series);
 
         return lineChart;
     }

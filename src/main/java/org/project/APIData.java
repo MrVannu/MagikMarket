@@ -26,7 +26,7 @@ public class APIData {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://yahoo-finance127.p.rapidapi.com/price/"+symbol))
                 .header("content-type", "application/octet-stream")
-                .header("X-RapidAPI-Key", "7fd9cfb8dbmshb2f9a3cb3aba987p14eec2jsn31f2b3486328")
+                .header("X-RapidAPI-Key", "c3f98819famsh3e9d4ed812b7142p19441fjsnee76f5e53fe3")
                 .header("X-RapidAPI-Host", "yahoo-finance127.p.rapidapi.com")
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
@@ -39,7 +39,7 @@ public class APIData {
             throw new RuntimeException(e);
         }
 
-        //System.out.println(response.body());
+        System.out.println(response.body());
         JSONObject jsonResponse = new JSONObject(response.body());
         data = jsonResponse;
         System.out.println("RESPONSE is: " + response.body());

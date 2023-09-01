@@ -35,6 +35,7 @@ public class WelcomePane {
 
         // Defining a list of checkBoxes
         List<CheckBox> checkBoxes = new ArrayList<>();
+        List<Button> betButtons = new ArrayList<>();
         symbols.add("amc");
         symbols.add("ape");
         symbols.add("x");
@@ -84,9 +85,21 @@ public class WelcomePane {
         bottomBox.getChildren().add(test);// Adding the button to the rightPaneBox
 
         LineChart<Number, Number> lineChart= createLineChart("nameOfCompany");
-    // Creating checkboxes
 
+
+        // Defining VBox for the left split pane and inserting checkBoxes inside
+        // VBox topLeftPane = new  VBox(10); //Box for other purpose
+        VBox bottomLeftPane = new  VBox(10);//Box for the checkboxes
+        VBox leftPaneBox = new VBox(bottomLeftPane);
+        leftPaneBox.setAlignment(Pos.CENTER_LEFT);
+        leftPaneBox.setPadding(new Insets(10));
+
+
+        // Creating checkboxes
         for (String symbol : symbols) {
+            HBox checkBoxWithBetButton = new HBox(10);
+            Button bet = new Button("Bet");
+
             CheckBox checkBox = new CheckBox(symbol);
             checkBox.getStyleClass().add("checkbox");
 
@@ -96,6 +109,23 @@ public class WelcomePane {
 
             // Saving the serie into the map associated with the checkbox
             checkBoxSeriesMap.put(checkBox, series);
+
+            // Create a TextField and a Submit button within a VBox for user input
+            TextField betAmountField = new TextField();
+            Button submitBetButton = new Button("Submit");
+            VBox userInputBox = new VBox(betAmountField, submitBetButton);
+
+            // Create a Tooltip and set the VBox containing the input elements as its graphic
+            Tooltip betTooltip = new Tooltip();
+            betTooltip.setGraphic(userInputBox);
+
+            // Set the Tooltip to the "Bet" button
+            Tooltip.install(bet, betTooltip);
+
+            bet.setOnAction(event -> {
+                // Handle the "Bet" button action here
+                betTooltip.show(bet, bet.getScene().getWindow().getX() + bet.getScene().getX() + bet.getLayoutX() + bet.getWidth(), bet.getScene().getWindow().getY() + bet.getScene().getY() + bet.getLayoutY());
+            });
 
             checkBox.setOnAction(event -> {
                 //For limiting of the selection of max checboxes
@@ -121,18 +151,14 @@ public class WelcomePane {
                 //For adding new line
                 if (checkBox.isSelected()) {
 
-
-                        //test.setOnAction(e->{
-
-
                             boolean callMade = false;
                             APIData testObj = null;
                             // API CALL!!
-                            /*testObj = new APIData(symbol);
+                            testObj = new APIData(symbol);
                             testObj.fetchData(); // !WARNING: this line requires API usage
-                            sym = testObj.extractSymbolOfCompany();
-                            nameOfCompany = testObj.extractNameOfCompany();
-                            callMade = true;*/
+                            Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany());
+
+                            callMade = true;
 
 
                             //String aa= String.valueOf(p1);
@@ -168,8 +194,8 @@ public class WelcomePane {
                                 new XYChart.Data<>(3, 200)
                         );
                     }
-                    // Add the new series to the line chart
 
+                    // Add the new series to the line chart
                     lineChart.setTitle(nameOfCompany);
 
                     lineChart.getData().add(newSeries);
@@ -181,8 +207,15 @@ public class WelcomePane {
                     lineChart.getData().removeIf(serie -> serie.getName().equals(temp));
                 }
             });
+            checkBoxWithBetButton.getChildren().addAll(checkBox, bet);
+            checkBoxWithBetButton.setAlignment(Pos.CENTER_LEFT);
 
+            betButtons.add(bet);
             checkBoxes.add(checkBox);
+
+            //topLeftPane.getChildren().addAll();
+            bottomLeftPane.getChildren().addAll(checkBoxWithBetButton);
+
         } // CLOSING FOR
 
 
@@ -191,16 +224,6 @@ public class WelcomePane {
             primaryStage.setTitle("Login");
             primaryStage.setScene(LoginScene);
         });
-
-            // Defining VBox for the left split pane and inserting checkBoxes inside
-    //        VBox topLeftPane = new  VBox(10); //Box for other purpose
-            VBox bottomLeftPane = new  VBox(10);//Box for the checkboxes
-            VBox leftPaneBox = new VBox(bottomLeftPane);
-            leftPaneBox.setAlignment(Pos.CENTER_LEFT);
-            leftPaneBox.setPadding(new Insets(10));
-    //        topLeftPane.getChildren().addAll();
-            bottomLeftPane.getChildren().addAll(checkBoxes);
-
 
             VBox.setVgrow(leftPaneBox, Priority.ALWAYS);
 

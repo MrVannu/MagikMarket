@@ -8,10 +8,14 @@ public class Stock {
     private double regularMarketDayLow;
     private double markerPreviousClose;
     private String symbol;
-    private String id;
+    private String name;
     private String description;
     private boolean available;
 
+    public Stock(String symbol, String name){
+        this.symbol= symbol;
+        this.name = name;
+    }
     public double getSymbol() {
         return price;
     }
@@ -24,11 +28,11 @@ public class Stock {
     public void setMarkerPreviousClose(double markerPreviousClose) {
         this.markerPreviousClose = markerPreviousClose;
     }
-    public String getId() {
-        return id;
+    public String getName() {
+        return name;
     }
-    public void setId(String id) {
-        this.id = id;
+    public void setName(String id) {
+        this.name = id;
     }
     public double getRegularMarketDayLow() {
         return regularMarketDayLow;
@@ -49,6 +53,6 @@ public class Stock {
             return 0.0;
         }*/
     public boolean equals(Stock obj) {
-        return this.getId().equals(obj.getId());
+        return this.getName().equals(obj.getName());
     }
 }

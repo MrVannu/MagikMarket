@@ -147,6 +147,87 @@ public class WelcomePane {
             String sym = "phSymbol";
             String nameOfCompany = "phNameOfCompany";
 
+
+            checkBox.setOnAction(event -> {
+                //For limiting of the selection of max checboxes
+                int selectedCount = (int) checkBoxes.stream().filter(CheckBox::isSelected).count();
+                //Adding a limit of selection of "MAX_SELECTED_CHECKBOXES" (for instance  max 4 check boxes)
+                if (selectedCount > MAX_SELECTED_CHECKBOXES) {
+                    checkBox.setSelected(false);
+
+                    //Disable the not selected checkboxes when limit is reached
+                    for (CheckBox cb : checkBoxes) {
+                        if (!cb.isSelected()) {
+                            cb.setDisable(true);
+                        }
+                    }
+                } else {
+                    checkBoxes.forEach(cb -> cb.setDisable(false));
+                }
+
+                APIData testObj = null;
+                //For adding new line
+                if (checkBox.isSelected()) {
+
+                    boolean callMade = false;
+
+                    // API CALL!!
+                            /*testObj = new APIData(symbol);
+                            testObj.fetchData(); // !WARNING: this line requires API usage
+                            //nameOfCompany = testObj.extractNameOfCompany();
+
+                            Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany());
+                            System.out.println(testObj.extractNameOfCompany());
+                            callMade = true;*/
+
+
+                    //String aa= String.valueOf(p1);
+                    //double p2 = testObj.postMarketChangePercent();
+                    //String bb = String.valueOf(p2);
+
+                    //test.setVisible(false);
+
+
+                    try {
+                        updateDataHistory(pathDataHistoryDB,sym, (testObj==null? nameOfCompany: testObj.extractNameOfCompany()));
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    //});
+
+                    // Create a new series for this checkbox
+                    XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
+                    newSeries.setName((testObj==null? nameOfCompany: testObj.extractNameOfCompany()));
+
+
+
+                    if (callMade) {
+                        newSeries.getData().addAll(
+                                new XYChart.Data<>(1, testObj.regularMarketDayLow()),
+                                new XYChart.Data<>(2, testObj.regularMarketDayHigh()),
+                                new XYChart.Data<>(3, testObj.regularMarketPreviousClose())
+                        );
+                    } else {
+                        newSeries.getData().addAll(
+                                new XYChart.Data<>(1, 50),
+                                new XYChart.Data<>(2, 50),
+                                new XYChart.Data<>(3, 200)
+                        );
+                    }
+
+                    // Add the new series to the line chart
+                    lineChart.setTitle((testObj==null? nameOfCompany: testObj.extractNameOfCompany()));
+
+                    lineChart.getData().add(newSeries);
+                    //bottomRightPane.getChildren().add(lineChart);
+
+
+                } else {
+                    final String temp = (testObj==null? nameOfCompany: testObj.extractNameOfCompany());
+                    lineChart.getData().removeIf(serie -> serie.getName().equals(temp));
+                }
+            });
+
             bet.setOnAction(event -> {
                 // Handle the "Bet" button action here
                 betTooltip.show(bet, bet.getScene().getWindow().getX() + bet.getScene().getX() + bet.getLayoutX() + bet.getWidth(), bet.getScene().getWindow().getY() + bet.getScene().getY() + bet.getLayoutY());
@@ -176,82 +257,7 @@ public class WelcomePane {
             } );
 
 
-            checkBox.setOnAction(event -> {
-                //For limiting of the selection of max checboxes
-                int selectedCount = (int) checkBoxes.stream().filter(CheckBox::isSelected).count();
-                //Adding a limit of selection of "MAX_SELECTED_CHECKBOXES" (for instance  max 4 check boxes)
-                if (selectedCount > MAX_SELECTED_CHECKBOXES) {
-                    checkBox.setSelected(false);
 
-                    //Disable the not selected checkboxes when limit is reached
-                    for (CheckBox cb : checkBoxes) {
-                        if (!cb.isSelected()) {
-                            cb.setDisable(true);
-                        }
-                    }
-                } else {
-                    checkBoxes.forEach(cb -> cb.setDisable(false));
-                }
-
-
-                //For adding new line
-                if (checkBox.isSelected()) {
-
-                            boolean callMade = false;
-                            APIData testObj = null;
-                            // API CALL!!
-                            /*testObj = new APIData(symbol);
-                            testObj.fetchData(); // !WARNING: this line requires API usage
-                            Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany());
-                            callMade = true;*/
-
-
-                            //String aa= String.valueOf(p1);
-                            //double p2 = testObj.postMarketChangePercent();
-                            //String bb = String.valueOf(p2);
-
-                            //test.setVisible(false);
-
-
-                            try {
-                                updateDataHistory(pathDataHistoryDB,sym,nameOfCompany);
-                            } catch (IOException ex) {
-                                throw new RuntimeException(ex);
-                            }
-                        //});
-
-                    // Create a new series for this checkbox
-                    XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
-                    newSeries.setName(nameOfCompany);
-
-
-
-                    if (callMade) {
-                        newSeries.getData().addAll(
-                                new XYChart.Data<>(1, testObj.regularMarketDayLow()),
-                                new XYChart.Data<>(2, testObj.regularMarketDayHigh()),
-                                new XYChart.Data<>(3, testObj.regularMarketPreviousClose())
-                        );
-                    } else {
-                        newSeries.getData().addAll(
-                                new XYChart.Data<>(1, 50),
-                                new XYChart.Data<>(2, 50),
-                                new XYChart.Data<>(3, 200)
-                        );
-                    }
-
-                    // Add the new series to the line chart
-                    lineChart.setTitle(nameOfCompany);
-
-                    lineChart.getData().add(newSeries);
-                    //bottomRightPane.getChildren().add(lineChart);
-
-
-                } else {
-                    final String temp = nameOfCompany;
-                    lineChart.getData().removeIf(serie -> serie.getName().equals(temp));
-                }
-            });
             checkBoxWithBetButton.getChildren().addAll(checkBox, bet);
             checkBoxWithBetButton.setAlignment(Pos.CENTER_LEFT);
 

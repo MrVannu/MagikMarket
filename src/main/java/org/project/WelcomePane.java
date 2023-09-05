@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class WelcomePane {
@@ -37,7 +38,6 @@ public class WelcomePane {
         List<CheckBox> checkBoxes = new ArrayList<>();
         List<Button> betButtons = new ArrayList<>();
         symbols.add("amc");
-        symbols.add("ape");
         symbols.add("x");
         symbols.add("tsla");
         symbols.add("kvue");
@@ -94,6 +94,17 @@ public class WelcomePane {
         leftPaneBox.setAlignment(Pos.CENTER_LEFT);
         leftPaneBox.setPadding(new Insets(10));
 
+        // Defining an HBox to hold the elements inside the underGridPane(GridPane),see declaration below
+        HBox topBox = new HBox(10); // Adjust the spacing as needed
+        topBox.setAlignment(Pos.CENTER);
+        topBox.setSpacing(10);
+
+        // Create a label for the amount of money
+        Label moneyLabel = new Label(Double.toString(userRegistered.getAmount())); // Replace with the actual amount
+        moneyLabel.getStyleClass().add("money-label"); // You can define a CSS class for styling
+
+        ArrayList<String>stocksBettedOn = new ArrayList<>();
+        Label listOfBettedStock= new Label() ;
 
         // Creating checkboxes
         for (String symbol : symbols) {
@@ -111,9 +122,10 @@ public class WelcomePane {
             checkBoxSeriesMap.put(checkBox, series);
 
             // Create a TextField and a Submit button within a VBox for user input
+            Label userInstruction = new Label("How much do you want to bet?");
             TextField betAmountField = new TextField();
             Button submitBetButton = new Button("Submit");
-            VBox userInputBox = new VBox(betAmountField, submitBetButton);
+            VBox userInputBox = new VBox(userInstruction, betAmountField, submitBetButton);
 
             // Create a Tooltip and set the VBox containing the input elements as its graphic
             Tooltip betTooltip = new Tooltip();
@@ -122,10 +134,26 @@ public class WelcomePane {
             // Set the Tooltip to the "Bet" button
             Tooltip.install(bet, betTooltip);
 
+
+
             bet.setOnAction(event -> {
                 // Handle the "Bet" button action here
                 betTooltip.show(bet, bet.getScene().getWindow().getX() + bet.getScene().getX() + bet.getLayoutX() + bet.getWidth(), bet.getScene().getWindow().getY() + bet.getScene().getY() + bet.getLayoutY());
             });
+
+            
+            submitBetButton.setOnAction(event -> {
+                //Decreases the user's amount of money
+                userRegistered.setAmount(userRegistered.getAmount()-Double.valueOf(betAmountField.getText()));
+                //Update the money label
+                moneyLabel.setText(Double.toString(userRegistered.getAmount()));
+                betAmountField.clear();
+                betTooltip.hide();
+                stocksBettedOn.add(symbol);
+                //updateListOfBettedStockLabel(stocksBettedOn, listOfBettedStock);
+                topBox.getChildren().add(new Label(symbol));
+            });
+            
 
             checkBox.setOnAction(event -> {
                 //For limiting of the selection of max checboxes
@@ -154,11 +182,10 @@ public class WelcomePane {
                             boolean callMade = false;
                             APIData testObj = null;
                             // API CALL!!
-                            testObj = new APIData(symbol);
+                            /*testObj = new APIData(symbol);
                             testObj.fetchData(); // !WARNING: this line requires API usage
                             Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany());
-
-                            callMade = true;
+                            callMade = true;*/
 
 
                             //String aa= String.valueOf(p1);
@@ -247,15 +274,16 @@ public class WelcomePane {
         imgView.setFitWidth(40);
         imgView.setFitHeight(30);
 
-        // Create a label for the amount of money
-        Label moneyLabel = new Label("$1000"); // Replace with the actual amount
-        moneyLabel.getStyleClass().add("money-label"); // You can define a CSS class for styling
+        //Label for the stocks betted on
 
-        // Defining an HBox to hold the elements inside the underGridPane(GridPane),see declaration below
-        HBox topBox = new HBox(10); // Adjust the spacing as needed
-        topBox.setAlignment(Pos.CENTER);
-        topBox.setSpacing(10);
-        topBox.getChildren().addAll(imgView,username, moneyLabel);
+        String stringOfBettedStocks = " Stocks betted on:\n";
+        for (String s: stocksBettedOn
+        ) {
+            stringOfBettedStocks+= s+" ";
+        }
+        listOfBettedStock = new Label(stringOfBettedStocks);
+
+        topBox.getChildren().addAll(imgView,username, moneyLabel, listOfBettedStock);
 
         // Defining an GridPane to better align logOut button. It contains the topBox
         GridPane underGridPane = new GridPane();

@@ -10,7 +10,7 @@ public class User {
     private String password;
     private String hashedPassword;
     private String email;
-    private double value;
+    private double amount = 1000;
 
 
     public User(){}
@@ -19,12 +19,13 @@ public class User {
         this.username = username;
         this.password = password;
         this.email = email;
-
     }
 
+    public double getAmount() {
+        return amount;
+    }
 
-
-
-
-
+    public void setAmount(double newValue){
+        amount = newValue;
+    }
 }

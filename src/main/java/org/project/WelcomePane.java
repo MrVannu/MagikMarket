@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.*;
 import java.util.ArrayList;
@@ -70,19 +71,24 @@ public class WelcomePane {
 
 
         // Defining logOut button
-        Button logOut = new  Button("LogOut");
+        Button logOut = new  Button();
         logOut.setOnAction(e->{
             primaryStage.setTitle("Start App");
             primaryStage.setScene(LoginScene);
         });
 
-        // Defining HBox for the bottomRightPane
-        HBox bottomBox = new HBox(logOut);
-        bottomRightPane.getChildren().addAll(bottomBox);
+        // Create an ImageView for the image
+        Image logoutImage = new Image("file:src/main/resources/logoutImg.png");
+        ImageView logoutImageView = new ImageView(logoutImage);
+        logoutImageView.setFitWidth(24); // Set the desired width
+        logoutImageView.setFitHeight(24); // Set the desired height
 
-        // Defining test button
-        Button test = new Button("Extract");
-        bottomBox.getChildren().add(test);// Adding the button to the rightPaneBox
+        logOut.setGraphic(logoutImageView);
+
+        // Defining HBox for the bottomRightPane
+        //HBox bottomBox = new HBox(logOut);
+        //bottomRightPane.getChildren().addAll(logOut);
+
 
         LineChart<Number, Number> lineChart= createLineChart("nameOfCompany");
 
@@ -95,15 +101,16 @@ public class WelcomePane {
         leftPaneBox.setPadding(new Insets(10));
 
         // Defining an HBox to hold the elements inside the underGridPane(GridPane),see declaration below
-        HBox topBox = new HBox(10); // Adjust the spacing as needed
+        FlowPane topBox = new FlowPane(); // Adjust the spacing as needed
         topBox.setAlignment(Pos.CENTER);
-        topBox.setSpacing(10);
+        topBox.setHgap(10);
+        topBox.setVgap(10);
 
         // Create a label for the amount of money
         Label moneyLabel = new Label(Double.toString(userRegistered.getAmount())); // Replace with the actual amount
         moneyLabel.getStyleClass().add("money-label"); // You can define a CSS class for styling
 
-        ArrayList<String>stocksBettedOn = new ArrayList<>();
+        ArrayList<Stock>stocksBettedOn = new ArrayList<>();
         Label listOfBettedStock= new Label() ;
 
         // Creating checkboxes
@@ -125,7 +132,9 @@ public class WelcomePane {
             Label userInstruction = new Label("How much do you want to bet?");
             TextField betAmountField = new TextField();
             Button submitBetButton = new Button("Submit");
-            VBox userInputBox = new VBox(userInstruction, betAmountField, submitBetButton);
+            Button closeBetButton = new Button("Close");
+            HBox inputButtons = new HBox(submitBetButton, closeBetButton);
+            VBox userInputBox = new VBox(userInstruction, betAmountField, inputButtons);
 
             // Create a Tooltip and set the VBox containing the input elements as its graphic
             Tooltip betTooltip = new Tooltip();
@@ -134,26 +143,38 @@ public class WelcomePane {
             // Set the Tooltip to the "Bet" button
             Tooltip.install(bet, betTooltip);
 
-
+            //Placeholders values in case something goes wrong with API call
+            String sym = "phSymbol";
+            String nameOfCompany = "phNameOfCompany";
 
             bet.setOnAction(event -> {
                 // Handle the "Bet" button action here
                 betTooltip.show(bet, bet.getScene().getWindow().getX() + bet.getScene().getX() + bet.getLayoutX() + bet.getWidth(), bet.getScene().getWindow().getY() + bet.getScene().getY() + bet.getLayoutY());
             });
 
-            
+
             submitBetButton.setOnAction(event -> {
-                //Decreases the user's amount of money
-                userRegistered.setAmount(userRegistered.getAmount()-Double.valueOf(betAmountField.getText()));
-                //Update the money label
-                moneyLabel.setText(Double.toString(userRegistered.getAmount()));
-                betAmountField.clear();
-                betTooltip.hide();
-                stocksBettedOn.add(symbol);
-                //updateListOfBettedStockLabel(stocksBettedOn, listOfBettedStock);
-                topBox.getChildren().add(new Label(symbol));
+                if(!betAmountField.getText().isEmpty()) {//Decreases the user's amount of money
+                    userRegistered.setAmount(userRegistered.getAmount() - Double.valueOf(betAmountField.getText()));
+                    //Update the money label
+                    moneyLabel.setText(Double.toString(userRegistered.getAmount()));
+                    betAmountField.clear();
+                    betTooltip.hide();
+                    stocksBettedOn.add(new Stock(symbol, nameOfCompany));
+
+                    /*if (stocksBettedOn.stream().anyMatch(stock -> {
+                        return stock.getName().equals(symbol);
+                    })) */
+                        //updateListOfBettedStockLabel(stocksBettedOn, listOfBettedStock);
+                        topBox.getChildren().add(new Label(symbol));
+
+                }
             });
-            
+
+            closeBetButton.setOnAction(event -> {
+                betTooltip.hide();
+            } );
+
 
             checkBox.setOnAction(event -> {
                 //For limiting of the selection of max checboxes
@@ -172,9 +193,6 @@ public class WelcomePane {
                     checkBoxes.forEach(cb -> cb.setDisable(false));
                 }
 
-                //Placeholders values in case something goes wrong
-                String sym = "phSymbol";
-                String nameOfCompany = "phNameOfCompany";
 
                 //For adding new line
                 if (checkBox.isSelected()) {
@@ -267,33 +285,54 @@ public class WelcomePane {
 
         // Defining elements and HBox for the topRightPane
         Label username = new Label("Username");
-
         // Create an ImageView for the user image
-        Image image = new Image("file:src/main/resources/AccountImg.png");
-        ImageView imgView = new ImageView(image);
-        imgView.setFitWidth(40);
-        imgView.setFitHeight(30);
+        ImageView imgView = new ImageView();
+        imgView.setFitWidth(80);
+        imgView.setFitHeight(80);
+
+        // Create a FileChooser
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp")
+        );
+
+        // Create a button to trigger the file selection
+        Image userImage = new Image("file:src/main/resources/userImg.png");
+        ImageView userView = new ImageView(userImage);
+        userView.setFitWidth(24); // Set the desired width
+        userView.setFitHeight(24); // Set the desired height
+
+        Button selectImageButton = new Button();
+        selectImageButton.setGraphic(userView);
+        selectImageButton.setOnAction(e -> {
+            File selectedFile = fileChooser.showOpenDialog(primaryStage);
+            if (selectedFile != null) {
+                // Load the selected image and display it in the ImageView
+                Image image = new Image(selectedFile.toURI().toString());
+                imgView.setImage(image);
+                //selectImageButton.setText("\nModify");
+            }
+        });
+
+        // Create a layout for the UI
+        HBox profilePic = new HBox(selectImageButton, imgView);
 
         //Label for the stocks betted on
-
         String stringOfBettedStocks = " Stocks betted on:\n";
-        for (String s: stocksBettedOn
-        ) {
-            stringOfBettedStocks+= s+" ";
-        }
+
         listOfBettedStock = new Label(stringOfBettedStocks);
 
-        topBox.getChildren().addAll(imgView,username, moneyLabel, listOfBettedStock);
+        topBox.getChildren().addAll(profilePic,username, moneyLabel, listOfBettedStock);
 
         // Defining an GridPane to better align logOut button. It contains the topBox
         GridPane underGridPane = new GridPane();
         underGridPane.setPadding(new Insets(10));
         underGridPane.setHgap(10);
-        underGridPane.setVgap(10);
+        underGridPane.setVgap(0);
         underGridPane.setAlignment(Pos.CENTER);
 
         underGridPane.add(topBox, 0, 0);
-        underGridPane.add(logOut, 6, 6);
+        underGridPane.add(logOut, 6, 0);
 
         topRightPane.getChildren().addAll(underGridPane);
 

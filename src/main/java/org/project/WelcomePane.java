@@ -200,20 +200,12 @@ public class WelcomePane {
                     newSeries.setName((testObj==null? nameOfCompany: testObj.extractNameOfCompany()));
 
 
+                    newSeries.getData().addAll(
+                            //(testObj==null? nameOfCompany: testObj.extractNameOfCompany())
+                            new XYChart.Data<>(1, (callMade? testObj.regularMarketDayLow(): 50)),
+                            new XYChart.Data<>(2, (callMade? testObj.regularMarketDayHigh(): 50)),
+                            new XYChart.Data<>(3, (callMade? testObj.regularMarketPreviousClose(): 200)));
 
-                    if (callMade) {
-                        newSeries.getData().addAll(
-                                new XYChart.Data<>(1, testObj.regularMarketDayLow()),
-                                new XYChart.Data<>(2, testObj.regularMarketDayHigh()),
-                                new XYChart.Data<>(3, testObj.regularMarketPreviousClose())
-                        );
-                    } else {
-                        newSeries.getData().addAll(
-                                new XYChart.Data<>(1, 50),
-                                new XYChart.Data<>(2, 50),
-                                new XYChart.Data<>(3, 200)
-                        );
-                    }
 
                     // Add the new series to the line chart
                     lineChart.setTitle((testObj==null? nameOfCompany: testObj.extractNameOfCompany()));

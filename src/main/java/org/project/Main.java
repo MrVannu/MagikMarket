@@ -7,7 +7,6 @@ import javafx.application.Application;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.FontWeight;
 import org.mindrot.jbcrypt.BCrypt;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.geometry.Insets;
@@ -108,8 +107,7 @@ public class Main extends Application implements Authentication {
 
     //Validator for username (no spaces allowed)
     public boolean usernameValidator (String username){
-        if (username.contains(" ") || (username == "")) return false;
-        else return true;
+        return !username.contains(" ") && (!username.equals(""));
     }
 
     // Validator for email fomrat (example@hello.world)

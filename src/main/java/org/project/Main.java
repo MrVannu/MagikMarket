@@ -1,6 +1,5 @@
 package org.project;
 
-
 import com.opencsv.exceptions.CsvValidationException;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;

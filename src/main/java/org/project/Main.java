@@ -113,7 +113,7 @@ public class Main extends Application implements Authentication {
         return !username.contains(" ") && (!username.equals(""));
     }
 
-    // Validator for email fomrat (example@hello.world)
+    // Validator for email format (example@hello.world)
     public boolean emailValidator (String email){
         String regex = "^[A-Za-z0-9._-]+@[A-Za-z0-9-]+\\.[A-Za-z]+$";
         return checkRegexMatch(regex, email);
@@ -232,6 +232,7 @@ public class Main extends Application implements Authentication {
             if(usernameExists(username, pathUserDB) && usernameValidator(username) && passwordCorresponds(username, password, pathUserDB)) {
                 //The user exists and the stage changes
 
+                userRegistered = new User (username, password, hashedPassword, "","");
                 WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, userRegistered);
 
                 primaryStage.setTitle("Start App");

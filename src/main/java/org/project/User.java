@@ -16,8 +16,9 @@ public class User {
     private String password;
     private String hashedPassword;
     private String email;
+    private double UserCredit;
     private final String pathUserDB = "src/main/resources/userDB.csv";  // Path to DB for users tracking
-    private double UserCredit = 1000;
+
 
 
     public User() {}

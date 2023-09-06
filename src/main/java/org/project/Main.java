@@ -2,10 +2,13 @@ package org.project;
 
 
 import com.opencsv.exceptions.CsvValidationException;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.application.Application;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.FontWeight;
 import org.mindrot.jbcrypt.BCrypt;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.geometry.Insets;
@@ -17,7 +20,6 @@ import com.opencsv.CSVWriter;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.*;
-
 
 public class Main extends Application implements Authentication {
 
@@ -217,7 +219,7 @@ public class Main extends Application implements Authentication {
         });
 
         //Defining the LoginScene which is the FIRST SCENE
-        Scene LoginScene = new Scene(layoutLogin, 700, 400); // <---- Dimention of the LoginPane
+        Scene LoginScene = new Scene(layoutLogin, 700, 400); // <---- Dimension of the LoginScene
 
 
         // Button -> login
@@ -227,7 +229,7 @@ public class Main extends Application implements Authentication {
             String password = passwordFieldLogin.getText();
             String hashedPassword = BCrypt.hashpw(passwordFieldLogin.getText(), BCrypt.gensalt());  // Just to test
 
-
+            // Validating credentials
             if(usernameExists(username, pathUserDB) && usernameValidator(username) && passwordCorresponds(username, password, pathUserDB)) {
                 //The user exists and the stage changes
 
@@ -256,7 +258,7 @@ public class Main extends Application implements Authentication {
         Button switchScenesLogin = new Button("Return to Login");
         Button registerButton = new Button("Register");
 
-        //Temporary button for GUI test
+        //Temporary button for GUI test to skip login faster
         Button gui = new Button("GUI");
         gui.setOnAction(e->{
             WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, userRegistered);
@@ -264,11 +266,13 @@ public class Main extends Application implements Authentication {
             primaryStage.setScene(welcomePane.getScene());
         });
 
-        // Login scene
-        layoutLogin.setPadding(new Insets(20));
-        layoutLogin.setHgap(10);
-        layoutLogin.setVgap(10);
+        // Adjusting layout of the login GridPane
+        layoutLogin.setPadding(new Insets(20)); // Defining a uniform quantity of pixels between the components of the layout and its edge
+        layoutLogin.setHgap(10); // Defining a gap between columns of the grid
+        layoutLogin.setVgap(15); // Defining a gap between rows of the grid
+        layoutLogin.setAlignment(Pos.CENTER); // Aligning the GridPane in the CENTER
 
+        // Adding elements to the login GridPane
         layoutLogin.add(titleLogin, 0, 0, 2, 1);
         layoutLogin.add(usernameLabelLogin, 0, 1);
         layoutLogin.add(usernameFieldLogin, 1, 1);
@@ -278,12 +282,13 @@ public class Main extends Application implements Authentication {
         layoutLogin.add(switchScenesRegister, 1, 3);
         layoutLogin.add(gui, 2, 4);
 
-        //Scene LoginScene = new Scene(layoutLogin, 500, 300);
-
-        // Register scene
+        // Adjusting layout of the register GridPane
         layoutRegister.setPadding(new Insets(20));
         layoutRegister.setHgap(10);
         layoutRegister.setVgap(10);
+        layoutRegister.setAlignment(Pos.CENTER);
+
+        // Adding elements to the register GridPane
         layoutRegister.add(titleRegister, 0, 0, 2, 1);
         layoutRegister.add(usernameLabelRegister, 0, 1);
         layoutRegister.add(usernameFieldRegister, 1, 1);
@@ -294,7 +299,8 @@ public class Main extends Application implements Authentication {
         layoutRegister.add(registerButton, 3, 4);
         layoutRegister.add(switchScenesLogin,4,4);
 
-        Scene RegisterScene = new Scene(layoutRegister, 500, 300);
+        //Defining the RegisterScene and it's dimension
+        Scene RegisterScene = new Scene(layoutRegister, 700, 400); // <---- Dimension of the RegisterScene
 
         // Options of window
         primaryStage.setTitle("Login Form");
@@ -326,7 +332,7 @@ public class Main extends Application implements Authentication {
                 // If the registration was not successful then it will follow one of the 3 cases below
                 System.out.println("globalValidator failed");
                 if(checkField[0]==true){ // If the username already exists then the field is red
-                    AlertField.showAlert("Username error","Use another username.");
+                    AlertField.showAlert("Username error","Username not inserted or use another username.");
                     AlertField.invalidField(usernameFieldRegister);
                     checkField[0]=false; // Resetting the check to false
                 }
@@ -358,8 +364,6 @@ public class Main extends Application implements Authentication {
         });
 
     }
-
-
 
     public static void main(String[] args) {
         //APIData testObj = new APIData();

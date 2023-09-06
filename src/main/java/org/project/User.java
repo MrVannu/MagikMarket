@@ -1,6 +1,12 @@
 
 package org.project;
 
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
+import org.mindrot.jbcrypt.BCrypt;
+
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,10 +16,11 @@ public class User {
     private String password;
     private String hashedPassword;
     private String email;
-    private double amount = 1000;
+    private final String pathUserDB = "src/main/resources/userDB.csv";  // Path to DB for users tracking
+    private double UserCredit = 1000;
 
 
-    public User(){}
+    public User() {}
 
     public User(String username, String password, String hashedPassword, String email, String userCredit) {
         this.username = username;
@@ -21,11 +28,50 @@ public class User {
         this.email = email;
     }
 
-    public double getAmount() {
-        return amount;
+
+    // Method to modify the userCredit value into the UserDB
+    public void setUserCredit(Double valueToSet) {
+        //Update the class parameter (instance data)
+        UserCredit = valueToSet;
+
+        //Update the database parameter
+        try (CSVReader reader = new CSVReader(new FileReader(pathUserDB))) {
+            String[] nextLine;  // Stores what is contained in the row
+
+            while ((nextLine = reader.readNext()) != null) {
+                // If username is related to the password inserted
+                if (nextLine[0].equals(username)) {
+                    nextLine[3] = String.valueOf(valueToSet);
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (CsvValidationException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
-    public void setAmount(double newValue){
-        amount = newValue;
+    public double getUserCredit() {
+        //Return the database parameter
+        try (CSVReader reader = new CSVReader(new FileReader(pathUserDB))) {
+            String[] nextLine;  // Stores what is contained in the row
+
+            while ((nextLine = reader.readNext()) != null) {
+                // If username is related to the password inserted
+                if (nextLine[0].equals(username)) {
+                    return Double.parseDouble(nextLine[3]);
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (CsvValidationException e) {
+            throw new RuntimeException(e);
+        }
+
+        //If not found
+        return -1;
     }
+
+
 }

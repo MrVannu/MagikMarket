@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import javafx.geometry.Insets;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
+import javafx.scene.control.*;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import javafx.scene.Scene;
@@ -27,12 +28,15 @@ public class Main extends Application implements Authentication {
     private final String pathUserDB = "src/main/resources/userDB.csv";  // Path to DB for users tracking
     private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";  // Path to DB for data history
 
+    private final double initialUserCredit = 1000;
+
     // Index of row to be overwritten (most remote in the db)
     private short dataToUpdateIndex = 0;
-    private double userCredit = 1000;
+
     private User userRegistered = new User("", "", "", "", "");;
 
     private boolean checkField[];
+
 
 
     // Authentication functionalities
@@ -107,8 +111,7 @@ public class Main extends Application implements Authentication {
 
     //Validator for username (no spaces allowed)
     public boolean usernameValidator (String username){
-        if (username.contains(" ") || (username == "")) return false;
-        else return true;
+        return !username.contains(" ") && (!username.equals(""));
     }
 
     // Validator for email fomrat (example@hello.world)
@@ -126,7 +129,7 @@ public class Main extends Application implements Authentication {
     public boolean globalValidator (String username, String password, String hashedPassword, String email){
         checkField = new boolean[3];
         if(usernameValidator(username) && emailValidator(email) && passwordValidator(password)) {
-            userRegistered = new User (username, password, hashedPassword, email, String.valueOf(userCredit));
+            userRegistered = new User (username, password, hashedPassword, email, String.valueOf(initialUserCredit));
             return true;
         }
         else if (!usernameValidator(username)){
@@ -146,10 +149,7 @@ public class Main extends Application implements Authentication {
     }
 
 
-    // Method to modify the userCredit value into the UserDB
-    public void setUserCredit(Double valueToSet){
 
-    }
 
 
     @Override
@@ -351,7 +351,7 @@ public class Main extends Application implements Authentication {
                 // If the registration was successful
                 try {
 
-                    registerNewUser(pathUserDB, username, hashedPassword, email, userCredit); // The credentials of the user are saved into the database
+                    registerNewUser(pathUserDB, username, hashedPassword, email, initialUserCredit); // The credentials of the user are saved into the database
                     AlertField.resetField(usernameFieldRegister,passwordFieldRegister,emailFieldRegister); // Resetting the fields
                     AlertField.showSuccessAlert("Registration successful","Your registration was successful!");
                     primaryStage.setScene(LoginScene); // Changing scene to LoginScene

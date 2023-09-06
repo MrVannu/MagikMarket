@@ -106,7 +106,7 @@ public class WelcomePane {
         topBox.setVgap(10);
 
         // Create a label for the amount of money
-        Label moneyLabel = new Label(Double.toString(userRegistered.getAmount())); // Replace with the actual amount
+        Label moneyLabel = new Label(Double.toString(userRegistered.getUserCredit())); // Replace with the actual amount
         moneyLabel.getStyleClass().add("money-label"); // You can define a CSS class for styling
 
         ArrayList<Stock>stocksBetOn = new ArrayList<>();
@@ -226,9 +226,9 @@ public class WelcomePane {
 
             submitBetButton.setOnAction(event -> {
                 if(!betAmountField.getText().isEmpty()) {//Decreases the user's amount of money
-                    userRegistered.setAmount(userRegistered.getAmount() - Double.valueOf(betAmountField.getText()));
+                    userRegistered.setUserCredit(userRegistered.getUserCredit() - Double.valueOf(betAmountField.getText()));
                     //Update the money label
-                    moneyLabel.setText(Double.toString(userRegistered.getAmount()));
+                    moneyLabel.setText(Double.toString(userRegistered.getUserCredit()));
                     betAmountField.clear();
                     betTooltip.hide();
                     stocksBetOn.add(new Stock(symbol, nameOfCompany));

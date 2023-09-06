@@ -34,7 +34,6 @@ public class WelcomePane {
     public WelcomePane(Stage primaryStage, Scene LoginScene, User userRegistered){
         super();
 
-
         // Defining a list of checkBoxes
         List<CheckBox> checkBoxes = new ArrayList<>();
         List<Button> betButtons = new ArrayList<>();
@@ -61,7 +60,7 @@ public class WelcomePane {
 
             // Defining the vertical SplitPane
             SplitPane internalVerticalSplitPane = new SplitPane();
-            internalVerticalSplitPane.setDividerPositions(0.1); // Configuring SplitPane dimension
+            internalVerticalSplitPane.setDividerPositions(0, 0.6); // Configuring SplitPane dimension
             internalVerticalSplitPane.getItems().addAll(topRightPane, bottomRightPane);
             internalVerticalSplitPane.setOrientation(javafx.geometry.Orientation.VERTICAL);
             // Adding the new verticalSplitPane to the right pane (of the horizontal splitPane)
@@ -110,18 +109,18 @@ public class WelcomePane {
         Label moneyLabel = new Label(Double.toString(userRegistered.getUserCredit())); // Replace with the actual amount
         moneyLabel.getStyleClass().add("money-label"); // You can define a CSS class for styling
 
-        ArrayList<Stock>stocksBettedOn = new ArrayList<>();
-        Label listOfBettedStock= new Label() ;
+        ArrayList<Stock>stocksBetOn = new ArrayList<>();
+        Label listOfBetStock= new Label() ;
 
         // Creating checkboxes
         for (String symbol : symbols) {
             HBox checkBoxWithBetButton = new HBox(10);
-            Button bet = new Button("Bet");
+            Button bet = new Button("Invest"); // Name of the bet buttons
 
             CheckBox checkBox = new CheckBox(symbol);
             checkBox.getStyleClass().add("checkbox");
 
-            // Checkbox creating a new serie for each checkbox
+            // Checkbox creating a new series for each checkbox
             XYChart.Series<Number, Number> series = new XYChart.Series<>();
             series.setName(symbol); // Set the name of the serie
 
@@ -146,7 +145,6 @@ public class WelcomePane {
             //Placeholders values in case something goes wrong with API call
             String sym = "phSymbol";
             String nameOfCompany = "phNameOfCompany";
-
 
             checkBox.setOnAction(event -> {
                 //For limiting of the selection of max checboxes
@@ -233,12 +231,12 @@ public class WelcomePane {
                     moneyLabel.setText(Double.toString(userRegistered.getUserCredit()));
                     betAmountField.clear();
                     betTooltip.hide();
-                    stocksBettedOn.add(new Stock(symbol, nameOfCompany));
+                    stocksBetOn.add(new Stock(symbol, nameOfCompany));
 
-                    /*if (stocksBettedOn.stream().anyMatch(stock -> {
+                    /*if (stocksBetOn.stream().anyMatch(stock -> {
                         return stock.getName().equals(symbol);
                     })) */
-                        //updateListOfBettedStockLabel(stocksBettedOn, listOfBettedStock);
+                        //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
                         topBox.getChildren().add(new Label(symbol));
 
                 }
@@ -247,8 +245,6 @@ public class WelcomePane {
             closeBetButton.setOnAction(event -> {
                 betTooltip.hide();
             } );
-
-
 
             checkBoxWithBetButton.getChildren().addAll(checkBox, bet);
             checkBoxWithBetButton.setAlignment(Pos.CENTER_LEFT);
@@ -268,21 +264,48 @@ public class WelcomePane {
             primaryStage.setScene(LoginScene);
         });
 
-            VBox.setVgrow(leftPaneBox, Priority.ALWAYS);
+        //In this area of the code the elements for the left part of the split pane will be defined
 
-        // Defining SplitPane that contains the left and right panes (that are VBoxes)
+//            // Defining VBoxes for the left split pane
+//            VBox leftBox = new  VBox(10); // Box for the checkboxes
+//            VBox rightBox = new  VBox(10); // Box for the bet element
+//
+//            // Inserting checkBoxes inside the VBox
+//            leftBox.getChildren().addAll(checkBoxes);
+//
+//            // Defining the bet button that will permit the user to bet
+//            Button bet = new Button();
+//            bet.setOnAction(e->{
+//
+//            });
+//
+//            // Inserting elements into the rightBox
+//            leftBox.getChildren().addAll(bet);
+//
+//            // Defining the main VBox which will contain the left and right box
+//            VBox leftPaneBox = new VBox(leftBox,rightBox);
+//            leftPaneBox.setAlignment(Pos.CENTER_LEFT);
+//            leftPaneBox.setPadding(new Insets(10));
+//            VBox.setVgrow(leftPaneBox, Priority.ALWAYS); // Priority expansion of the VBox
+//            VBox.setVgrow(leftPaneBox, Priority.ALWAYS);
+
+        // Defining the main SplitPane that contains the left and right panes (that are VBoxes)
         SplitPane splitPane = new SplitPane();
         splitPane.getItems().addAll(leftPaneBox, rightPaneBox);
-        splitPane.setDividerPositions(0.2); // Configuring SplitPane dimension
+        splitPane.setDividerPositions(0.2, 0.6); // Configuring SplitPane dimension
         splitPane.setMinWidth(1000); // Minimum width for the pane
         splitPane.setMinHeight(700); // Minimum height for the pane
 
         // Instantiating the whole scene and defining its dimension
-        WelcomeScene = new Scene(splitPane, 1000, 700); // <---- Dimention of the WelcomePane
-        WelcomeScene.getStylesheets().add("styles.css");// Reference to the CSS file0
+
+        WelcomeScene = new Scene(splitPane, 1200, 700); // <---- Dimension of the WelcomePane
+
+        WelcomeScene.getStylesheets().add("styles.css"); // Reference to the CSS file0
 
         // Defining elements and HBox for the topRightPane
         Label username = new Label("Username");
+//        username.setText(""); // Set the username as text of the label
+
         // Create an ImageView for the user image
         ImageView imgView = new ImageView();
         imgView.setFitWidth(80);
@@ -315,12 +338,12 @@ public class WelcomePane {
         // Create a layout for the UI
         HBox profilePic = new HBox(selectImageButton, imgView);
 
-        //Label for the stocks betted on
-        String stringOfBettedStocks = " Stocks betted on:\n";
+        //Label for the stocks bet on
+        String stringOfBetStocks = " Stocks bet on:\n";
 
-        listOfBettedStock = new Label(stringOfBettedStocks);
+        listOfBetStock = new Label(stringOfBetStocks);
 
-        topBox.getChildren().addAll(profilePic,username, moneyLabel, listOfBettedStock);
+        topBox.getChildren().addAll(profilePic,username, moneyLabel, listOfBetStock);
 
         // Defining an GridPane to better align logOut button. It contains the topBox
         GridPane underGridPane = new GridPane();
@@ -335,7 +358,6 @@ public class WelcomePane {
         topRightPane.getChildren().addAll(underGridPane);
 
     } // Closing WelcomePane
-
 
     // Data history management
     // Method to update data history database

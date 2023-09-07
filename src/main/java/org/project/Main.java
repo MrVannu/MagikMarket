@@ -32,7 +32,7 @@ public class Main extends Application implements Authentication {
     // Index of row to be overwritten (most remote in the db)
     private short dataToUpdateIndex = 0;
 
-    private User userRegistered = new User("", "", "", "", "");;
+    private User userRegistered = new User("", "", "", "", -101.0);;
 
     private boolean checkField[];
 
@@ -232,7 +232,7 @@ public class Main extends Application implements Authentication {
             if(usernameExists(username, pathUserDB) && usernameValidator(username) && passwordCorresponds(username, password, pathUserDB)) {
                 //The user exists and the stage changes
 
-                userRegistered = new User (username, password, hashedPassword, "","");
+                userRegistered = new User (username, password, hashedPassword, "",-101.0);
                 WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, userRegistered);
 
                 primaryStage.setTitle("Start App");

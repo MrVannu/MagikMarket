@@ -4,13 +4,11 @@ package org.project;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
-import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class User {
@@ -18,34 +16,29 @@ public class User {
     private String password;
     private String hashedPassword;
     private String email;
-    private double UserCredit;
+    private double userCredit;
     private final String pathUserDB = "src/main/resources/userDB.csv";  // Path to DB for users tracking
 
 
     public User() {}
 
-    public User(String username, String password, String hashedPassword, String email, String userCredit) {
+    public User(String username, String password, String hashedPassword, String email, Double userCredit) {
         this.username = username;
         this.password = password;
+        this.hashedPassword = hashedPassword;
         this.email = email;
+        this.userCredit = userCredit;
     }
 
 
     // Method to modify the userCredit value into the UserDB
-    public String getUserCredit() {
+    public double getUserCredit() {
         try (CSVReader reader = new CSVReader(new FileReader(pathUserDB))) {
             String[] nextLine;  // Stores what is contained in the row
 
             while ((nextLine = reader.readNext()) != null) {
                 // If username is related to the password inserted
-                if (nextLine[0].equals(username)) {
-                    double userCredit = Double.parseDouble(nextLine[3]);
-                    if (userCredit < 0) {
-                        return "CREDITO ESAURITO";
-                    } else {
-                        return String.valueOf(userCredit);
-                    }
-                }
+                if (nextLine[0].equals(username)) return Double.parseDouble(nextLine[3]);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -53,14 +46,16 @@ public class User {
             throw new RuntimeException(e);
         }
 
-        // If not found or other errors occur
-        return "CREDITO ESAURITO";     }
-
+        throw new RuntimeException("User not found into the DB");
+    }
 
 
     public void setUserCredit(Double valueToSet) {
+        // In case of user has not enough credit
+        if(valueToSet<0) throw new NoCreditException(); // Launch
+
         // Update the class parameter
-        UserCredit = valueToSet;
+        userCredit = valueToSet;
 
         // Update the database parameter
         try {

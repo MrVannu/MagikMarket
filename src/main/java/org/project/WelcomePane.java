@@ -54,19 +54,19 @@ public class WelcomePane {
         // Defining VBox for the right split pane
         VBox rightPaneBox = new VBox();
 
-            // Defining internal panes of the vertical split pane
-            StackPane topRightPane = new StackPane();
-            StackPane bottomRightPane = new StackPane();
+        // Defining internal panes of the vertical split pane
+        StackPane topRightPane = new StackPane();
+        StackPane bottomRightPane = new StackPane();
 
-            // Defining the vertical SplitPane
-            SplitPane internalVerticalSplitPane = new SplitPane();
-            internalVerticalSplitPane.setDividerPositions(0, 0.6); // Setting SplitPane dimension
-            internalVerticalSplitPane.getItems().addAll(topRightPane, bottomRightPane); // Adding the pane inside the SplitPane
-            internalVerticalSplitPane.setOrientation(javafx.geometry.Orientation.VERTICAL);
-            // Adding the new verticalSplitPane to the right pane (of the horizontal splitPane)
-            rightPaneBox.getChildren().add(internalVerticalSplitPane);
+        // Defining the vertical SplitPane
+        SplitPane internalVerticalSplitPane = new SplitPane();
+        internalVerticalSplitPane.setDividerPositions(0, 0.6); // Setting SplitPane dimension
+        internalVerticalSplitPane.getItems().addAll(topRightPane, bottomRightPane); // Adding the pane inside the SplitPane
+        internalVerticalSplitPane.setOrientation(javafx.geometry.Orientation.VERTICAL);
+        // Adding the new verticalSplitPane to the right pane (of the horizontal splitPane)
+        rightPaneBox.getChildren().add(internalVerticalSplitPane);
 
-            VBox.setVgrow(internalVerticalSplitPane, Priority.ALWAYS);
+        VBox.setVgrow(internalVerticalSplitPane, Priority.ALWAYS);
 
 
         // Defining logOut button
@@ -240,9 +240,8 @@ public class WelcomePane {
                         topBox.getChildren().add(new Label(symbol));
 
                 } else {
+
                     // Handling the error when you do not insert a number into the betAmountField, or it is empty
-
-
 
                 }
             });

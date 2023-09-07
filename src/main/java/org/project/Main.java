@@ -34,7 +34,7 @@ public class Main extends Application implements Authentication {
 
     private User userRegistered = new User("", "", "", "", -101.0);;
 
-    private boolean checkField[];
+    private boolean[] checkField;
 
 
 
@@ -94,7 +94,6 @@ public class Main extends Application implements Authentication {
         try (CSVWriter writer = new CSVWriter(new FileWriter(pathToUse, true))) {
             String[] toRecord = {username, hashedPassword, email, String.valueOf(credit)};  // Compose the string to be saved
             writer.writeNext(toRecord);  // Writes the string composed
-
             return true;
         }
     }
@@ -127,10 +126,8 @@ public class Main extends Application implements Authentication {
     // Global validator
     public boolean globalValidator (String username, String password, String hashedPassword, String email){
         checkField = new boolean[3];
-        if(usernameValidator(username) && emailValidator(email) && passwordValidator(password)) {
-            //userRegistered = new User (username, password, hashedPassword, email, String.valueOf(initialUserCredit));
-            return true;
-        }
+        if(usernameValidator(username) && emailValidator(email) && passwordValidator(password)) return true;
+
         else if (!usernameValidator(username)){
             System.out.println("Username not allowed");
             checkField[0]=true;
@@ -217,7 +214,7 @@ public class Main extends Application implements Authentication {
 
         });
 
-        //Defining the LoginScene which is the FIRST SCENE
+        // Defining the LoginScene which is the FIRST SCENE
         Scene LoginScene = new Scene(layoutLogin, 700, 400); // <---- Dimension of the LoginScene
 
 
@@ -230,7 +227,7 @@ public class Main extends Application implements Authentication {
 
             // Validating credentials
             if(usernameExists(username, pathUserDB) && usernameValidator(username) && passwordCorresponds(username, password, pathUserDB)) {
-                //The user exists and the stage changes
+                // The user exists and the stage changes
 
                 userRegistered = new User (username, password, hashedPassword, "",-101.0);
                 WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, userRegistered);
@@ -258,7 +255,7 @@ public class Main extends Application implements Authentication {
         Button switchScenesLogin = new Button("Return to Login");
         Button registerButton = new Button("Register");
 
-        //Temporary button for GUI test to skip login faster
+        // Temporary button for GUI test to skip login faster
         Button gui = new Button("GUI");
         gui.setOnAction(e->{
             WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, userRegistered);
@@ -331,17 +328,17 @@ public class Main extends Application implements Authentication {
 
                 // If the registration was not successful then it will follow one of the 3 cases below
                 System.out.println("globalValidator failed");
-                if(checkField[0]==true){ // If the username already exists then the field is red
+                if(checkField[0]){ // If the username already exists then the field is red
                     AlertField.showAlert("Username error","Username not inserted or use another username.");
                     AlertField.invalidField(usernameFieldRegister);
                     checkField[0]=false; // Resetting the check to false
                 }
-                if(checkField[1]==true){// If the password is empty then the field is red
+                if(checkField[1]){// If the password is empty then the field is red
                     AlertField.showAlert("Password error","The password you inserted is not allowed or the field is empty.");
                     AlertField.invalidField(passwordFieldRegister);
                     checkField[1]=false; // Resetting the check to false
                 }
-                if(checkField[2]==true){// If the email does not match the regex (so is not valid) then the field is red
+                if(checkField[2]){// If the email does not match the regex (so is not valid) then the field is red
                     AlertField.showAlert("Email error","The email you inserted is not an email.");
                     AlertField.invalidField(emailFieldRegister);
                     checkField[2]=false; // Resetting the check to false
@@ -367,6 +364,7 @@ public class Main extends Application implements Authentication {
 
     public static void main(String[] args) {
         //APIData testObj = new APIData();
+
         /*
         testObj.fetchData(); // WARNING: this line requires API usage
         double resultOfTest = testObj.maxAge();

@@ -226,7 +226,7 @@ public class WelcomePane {
 
             submitBetButton.setOnAction(event -> {
                 if(!betAmountField.getText().isEmpty()) {//Decreases the user's amount of money
-                    userRegistered.setUserCredit((userRegistered.getUserCredit() - Double.valueOf(betAmountField.getText())));
+                    userRegistered.setUserCredit(userRegistered.getUserCredit() - Double.valueOf(betAmountField.getText()));
                     //Update the money label
                     moneyLabel.setText(Double.toString(userRegistered.getUserCredit()));
                     betAmountField.clear();

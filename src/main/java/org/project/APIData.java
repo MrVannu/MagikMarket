@@ -18,9 +18,7 @@ public class APIData {
     private JSONObject data;
     private ObjectMapper mapper = new ObjectMapper();
 
-    public APIData(String symbol){
-        this.symbol= symbol;
-    }
+    public APIData() {}
     //Requesting APIData (live)
     public void fetchData(/*String symbol*/) {
         HttpRequest request = HttpRequest.newBuilder()

@@ -1,6 +1,5 @@
 package org.project;
 
-import java.io.FileWriter;
 import java.io.IOException;
 
 public interface Authentication {
@@ -9,7 +8,7 @@ public interface Authentication {
 
    boolean passwordCorresponds(String usernameInserted, String passwordInserted, String pathToUse);
 
-   boolean registerNewUser(String pathToUse, String username, String hashedPassword, String email, Double userCredit) throws IOException;
+   void registerNewUser(String pathToUse, String username, String hashedPassword, String email, Double userCredit) throws IOException;
 
    boolean checkRegexMatch(String regex, String textToMatch);
 

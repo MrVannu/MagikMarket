@@ -29,6 +29,9 @@ public class User {
         this.email = email;
     }
 
+    public String getUsername() {
+        return username;
+    }
 
     // Method to modify the userCredit value into the UserDB
     public void setUserCredit(Double valueToSet) {

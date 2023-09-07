@@ -129,6 +129,7 @@ public class Main extends Application implements Authentication {
     public boolean globalValidator (String username, String password, String hashedPassword, String email){
         checkField = new boolean[3];
         if(usernameValidator(username) && emailValidator(email) && passwordValidator(password)) {
+            System.out.println("entered");
             userRegistered = new User (username, password, hashedPassword, email, String.valueOf(initialUserCredit));
             return true;
         }
@@ -143,13 +144,9 @@ public class Main extends Application implements Authentication {
         }else if (!emailValidator(email)){
             System.out.println("Email not allowed");
             checkField[2]=true;
-
         }
         return false;
     }
-
-
-
 
 
     @Override
@@ -232,7 +229,8 @@ public class Main extends Application implements Authentication {
             // Validating credentials
             if(usernameExists(username, pathUserDB) && usernameValidator(username) && passwordCorresponds(username, password, pathUserDB)) {
                 //The user exists and the stage changes
-
+                //System.out.println(userRegistered.getUsername()+"<------");
+                userRegistered= new User(username,password, hashedPassword, "" ,Double.toString(userRegistered.getUserCredit()));
                 WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, userRegistered);
 
                 primaryStage.setTitle("Start App");

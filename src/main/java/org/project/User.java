@@ -22,8 +22,7 @@ public class User {
     private final String pathUserDB = "src/main/resources/userDB.csv";  // Path to DB for users tracking
 
 
-    public User() {
-    }
+    public User() {}
 
     public User(String username, String password, String hashedPassword, String email, String userCredit) {
         this.username = username;
@@ -33,15 +32,19 @@ public class User {
 
 
     // Method to modify the userCredit value into the UserDB
-    public double getUserCredit() {
-        //Return the database parameter
+    public String getUserCredit() {
         try (CSVReader reader = new CSVReader(new FileReader(pathUserDB))) {
             String[] nextLine;  // Stores what is contained in the row
 
             while ((nextLine = reader.readNext()) != null) {
                 // If username is related to the password inserted
                 if (nextLine[0].equals(username)) {
-                    return Double.parseDouble(nextLine[3]);
+                    double userCredit = Double.parseDouble(nextLine[3]);
+                    if (userCredit < 0) {
+                        return "CREDITO ESAURITO";
+                    } else {
+                        return String.valueOf(userCredit);
+                    }
                 }
             }
         } catch (IOException ex) {
@@ -50,17 +53,20 @@ public class User {
             throw new RuntimeException(e);
         }
 
-        //If not found
-        return -1;
-    }
+        // If not found or other errors occur
+        return "CREDITO ESAURITO";     }
+
+
 
     public void setUserCredit(Double valueToSet) {
-        //Update the class parameter (instance data)
+        // Update the class parameter
         UserCredit = valueToSet;
 
-        //Update the database parameter
+        // Update the database parameter
         try {
             List<String[]> lines = new ArrayList<>();
+            boolean updated = false; // Flag for tracking if edited
+
             try (CSVReader reader = new CSVReader(new FileReader(pathUserDB))) {
                 String[] nextLine;
 
@@ -68,20 +74,21 @@ public class User {
                     // If username is related to the password inserted
                     if (nextLine[0].equals(username)) {
                         nextLine[3] = String.valueOf(valueToSet);
+                        updated = true; // flag modified
                     }
-                    lines.add(nextLine); // Keep track of the line
+                    lines.add(nextLine);
                 }
             }
 
-            //Overwrite the file with the new content
-            try (CSVWriter writer = new CSVWriter(new FileWriter(pathUserDB))) {
-                writer.writeAll(lines);
+            // Overwrite the file only if the line has been updated
+            if (updated) {
+                try (CSVWriter writer = new CSVWriter(new FileWriter(pathUserDB))) {
+                    writer.writeAll(lines);
+                }
             }
-            
         } catch (IOException | CsvValidationException ex) {
             ex.printStackTrace();
         }
-
-
     }
+
 }

@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 import javafx.geometry.Insets;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
-import javafx.scene.control.*;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import javafx.scene.Scene;
@@ -78,9 +77,9 @@ public class Main extends Application implements Authentication {
     }
 
     // Creates a new account
-    public boolean registerNewUser(String pathToUse, String username, String hashedPassword, String email, Double credit) throws IOException {
+    public void registerNewUser(String pathToUse, String username, String hashedPassword, String email, Double credit) throws IOException {
 
-        if(usernameExists(username, pathToUse)) return false;  // Check no user with alias exist
+        if(usernameExists(username, pathToUse)) return;  // Check no user with alias exist
 
         try (CSVReader reader = new CSVReader(new FileReader(pathToUse))) {
             String[] nextLine;
@@ -94,9 +93,9 @@ public class Main extends Application implements Authentication {
         try (CSVWriter writer = new CSVWriter(new FileWriter(pathToUse, true))) {
             String[] toRecord = {username, hashedPassword, email, String.valueOf(credit)};  // Compose the string to be saved
             writer.writeNext(toRecord);  // Writes the string composed
-            return true;
         }
     }
+
 
 
     // Register process validation
@@ -143,8 +142,6 @@ public class Main extends Application implements Authentication {
 
         return false;
     }
-
-
 
 
 

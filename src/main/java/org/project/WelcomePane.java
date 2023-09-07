@@ -20,16 +20,76 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public class WelcomePane {
-    private static final int MAX_SELECTED_CHECKBOXES = 4;
+public class WelcomePane extends APIData implements HistoryManagement { // To use data from api obj
     Scene WelcomeScene;
+    private static final int MAX_SELECTED_CHECKBOXES = 4;
     private final String pathUserDB = "src/main/resources/userDB.csv";  // Path to DB for users tracking
-    private ArrayList<String> symbols = new ArrayList<String>();
     private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";  // Path to DB for data history
+    private short dataToUpdateIndex = 0;
+    private ArrayList<String> symbols = new ArrayList<String>();
 
     // Index of row to be overwritten (most remote in the db)
-    private short dataToUpdateIndex = 0;
+
     private Map<CheckBox, XYChart.Series<Number, Number>> checkBoxSeriesMap;
+
+
+    //DATA HISTORY MANAGEMENT
+    public void updateDataHistory(
+            int maxAge,
+            double postMarketChangePercent,
+            double regularMarketChangePercent,
+            double preMarketChange,
+            String extractNameOfCompany,
+            double regularMarketDayHigh,
+            double regularMarketDayLow,
+            double regularMarketPreviousClose,
+            String symbolOfCompany,
+            String extractCurrencySymbol
+    ) throws IOException
+    {
+        // Building the String to be written on DB
+        String toWrite = String.valueOf(maxAge) + ", " +
+                String.valueOf(postMarketChangePercent) + ", " +
+                String.valueOf(regularMarketChangePercent) + ", " +
+                String.valueOf(preMarketChange) + ", " +
+                extractNameOfCompany + ", " +
+                String.valueOf(regularMarketDayHigh) + ", " +
+                String.valueOf(regularMarketDayLow) + ", " +
+                String.valueOf(regularMarketPreviousClose) + ", " +
+                symbolOfCompany + ", " +
+                extractCurrencySymbol;
+
+
+        // Read all lines from the file
+        List<String> lines = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(pathDataHistoryDB))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+        }
+
+        // Pad the list with empty lines up to 100 elements
+        while (lines.size() < 200) {
+            lines.add("");
+        }
+
+        // Update the data at the specified index
+        lines.set(dataToUpdateIndex, toWrite);
+        // Write the modified lines back to the file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathDataHistoryDB))) {
+            for (String line : lines) {
+                writer.write(line + "\n");
+            }
+        }
+
+        ++dataToUpdateIndex; // Increment the counter of the most remote index
+        if(dataToUpdateIndex>=200) dataToUpdateIndex=0;
+        //System.out.println(dataToUpdateIndex);
+    }
+
+
+
 
     public WelcomePane(Stage primaryStage, Scene LoginScene, User userRegistered){
         super();
@@ -187,7 +247,7 @@ public class WelcomePane {
 
 
                     try {
-                        updateDataHistory(pathDataHistoryDB,sym, (testObj==null? nameOfCompany: testObj.extractNameOfCompany()));
+                        updateDataHistory(1, 1.0, 1.0, 1.0, "", 1.0,1.0,1.0, "", "");
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -364,38 +424,15 @@ public class WelcomePane {
 
     } // Closing WelcomePane
 
+
+
+
     // Data history management
     // Method to update data history database
-    public void updateDataHistory(String pathToUse, String a, String b) throws IOException {
-        String toWrite = a + "," + b;
 
-        // Read all lines from the file
-        List<String> lines = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(pathToUse))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                lines.add(line);
-            }
-        }
 
-        // Pad the list with empty lines up to 20 elements
-        while (lines.size() < 20) {
-            lines.add("");
-        }
 
-        // Update the data at the specified index
-        lines.set(dataToUpdateIndex, toWrite);
-        // Write the modified lines back to the file
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathToUse))) {
-            for (String line : lines) {
-                writer.write(line + "\n");
-            }
-        }
 
-        ++dataToUpdateIndex; // Increment the counter of the most remote index
-        if(dataToUpdateIndex>=20)dataToUpdateIndex=0;
-        System.out.println(dataToUpdateIndex);
-    }
 
     //Method to add Line Chart
     private LineChart<Number, Number> createLineChart(String nameOfCompany) {

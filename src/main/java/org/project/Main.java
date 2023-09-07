@@ -128,7 +128,7 @@ public class Main extends Application implements Authentication {
     public boolean globalValidator (String username, String password, String hashedPassword, String email){
         checkField = new boolean[3];
         if(usernameValidator(username) && emailValidator(email) && passwordValidator(password)) {
-            userRegistered = new User (username, password, hashedPassword, email, String.valueOf(initialUserCredit));
+            //userRegistered = new User (username, password, hashedPassword, email, String.valueOf(initialUserCredit));
             return true;
         }
         else if (!usernameValidator(username)){
@@ -142,8 +142,8 @@ public class Main extends Application implements Authentication {
         }else if (!emailValidator(email)){
             System.out.println("Email not allowed");
             checkField[2]=true;
-
         }
+
         return false;
     }
 

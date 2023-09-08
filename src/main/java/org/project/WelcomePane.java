@@ -20,16 +20,76 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public class WelcomePane {
-    private static final int MAX_SELECTED_CHECKBOXES = 4;
+public class WelcomePane extends APIData implements HistoryManagement { // To use data from api obj
     Scene WelcomeScene;
+    private static final int MAX_SELECTED_CHECKBOXES = 4;
     private final String pathUserDB = "src/main/resources/userDB.csv";  // Path to DB for users tracking
-    private ArrayList<String> symbols = new ArrayList<String>();
     private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";  // Path to DB for data history
+    private short dataToUpdateIndex = 0;
+    private ArrayList<String> symbols = new ArrayList<String>();
 
     // Index of row to be overwritten (most remote in the db)
-    private short dataToUpdateIndex = 0;
+
     private Map<CheckBox, XYChart.Series<Number, Number>> checkBoxSeriesMap;
+
+
+    //DATA HISTORY MANAGEMENT
+    public void updateDataHistory(
+            int maxAge,
+            double postMarketChangePercent,
+            double regularMarketChangePercent,
+            double preMarketChange,
+            String extractNameOfCompany,
+            double regularMarketDayHigh,
+            double regularMarketDayLow,
+            double regularMarketPreviousClose,
+            String symbolOfCompany,
+            String extractCurrencySymbol
+    ) throws IOException
+    {
+        // Building the String to be written on DB
+        String toWrite = String.valueOf(maxAge) + ", " +
+                String.valueOf(postMarketChangePercent) + ", " +
+                String.valueOf(regularMarketChangePercent) + ", " +
+                String.valueOf(preMarketChange) + ", " +
+                extractNameOfCompany + ", " +
+                String.valueOf(regularMarketDayHigh) + ", " +
+                String.valueOf(regularMarketDayLow) + ", " +
+                String.valueOf(regularMarketPreviousClose) + ", " +
+                symbolOfCompany + ", " +
+                extractCurrencySymbol;
+
+
+        // Read all lines from the file
+        List<String> lines = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(pathDataHistoryDB))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+        }
+
+        // Pad the list with empty lines up to 100 elements
+        while (lines.size() < 200) {
+            lines.add("");
+        }
+
+        // Update the data at the specified index
+        lines.set(dataToUpdateIndex, toWrite);
+        // Write the modified lines back to the file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathDataHistoryDB))) {
+            for (String line : lines) {
+                writer.write(line + "\n");
+            }
+        }
+
+        ++dataToUpdateIndex; // Increment the counter of the most remote index
+        if(dataToUpdateIndex>=200) dataToUpdateIndex=0;
+        //System.out.println(dataToUpdateIndex);
+    }
+
+
+
 
     public WelcomePane(Stage primaryStage, Scene LoginScene, User userRegistered){
         super();
@@ -54,19 +114,19 @@ public class WelcomePane {
         // Defining VBox for the right split pane
         VBox rightPaneBox = new VBox();
 
-            // Defining internal panes of the vertical split pane
-            StackPane topRightPane = new StackPane();
-            StackPane bottomRightPane = new StackPane();
+        // Defining internal panes of the vertical split pane
+        StackPane topRightPane = new StackPane();
+        StackPane bottomRightPane = new StackPane();
 
-            // Defining the vertical SplitPane
-            SplitPane internalVerticalSplitPane = new SplitPane();
-            internalVerticalSplitPane.setDividerPositions(0, 0.6); // Configuring SplitPane dimension
-            internalVerticalSplitPane.getItems().addAll(topRightPane, bottomRightPane);
-            internalVerticalSplitPane.setOrientation(javafx.geometry.Orientation.VERTICAL);
-            // Adding the new verticalSplitPane to the right pane (of the horizontal splitPane)
-            rightPaneBox.getChildren().add(internalVerticalSplitPane);
+        // Defining the vertical SplitPane
+        SplitPane internalVerticalSplitPane = new SplitPane();
+        internalVerticalSplitPane.setDividerPositions(0, 0.6); // Setting SplitPane dimension
+        internalVerticalSplitPane.getItems().addAll(topRightPane, bottomRightPane); // Adding the pane inside the SplitPane
+        internalVerticalSplitPane.setOrientation(javafx.geometry.Orientation.VERTICAL);
+        // Adding the new verticalSplitPane to the right pane (of the horizontal splitPane)
+        rightPaneBox.getChildren().add(internalVerticalSplitPane);
 
-            VBox.setVgrow(internalVerticalSplitPane, Priority.ALWAYS);
+        VBox.setVgrow(internalVerticalSplitPane, Priority.ALWAYS);
 
 
         // Defining logOut button
@@ -100,7 +160,7 @@ public class WelcomePane {
         leftPaneBox.setPadding(new Insets(10));
 
         // Defining an HBox to hold the elements inside the underGridPane(GridPane),see declaration below
-        FlowPane topBox = new FlowPane(); // Adjust the spacing as needed
+        FlowPane topBox = new FlowPane(); // Using FlowPane to adjust the space as needed
         topBox.setAlignment(Pos.CENTER);
         topBox.setHgap(10);
         topBox.setVgap(10);
@@ -112,7 +172,7 @@ public class WelcomePane {
         ArrayList<Stock>stocksBetOn = new ArrayList<>();
         Label listOfBetStock= new Label() ;
 
-        // Creating checkboxes
+        // Creating checkboxes and invest button
         for (String symbol : symbols) {
             HBox checkBoxWithBetButton = new HBox(10);
             Button bet = new Button("Invest"); // Name of the bet buttons
@@ -124,12 +184,12 @@ public class WelcomePane {
             XYChart.Series<Number, Number> series = new XYChart.Series<>();
             series.setName(symbol); // Set the name of the serie
 
-            // Saving the serie into the map associated with the checkbox
+            // Saving the series into the map associated with the checkbox
             checkBoxSeriesMap.put(checkBox, series);
 
             // Create a TextField and a Submit button within a VBox for user input
             Label userInstruction = new Label("How much do you want to bet?");
-            TextField betAmountField = new TextField();
+            TextField betAmountField = new TextField(); // Defining the field to insert the amount of betting
             Button submitBetButton = new Button("Submit");
             Button closeBetButton = new Button("Close");
             HBox inputButtons = new HBox(submitBetButton, closeBetButton);
@@ -147,7 +207,7 @@ public class WelcomePane {
             String nameOfCompany = "phNameOfCompany";
 
             checkBox.setOnAction(event -> {
-                //For limiting of the selection of max checboxes
+                //For limiting of the selection of max checkboxes
                 int selectedCount = (int) checkBoxes.stream().filter(CheckBox::isSelected).count();
                 //Adding a limit of selection of "MAX_SELECTED_CHECKBOXES" (for instance  max 4 check boxes)
                 if (selectedCount > MAX_SELECTED_CHECKBOXES) {
@@ -187,7 +247,7 @@ public class WelcomePane {
 
 
                     try {
-                        updateDataHistory(pathDataHistoryDB,sym, (testObj==null? nameOfCompany: testObj.extractNameOfCompany()));
+                        updateDataHistory(1, 1.0, 1.0, 1.0, "", 1.0,1.0,1.0, "", "");
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -225,8 +285,8 @@ public class WelcomePane {
 
 
             submitBetButton.setOnAction(event -> {
-                if(!betAmountField.getText().isEmpty()) {//Decreases the user's amount of money
-                    userRegistered.setUserCredit(userRegistered.getUserCredit() - Double.valueOf(betAmountField.getText()));
+                if(!betAmountField.getText().isEmpty()) {//Decreases the user's amount of money in the GUI label
+                    userRegistered.setUserCredit(userRegistered.getUserCredit() - Double.parseDouble(betAmountField.getText()));
                     //Update the money label
                     moneyLabel.setText(Double.toString(userRegistered.getUserCredit()));
                     betAmountField.clear();
@@ -238,6 +298,10 @@ public class WelcomePane {
                     })) */
                         //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
                         topBox.getChildren().add(new Label(symbol));
+
+                } else {
+
+                    // Handling the error when you do not insert a number into the betAmountField, or it is empty
 
                 }
             });
@@ -264,7 +328,7 @@ public class WelcomePane {
             primaryStage.setScene(LoginScene);
         });
 
-        //In this area of the code the elements for the left part of the split pane will be defined
+        //In this area of the code there will be defined the elements for the left part of the split pane
 
 //            // Defining VBoxes for the left split pane
 //            VBox leftBox = new  VBox(10); // Box for the checkboxes
@@ -297,9 +361,7 @@ public class WelcomePane {
         splitPane.setMinHeight(700); // Minimum height for the pane
 
         // Instantiating the whole scene and defining its dimension
-
         WelcomeScene = new Scene(splitPane, 1200, 700); // <---- Dimension of the WelcomePane
-
         WelcomeScene.getStylesheets().add("styles.css"); // Reference to the CSS file0
 
         // Defining elements and HBox for the topRightPane
@@ -311,17 +373,17 @@ public class WelcomePane {
         imgView.setFitWidth(80);
         imgView.setFitHeight(80);
 
-        // Create a FileChooser
+        // Create a FileChooser so that the user can insert an image
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp")
         );
 
-        // Create a button to trigger the file selection
+        // Create a button to trigger the file selection and an image view
         Image userImage = new Image("file:src/main/resources/userImg.png");
         ImageView userView = new ImageView(userImage);
-        userView.setFitWidth(24); // Set the desired width
-        userView.setFitHeight(24); // Set the desired height
+        userView.setFitWidth(24); // Set the desired width for the image
+        userView.setFitHeight(24); // Set the desired height for the image
 
         Button selectImageButton = new Button();
         selectImageButton.setGraphic(userView);
@@ -337,12 +399,15 @@ public class WelcomePane {
 
         // Create a layout for the UI
         HBox profilePic = new HBox(selectImageButton, imgView);
+        profilePic.setAlignment(Pos.CENTER);
 
-        //Label for the stocks bet on
+        // Label for the stocks bet on
         String stringOfBetStocks = " Stocks bet on:\n";
 
+        // Label with the list of Stock the user bet
         listOfBetStock = new Label(stringOfBetStocks);
 
+        // Adding all the elements into the tobBox
         topBox.getChildren().addAll(profilePic,username, moneyLabel, listOfBetStock);
 
         // Defining an GridPane to better align logOut button. It contains the topBox
@@ -359,38 +424,15 @@ public class WelcomePane {
 
     } // Closing WelcomePane
 
+
+
+
     // Data history management
     // Method to update data history database
-    public void updateDataHistory(String pathToUse, String a, String b) throws IOException {
-        String toWrite = a + "," + b;
 
-        // Read all lines from the file
-        List<String> lines = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(pathToUse))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                lines.add(line);
-            }
-        }
 
-        // Pad the list with empty lines up to 20 elements
-        while (lines.size() < 20) {
-            lines.add("");
-        }
 
-        // Update the data at the specified index
-        lines.set(dataToUpdateIndex, toWrite);
-        // Write the modified lines back to the file
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathToUse))) {
-            for (String line : lines) {
-                writer.write(line + "\n");
-            }
-        }
 
-        ++dataToUpdateIndex; // Increment the counter of the most remote index
-        if(dataToUpdateIndex>=20)dataToUpdateIndex=0;
-        System.out.println(dataToUpdateIndex);
-    }
 
     //Method to add Line Chart
     private LineChart<Number, Number> createLineChart(String nameOfCompany) {

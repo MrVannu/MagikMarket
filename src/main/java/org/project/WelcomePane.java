@@ -1,5 +1,7 @@
 package org.project;
 
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,10 +15,7 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -31,6 +30,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
     // Index of row to be overwritten (most remote in the db)
 
     private Map<CheckBox, XYChart.Series<Number, Number>> checkBoxSeriesMap;
+
 
 
     //DATA HISTORY MANAGEMENT
@@ -87,6 +87,47 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         if(dataToUpdateIndex>=200) dataToUpdateIndex=0;
         //System.out.println(dataToUpdateIndex);
     }
+
+
+    // This method is yet to be improved providing a switch structure for various type of data are needed
+    public double generateNextPrevision(String nameToScanFor, String parameter, short precisionRange){
+        List<String[]> linesToSave = new ArrayList<>();
+        int prevision;
+
+        try (CSVReader reader = new CSVReader(new FileReader(pathDataHistoryDB))) {
+            String[] nextLine;
+
+            while ((nextLine = reader.readNext()) != null) {
+                // Check whether the name is the wanted one
+                if (!nextLine[4].isEmpty() && nextLine[4].equals(nameToScanFor)) {  // "4" is the position of the name of  company into the db
+                    linesToSave.add(nextLine);
+                }
+            }
+
+            Random random = new Random();
+            int randomInRange = (random.nextInt(11))+1; // Generates a random integer between 1 (inclusive) and 10 (inclusive)
+
+            prevision = 0;
+            for (int k = 0; k < precisionRange; k++) {
+                if (k < linesToSave.size()) {
+                    String[] currentLine = linesToSave.get(k);
+                    prevision += Integer.parseInt(currentLine[2]); // To sum the postMarketChangePercent
+                }
+            }
+            return prevision;
+
+
+        } catch (IOException | CsvValidationException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+    public void giveATip(String nameToScanFor, String parameter){
+        // To be implemented
+    }
+
 
 
 

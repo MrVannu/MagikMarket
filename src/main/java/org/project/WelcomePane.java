@@ -196,7 +196,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
         // Define VBox for the left split pane and insert checkBoxes inside
         // VBox topLeftPane = new  VBox(10); //Box for other purpose
-        VBox leftPaneBox = new VBox(10);// Box to contain the
+        VBox leftPaneBox = new VBox(10);// Box to contain the checkboxes
         leftPaneBox.setAlignment(Pos.CENTER_LEFT);
         leftPaneBox.setPadding(new Insets(10));
 
@@ -367,6 +367,24 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
         } // CLOSE FOREACH
 
+        // Empty label for space
+        Label empty = new Label(" ");
+        Label empty1 = new Label(" ");
+
+        // Define the prevision button inside a Box
+        Button previsionButton = new Button("Prevision");
+        HBox previsionBox = new HBox(previsionButton);
+        previsionBox.setAlignment(Pos.CENTER);
+
+        // Prevision action
+        previsionButton.setOnAction(e->{
+
+        });
+
+        // Add the button to the leftPaneBox, below the checkboxes
+        leftPaneBox.getChildren().addAll(empty,empty1, previsionBox);
+        leftPaneBox.setSpacing(10); // Define space between the elements inside the box
+
         // Add the line chart to the bottomRightPane
         bottomRightPane.getChildren().add(lineChart);
 
@@ -384,10 +402,13 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                     // Create menu items for the "File" menu
                     MenuItem instructionsItem = new MenuItem("Instructions");
                         instructionsItem.setOnAction(e->{
-                            AlertField.showSuccessAlert("Information","");
+                            AlertField.showSuccessAlert("Information","This is a simulation of an " +
+                                    "application that can help you look at the real market. You can invest some " +
+                                    "money in some Stocks. The available Stocks are listed in the left part of the " +
+                                    "application. You have an amount of money that is, by default, 1,000. As much as " +
+                                    "you invest, the amount of money will decrease. There will be a simulation that " +
+                                    "will show you if your prediction was like that or not.");
                         });
-//                    MenuItem openItem = new MenuItem("Open");
-//                    MenuItem saveItem = new MenuItem("Save");
                     MenuItem exitItem = new MenuItem("Exit");
                         // Exit the application if you click the exit item
                         exitItem.setOnAction(e -> {

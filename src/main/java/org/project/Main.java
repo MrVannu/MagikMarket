@@ -252,13 +252,13 @@ public class Main extends Application implements Authentication {
         Button switchScenesLogin = new Button("Return to Login");
         Button registerButton = new Button("Register");
 
-        // Temporary button for GUI test to skip login faster
-        Button gui = new Button("GUI");
-        gui.setOnAction(e->{
-            WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, userRegistered);
-            primaryStage.setTitle("Start App");
-            primaryStage.setScene(welcomePane.getScene());
-        });
+//        // Temporary button for GUI test to skip login faster
+//        Button gui = new Button("GUI");
+//        gui.setOnAction(e->{
+//            WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, userRegistered);
+//            primaryStage.setTitle("Start App");
+//            primaryStage.setScene(welcomePane.getScene());
+//        });
 
         // Adjusting layout of the login GridPane
         layoutLogin.setPadding(new Insets(20)); // Defining a uniform quantity of pixels between the components of the layout and its edge
@@ -274,7 +274,7 @@ public class Main extends Application implements Authentication {
         layoutLogin.add(passwordFieldLogin, 1, 2);
         layoutLogin.add(loginButton, 0, 3);
         layoutLogin.add(switchScenesRegister, 1, 3);
-        layoutLogin.add(gui, 2, 4);
+//        layoutLogin.add(gui, 2, 4);
 
         // Adjusting layout of the register GridPane
         layoutRegister.setPadding(new Insets(20));

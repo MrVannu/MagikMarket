@@ -14,6 +14,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.commons.collections.bag.SynchronizedSortedBag;
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -329,25 +331,35 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
 
             submitBetButton.setOnAction(event -> {
-                if(!betAmountField.getText().isEmpty()) { // If the field is not empty
-                    //Decreases the user's amount of money in the GUI label
-                    userRegistered.setUserCredit(userRegistered.getUserCredit() - Double.parseDouble(betAmountField.getText()));
-                    //Update the money label
-                    moneyLabel.setText(Double.toString(userRegistered.getUserCredit()));
-                    betAmountField.clear();
-                    betTooltip.hide();
-                    stocksBetOn.add(new Stock(symbol, nameOfCompany));
+                if(!betAmountField.getText().isEmpty()) { // If the field is not empty and
+                    try{
+                        // Attempt to parse the text as a double. If parsing is successful, it's a valid number
+                        double betAmount = Double.parseDouble(betAmountField.getText());
 
-                    /*if (stocksBetOn.stream().anyMatch(stock -> {
-                        return stock.getName().equals(symbol);
-                    })) */
+                        //Decreases the user's amount of money in the GUI label
+                        userRegistered.setUserCredit(userRegistered.getUserCredit() - Double.parseDouble(betAmountField.getText()));
+                        //Update the money label
+                        moneyLabel.setText(Double.toString(userRegistered.getUserCredit()));
+                        betAmountField.clear();
+                        betTooltip.hide();
+                        stocksBetOn.add(new Stock(symbol, nameOfCompany));
+
+                        /*if (stocksBetOn.stream().anyMatch(stock -> {
+                            return stock.getName().equals(symbol);
+                        })) */
                         //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
                         topBox.getChildren().add(new Label(symbol));
-
+                    }
+                    catch(NumberFormatException e){
+                        // Parsing failed, the text is not a valid number
+                        // Handle the case where the input is not a number
+                        AlertField.showAlert("Invalid input", "Please enter a valid number.");
+                        System.out.println("Invalid input. Please enter a valid number.");
+                    }
                 } else {
-                    // Handle the error when you do not insert a number into the betAmountField, or it is empty
-
-                    // Handling the error when you do not insert a number into the betAmountField, or it is empty
+                    // The field is empty
+                    AlertField.showAlert("Invalid input", "Please enter a bet amount.");
+                    System.out.println("Field is empty. Please enter a bet amount.");
 
                 }
             });
@@ -462,8 +474,8 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
         // Create an ImageView for the user image
         ImageView imgView = new ImageView();
-        imgView.setFitWidth(80);
-        imgView.setFitHeight(80);
+        imgView.setFitWidth(60);
+        imgView.setFitHeight(60);
 
         // Create a FileChooser so that the user can insert an image
         FileChooser fileChooser = new FileChooser();
@@ -490,7 +502,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         });
 
         // Create a layout for the UI
-        HBox profilePic = new HBox(selectImageButton, imgView);
+        HBox profilePic = new HBox(imgView, selectImageButton);
         profilePic.setAlignment(Pos.CENTER);
 
         // Label for the stocks bet on

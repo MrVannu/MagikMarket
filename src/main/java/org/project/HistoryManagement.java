@@ -16,4 +16,9 @@ public interface HistoryManagement {
             String symbolOfCompany,
             String extractCurrencySymbol
     ) throws IOException {}
+
+    double generateNextPrevision(String nameToScanFor, String parameter, short precisionRange);
+
+    void giveATip(String nameToScanFor, String parameter);
+
 }

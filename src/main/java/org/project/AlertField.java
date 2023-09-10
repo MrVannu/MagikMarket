@@ -5,7 +5,7 @@ import javafx.scene.control.TextField;
 
 public class AlertField {
 
-    // Defining method to show an alert
+    // Method to show an error alert
     public static void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -14,6 +14,7 @@ public class AlertField {
         alert.showAndWait();
     }
 
+    // Method to show an information alert
     public static void showSuccessAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -22,7 +23,7 @@ public class AlertField {
         alert.showAndWait();
     }
 
-    // Setting invalid field
+    // Set invalid field by changing css
     public static void invalidField(TextField... field){
         for(TextField f : field){
             f.setStyle("-fx-border-color: red; -fx-border-width: 2px; -fx-border-radius: 5px;");
@@ -30,6 +31,7 @@ public class AlertField {
         }
     }
 
+    // Reset style of the field and empty the field
     public static void resetField(TextField... field){
         for(TextField f : field){
             f.setStyle("");

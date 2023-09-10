@@ -94,7 +94,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
     public WelcomePane(Stage primaryStage, Scene LoginScene, User userRegistered){
         super();
 
-        // Defining a list of checkBoxes
+        // Define a list of checkBoxes
         List<CheckBox> checkBoxes = new ArrayList<>();
         List<Button> betButtons = new ArrayList<>();
         symbols.add("amc");
@@ -111,25 +111,26 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
         checkBoxSeriesMap = new HashMap<>();
 
-        // Defining VBox for the right split pane
+        // Define VBox for the right pane of the main SplitPane
         VBox rightPaneBox = new VBox();
 
-        // Defining internal panes of the vertical split pane
-        StackPane topRightPane = new StackPane();
-        StackPane bottomRightPane = new StackPane();
+            // Define internal panes of the vertical split pane
+            StackPane topRightPane = new StackPane();
+            StackPane bottomRightPane = new StackPane();
 
-        // Defining the vertical SplitPane
-        SplitPane internalVerticalSplitPane = new SplitPane();
-        internalVerticalSplitPane.setDividerPositions(0, 0.6); // Setting SplitPane dimension
-        internalVerticalSplitPane.getItems().addAll(topRightPane, bottomRightPane); // Adding the pane inside the SplitPane
-        internalVerticalSplitPane.setOrientation(javafx.geometry.Orientation.VERTICAL);
-        // Adding the new verticalSplitPane to the right pane (of the horizontal splitPane)
-        rightPaneBox.getChildren().add(internalVerticalSplitPane);
+            // Define the vertical SplitPane
+            SplitPane rightVerticalSplitPane = new SplitPane();
+            rightVerticalSplitPane.setDividerPositions(0, 0.6); // Set SplitPane dimension
+            rightVerticalSplitPane.getItems().addAll(topRightPane, bottomRightPane); // Add the pane inside the SplitPane
+            rightVerticalSplitPane.setOrientation(javafx.geometry.Orientation.VERTICAL);
 
-        VBox.setVgrow(internalVerticalSplitPane, Priority.ALWAYS);
+            // Add the internalVerticalSplitPane to the right pane (of the main splitPane)
+            rightPaneBox.getChildren().add(rightVerticalSplitPane);
+
+            VBox.setVgrow(rightVerticalSplitPane, Priority.ALWAYS);
 
 
-        // Defining logOut button
+        // Define logOut button
         Button logOut = new  Button();
         logOut.setOnAction(e->{
             primaryStage.setTitle("Start App");
@@ -144,7 +145,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
         logOut.setGraphic(logoutImageView);
 
-        // Defining HBox for the bottomRightPane
+        // Define HBox for the bottomRightPane
         //HBox bottomBox = new HBox(logOut);
         //bottomRightPane.getChildren().addAll(logOut);
 
@@ -152,15 +153,14 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         LineChart<Number, Number> lineChart= createLineChart("nameOfCompany");
 
 
-        // Defining VBox for the left split pane and inserting checkBoxes inside
+        // Define VBox for the left split pane and insert checkBoxes inside
         // VBox topLeftPane = new  VBox(10); //Box for other purpose
-        VBox bottomLeftPane = new  VBox(10);//Box for the checkboxes
-        VBox leftPaneBox = new VBox(bottomLeftPane);
+        VBox leftPaneBox = new VBox(10);// Box to contain the
         leftPaneBox.setAlignment(Pos.CENTER_LEFT);
         leftPaneBox.setPadding(new Insets(10));
 
-        // Defining an HBox to hold the elements inside the underGridPane(GridPane),see declaration below
-        FlowPane topBox = new FlowPane(); // Using FlowPane to adjust the space as needed
+        // Define an HBox to hold the elements inside the underGridPane(GridPane),see declaration below
+        FlowPane topBox = new FlowPane(); // Use FlowPane to adjust the space as needed
         topBox.setAlignment(Pos.CENTER);
         topBox.setHgap(10);
         topBox.setVgap(10);
@@ -172,7 +172,10 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         ArrayList<Stock>stocksBetOn = new ArrayList<>();
         Label listOfBetStock= new Label() ;
 
-        // Creating checkboxes and invest button
+        /*
+            In this foreach the Stock CheckBoxes will be defined. Next to the checkboxes a bet button is added.
+            A tooltip is created together with the button where the amount of bet money is inserted
+         */
         for (String symbol : symbols) {
             HBox checkBoxWithBetButton = new HBox(10);
             Button bet = new Button("Invest"); // Name of the bet buttons
@@ -184,12 +187,12 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             XYChart.Series<Number, Number> series = new XYChart.Series<>();
             series.setName(symbol); // Set the name of the serie
 
-            // Saving the series into the map associated with the checkbox
+            // Save the series into the map associated with the checkbox
             checkBoxSeriesMap.put(checkBox, series);
 
             // Create a TextField and a Submit button within a VBox for user input
             Label userInstruction = new Label("How much do you want to bet?");
-            TextField betAmountField = new TextField(); // Defining the field to insert the amount of betting
+            TextField betAmountField = new TextField(); // Define the field to insert the amount of betting
             Button submitBetButton = new Button("Submit");
             Button closeBetButton = new Button("Close");
             HBox inputButtons = new HBox(submitBetButton, closeBetButton);
@@ -209,7 +212,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             checkBox.setOnAction(event -> {
                 //For limiting of the selection of max checkboxes
                 int selectedCount = (int) checkBoxes.stream().filter(CheckBox::isSelected).count();
-                //Adding a limit of selection of "MAX_SELECTED_CHECKBOXES" (for instance  max 4 check boxes)
+                //Add a limit of selection of "MAX_SELECTED_CHECKBOXES" (for instance  max 4 check boxes)
                 if (selectedCount > MAX_SELECTED_CHECKBOXES) {
                     checkBox.setSelected(false);
 
@@ -285,7 +288,8 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
 
             submitBetButton.setOnAction(event -> {
-                if(!betAmountField.getText().isEmpty()) {//Decreases the user's amount of money in the GUI label
+                if(!betAmountField.getText().isEmpty()) { // If the field is not empty
+                    //Decreases the user's amount of money in the GUI label
                     userRegistered.setUserCredit(userRegistered.getUserCredit() - Double.parseDouble(betAmountField.getText()));
                     //Update the money label
                     moneyLabel.setText(Double.toString(userRegistered.getUserCredit()));
@@ -300,6 +304,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                         topBox.getChildren().add(new Label(symbol));
 
                 } else {
+                    // Handle the error when you do not insert a number into the betAmountField, or it is empty
 
                     // Handling the error when you do not insert a number into the betAmountField, or it is empty
 
@@ -317,54 +322,79 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             checkBoxes.add(checkBox);
 
             //topLeftPane.getChildren().addAll();
-            bottomLeftPane.getChildren().addAll(checkBoxWithBetButton);
+            leftPaneBox.getChildren().addAll(checkBoxWithBetButton);
 
-        } // CLOSING FOR
+        } // CLOSE FOREACH
 
-
+        // Add the line chart to the bottomRightPane
         bottomRightPane.getChildren().add(lineChart);
+
+        // Define the action of the logOut button
         logOut.setOnAction(e ->{
             primaryStage.setTitle("Login");
             primaryStage.setScene(LoginScene);
         });
 
-        //In this area of the code there will be defined the elements for the left part of the split pane
+        // Define the menu bar in the top of the mainPain
+            MenuBar menuBar = new MenuBar();// Create a menu bar
 
-//            // Defining VBoxes for the left split pane
-//            VBox leftBox = new  VBox(10); // Box for the checkboxes
-//            VBox rightBox = new  VBox(10); // Box for the bet element
-//
-//            // Inserting checkBoxes inside the VBox
-//            leftBox.getChildren().addAll(checkBoxes);
-//
-//            // Defining the bet button that will permit the user to bet
-//            Button bet = new Button();
-//            bet.setOnAction(e->{
-//
-//            });
-//
-//            // Inserting elements into the rightBox
-//            leftBox.getChildren().addAll(bet);
-//
-//            // Defining the main VBox which will contain the left and right box
-//            VBox leftPaneBox = new VBox(leftBox,rightBox);
-//            leftPaneBox.setAlignment(Pos.CENTER_LEFT);
-//            leftPaneBox.setPadding(new Insets(10));
-//            VBox.setVgrow(leftPaneBox, Priority.ALWAYS); // Priority expansion of the VBox
-//            VBox.setVgrow(leftPaneBox, Priority.ALWAYS);
+                // Create a "File" menu
+                Menu fileMenu = new Menu("File");
+                    // Create menu items for the "File" menu
+                    MenuItem instructionsItem = new MenuItem("Instructions");
+                        instructionsItem.setOnAction(e->{
+                            AlertField.showSuccessAlert("Information","");
+                        });
+//                    MenuItem openItem = new MenuItem("Open");
+//                    MenuItem saveItem = new MenuItem("Save");
+                    MenuItem exitItem = new MenuItem("Exit");
+                        // Exit the application if you click the exit item
+                        exitItem.setOnAction(e -> {
+                            System.exit(0); // Exit the application
+                        });
+                // Add menu items to the "File" menu and use a separator before the last element
+                fileMenu.getItems().addAll(instructionsItem, new SeparatorMenuItem(), exitItem);
 
-        // Defining the main SplitPane that contains the left and right panes (that are VBoxes)
+                // Create an "Edit" menu
+                Menu editMenu = new Menu("Edit");
+                    // Create menu items for the "Edit" menu
+                    MenuItem cutItem = new MenuItem("Cut");
+                    MenuItem copyItem = new MenuItem("Copy");
+                    MenuItem pasteItem = new MenuItem("Paste");
+                // Add menu items to the "Edit" menu
+                editMenu.getItems().addAll(cutItem, copyItem, pasteItem);
+
+                // Create a "LogOut" menu
+                Menu logOutMenu = new Menu("LogOut");
+                    MenuItem logOutItem = new MenuItem("Log out");
+                        logOutItem.setOnAction(e->{
+                            primaryStage.setTitle("Start App");
+                            primaryStage.setScene(LoginScene);
+                        });
+                // Add menu items to the "LogOut" menu
+                logOutMenu.getItems().addAll(logOutItem);
+
+            // Add menus to the menu bar
+            menuBar.getMenus().addAll(fileMenu, editMenu, logOutMenu);
+
+        // Define the main SplitPane that contains the left and right panes
         SplitPane splitPane = new SplitPane();
-        splitPane.getItems().addAll(leftPaneBox, rightPaneBox);
-        splitPane.setDividerPositions(0.2, 0.6); // Configuring SplitPane dimension
-        splitPane.setMinWidth(1000); // Minimum width for the pane
-        splitPane.setMinHeight(700); // Minimum height for the pane
 
-        // Instantiating the whole scene and defining its dimension
-        WelcomeScene = new Scene(splitPane, 1200, 700); // <---- Dimension of the WelcomePane
+        splitPane.getItems().addAll(leftPaneBox, rightPaneBox);
+        splitPane.setDividerPositions(0.2, 0.6); // Configure SplitPane dimension
+
+        // Define the mainPane that will contain the main splitPane and the menuBar
+        BorderPane mainPane = new BorderPane(splitPane);
+        mainPane.setTop(menuBar);
+
+//        mainPane.setMinWidth(1000); // Minimum width for the pane
+//        mainPane.setMinHeight(700); // Minimum height for the pane
+
+        // Instantiate the whole scene and define its dimension
+        WelcomeScene = new Scene(mainPane, 1200, 700); // <---- Dimension of the WelcomePane
         WelcomeScene.getStylesheets().add("styles.css"); // Reference to the CSS file0
 
-        // Defining elements and HBox for the topRightPane
+        // Define elements and HBox for the topRightPane
         Label username = new Label("Username");
 //        username.setText(""); // Set the username as text of the label
 
@@ -407,10 +437,10 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         // Label with the list of Stock the user bet
         listOfBetStock = new Label(stringOfBetStocks);
 
-        // Adding all the elements into the tobBox
+        // Add all the elements into the tobBox
         topBox.getChildren().addAll(profilePic,username, moneyLabel, listOfBetStock);
 
-        // Defining an GridPane to better align logOut button. It contains the topBox
+        // Define an GridPane to better align logOut button. It contains the topBox
         GridPane underGridPane = new GridPane();
         underGridPane.setPadding(new Insets(10));
         underGridPane.setHgap(10);
@@ -422,16 +452,11 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
         topRightPane.getChildren().addAll(underGridPane);
 
-    } // Closing WelcomePane
-
-
+    } // Close WelcomePane
 
 
     // Data history management
     // Method to update data history database
-
-
-
 
 
     //Method to add Line Chart

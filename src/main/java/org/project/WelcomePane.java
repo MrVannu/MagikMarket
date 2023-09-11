@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.*;
 import java.util.ArrayList;
@@ -357,12 +358,55 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
                 // Create an "Edit" menu
                 Menu editMenu = new Menu("Edit");
-                    // Create menu items for the "Edit" menu
-                    MenuItem cutItem = new MenuItem("Cut");
-                    MenuItem copyItem = new MenuItem("Copy");
-                    MenuItem pasteItem = new MenuItem("Paste");
+                    // Create menu item for the "Edit" menu
+                    // Create amountItem where the user can change his amount
+                    MenuItem amountItem = new MenuItem("Amount");
+
+                        // Handle actions when the "Amount" menu item is clicked
+                        amountItem.setOnAction(e -> {
+                            // Create a custom popup using a Stage
+                            Stage popup = new Stage();
+                            popup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
+                            popup.initOwner(primaryStage); // Set primaryStage as the parent of popup
+                            popup.setTitle("Amount Input");
+
+                            // Create UI elements for the custom popup
+                            Label instr = new Label("Set your new amount");
+                            TextField newCredit = new TextField();
+                            Button submitCredit = new Button("Submit");
+                            Button closePopup = new Button("Close");
+                            HBox inputBox = new HBox(submitCredit, closePopup);
+                            VBox windowBox = new VBox(instr, newCredit, inputBox);
+                            windowBox.setPadding(new Insets(10));
+                            windowBox.setSpacing(10);
+                            windowBox.setAlignment(Pos.CENTER);
+
+                            // Handle actions when the "Submit" button is clicked
+                            submitCredit.setOnAction(submitEvent -> {
+                                // Process the user input here
+                                String userInput = newCredit.getText();
+                                System.out.println("User input: " + userInput);
+
+                                // Close the custom popup
+                                popup.close();
+                            });
+
+                            // Handle actions when the "Close" button is clicked
+                            closePopup.setOnAction(closeEvent -> {
+                                // Close the custom popup without processing the input
+                                popup.close();
+                            });
+
+                            // Create a scene for the custom popup
+                            Scene popupScene = new Scene(windowBox);
+                            popup.setScene(popupScene);
+
+                            // Show the custom popup
+                            popup.showAndWait(); // Use showAndWait to wait for user interaction before continuing
+                        });
+
                 // Add menu items to the "Edit" menu
-                editMenu.getItems().addAll(cutItem, copyItem, pasteItem);
+                editMenu.getItems().addAll(amountItem);
 
                 // Create a "LogOut" menu
                 Menu logOutMenu = new Menu("LogOut");

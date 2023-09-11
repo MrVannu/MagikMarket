@@ -164,7 +164,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
             // Define the vertical SplitPane
             SplitPane rightVerticalSplitPane = new SplitPane();
-            rightVerticalSplitPane.setDividerPositions(0, 0.6); // Set SplitPane dimension
+            rightVerticalSplitPane.setDividerPositions(0.1, 0.6); // Set SplitPane dimension
             rightVerticalSplitPane.getItems().addAll(topRightPane, bottomRightPane); // Add the pane inside the SplitPane
             rightVerticalSplitPane.setOrientation(javafx.geometry.Orientation.VERTICAL);
 
@@ -213,7 +213,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         Label moneyLabel = new Label(Double.toString(userRegistered.getUserCredit())); // Replace with the actual amount
         moneyLabel.getStyleClass().add("money-label"); // You can define a CSS class for styling
 
-        ArrayList<Stock>stocksBetOn = new ArrayList<>();
+        ArrayList<Stock> stocksBetOn = new ArrayList<>();
         Label listOfBetStock= new Label() ;
 
         /*
@@ -330,7 +330,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                 betTooltip.show(bet, bet.getScene().getWindow().getX() + bet.getScene().getX() + bet.getLayoutX() + bet.getWidth(), bet.getScene().getWindow().getY() + bet.getScene().getY() + bet.getLayoutY());
             });
 
-
             submitBetButton.setOnAction(event -> {
                 if(!betAmountField.getText().isEmpty()) { // If the field is not empty and
                     try{
@@ -417,10 +416,11 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                         instructionsItem.setOnAction(e->{
                             AlertField.showSuccessAlert("Information","This is a simulation of an " +
                                     "application that can help you look at the real market. You can invest some " +
-                                    "money in some Stocks. The available Stocks are listed in the left part of the " +
-                                    "application. You have an amount of money that is, by default, 1,000. As much as " +
+                                    "money in some Stocks. You can have a look at the Stocks by selecting from the " +
+                                    "checkboxes the Stocks you are interested on. You can select maximum 4 Stocks" +
+                                    "You have an amount of money that is, by default, 1,000. As much as " +
                                     "you invest, the amount of money will decrease. There will be a simulation that " +
-                                    "will show you if your prediction was like that or not.");
+                                    "will show you if your prediction was correct or not.");
                         });
                     MenuItem exitItem = new MenuItem("Exit");
                         // Exit the application if you click the exit item
@@ -443,6 +443,8 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                             popup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
                             popup.initOwner(primaryStage); // Set primaryStage as the parent of popup
                             popup.setTitle("Amount Input");
+                            popup.setWidth(400);
+                            popup.setHeight(200);
 
                             // Create UI elements for the custom popup
                             Label instr = new Label("Set your new amount");
@@ -450,6 +452,9 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                             Button submitCredit = new Button("Submit");
                             Button closePopup = new Button("Close");
                             HBox inputBox = new HBox(submitCredit, closePopup);
+                            inputBox.setSpacing(30);
+
+                            // Define Box with elements for the popup
                             VBox windowBox = new VBox(instr, newCredit, inputBox);
                             windowBox.setPadding(new Insets(10));
                             windowBox.setSpacing(10);
@@ -509,7 +514,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 //        mainPane.setMinHeight(700); // Minimum height for the pane
 
         // Instantiate the whole scene and define its dimension
-        WelcomeScene = new Scene(mainPane, 1200, 700); // <---- Dimension of the WelcomePane
+        WelcomeScene = new Scene(mainPane, 1400, 900); // <---- Dimension of the WelcomePane
         WelcomeScene.getStylesheets().add("styles.css"); // Reference to the CSS file0
 
         // Define elements and HBox for the topRightPane
@@ -518,8 +523,8 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
         // Create an ImageView for the user image
         ImageView imgView = new ImageView();
-        imgView.setFitWidth(60);
-        imgView.setFitHeight(60);
+        imgView.setFitWidth(30); // Dimension of the image
+        imgView.setFitHeight(30);
 
         // Create a FileChooser so that the user can insert an image
         FileChooser fileChooser = new FileChooser();
@@ -548,6 +553,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         // Create a layout for the UI
         HBox profilePic = new HBox(imgView, selectImageButton);
         profilePic.setAlignment(Pos.CENTER);
+        profilePic.setSpacing(10);
 
         // Label for the stocks bet on
         String stringOfBetStocks = " Stocks bet on:\n";
@@ -556,7 +562,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         listOfBetStock = new Label(stringOfBetStocks);
 
         // Add all the elements into the tobBox
-        topBox.getChildren().addAll(profilePic,username, moneyLabel, listOfBetStock);
+        topBox.getChildren().addAll(profilePic, username, moneyLabel, listOfBetStock);
 
         // Define an GridPane to better align logOut button. It contains the topBox
         GridPane underGridPane = new GridPane();
@@ -566,7 +572,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         underGridPane.setAlignment(Pos.CENTER);
 
         underGridPane.add(topBox, 0, 0);
-        underGridPane.add(logOut, 6, 0);
+//        underGridPane.add(logOut, 6, 0);
 
         topRightPane.getChildren().addAll(underGridPane);
 

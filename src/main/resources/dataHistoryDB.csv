@@ -1,22 +1,24 @@
-phSymbol,phNameOfCompany
-phSymbol,phNameOfCompany
-phSymbol,phNameOfCompany
-phSymbol,phNameOfCompany
-phSymbol,phNameOfCompany
-phSymbol,phNameOfCompany
-phSymbol,phNameOfCompany
-phSymbol,phNameOfCompany
-phSymbol,phNameOfCompany
-phSymbol,phNameOfCompany
-phSymbol,phNameOfCompany
-"ETH-USD","Ethereum USD"
-"ETH-USD","Ethereum USD"
-"ETH-USD","Ethereum USD"
-"ETH-USD","Ethereum USD"
-"ETH-USD","Ethereum USD"
+1, 1.0, 1.0, 1.0, , 1.0, 1.0, 1.0, , 
+1, 1.0, 1.0, 1.0, , 1.0, 1.0, 1.0, , 
+1, 1.0, 1.0, 1.0, , 1.0, 1.0, 1.0, , 
+1, 1.0, 1.0, 1.0, , 1.0, 1.0, 1.0, , 
+1, 1.0, 1.0, 1.0, , 1.0, 1.0, 1.0, , 
+1, 1.0, 1.0, 1.0, , 1.0, 1.0, 1.0, , 
+1, 1.0, 1.0, 1.0, , 1.0, 1.0, 1.0, , 
+1, 1.0, 1.0, 1.0, , 1.0, 1.0, 1.0, , 
+1, 1.0, 1.0, 1.0, , 1.0, 1.0, 1.0, , 
+1, 1.0, 1.0, 1.0, , 1.0, 1.0, 1.0, , 
+1, 1.0, 1.0, 1.0, , 1.0, 1.0, 1.0, , 
+1, 1.0, 1.0, 1.0, , 1.0, 1.0, 1.0, , 
+1, 1.0, 1.0, 1.0, , 1.0, 1.0, 1.0, , 
+1, 1.0, 1.0, 1.0, , 1.0, 1.0, 1.0, , 
+1, 1.0, 1.0, 1.0, , 1.0, 1.0, 1.0, , 
+1, 1.0, 1.0, 1.0, , 1.0, 1.0, 1.0, , 
 "ETH-USD","Ethereum USD"
 "ETH-USD","Ethereum USD"
 "maxAge","postMarketChangePercent","regularMarketChangePercent","preMarketChange","extractNameOfCompany","regularMarketDayHigh","regularMarketDayLow","regularMarketPreviousClose","symbolOfCompany","extractCurrencySymbol"
+
+
 
 
 

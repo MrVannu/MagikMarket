@@ -1,10 +1,14 @@
 package org.project;
 
 import com.opencsv.exceptions.CsvValidationException;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.application.Application;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.FontWeight;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -153,13 +157,26 @@ public class Main extends Application implements Authentication {
         GridPane layoutLogin = new GridPane();
         GridPane layoutRegister = new GridPane();
 
-        // Title
-        Text titleLogin = new Text("Login");
-        Text titleRegister = new Text("Register");
-        titleLogin.setFont(Font.font("Arial", FontWeight.BOLD, 24));
-        titleRegister.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        // Define the main labels and titles
+        Label titleLogin = new Label("Login");
+        Label titleRegister = new Label("Register");
+        Label welcomeLabel = new Label("Welcome!");
 
-        // Labels
+        welcomeLabel.setPadding(new Insets(20));
+
+        titleLogin.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        titleRegister.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        welcomeLabel.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+
+        // Define a separator
+        Separator separator = new Separator(Orientation.HORIZONTAL); // Create a horizontal separator
+        separator.setMaxWidth(250); // Maximum width
+
+        // Define a VBox to be the upper part of the layout
+        VBox upperBox = new VBox(welcomeLabel, separator);
+        upperBox.setAlignment(Pos.CENTER_LEFT);
+
+        // Define labels
         Label usernameLabelLogin = new Label("Username:");
         Label passwordLabelLogin = new Label("Password:");
         Label usernameLabelRegister = new Label("Username:");
@@ -211,8 +228,15 @@ public class Main extends Application implements Authentication {
 
         });
 
+        // Define main BorderPane
+        GridPane main = new GridPane();
+        main.add(upperBox, 0,0);
+        main.add(layoutLogin, 0,1);
+        main.setAlignment(Pos.CENTER);
+
         // Defining the LoginScene which is the FIRST SCENE
-        Scene LoginScene = new Scene(layoutLogin, 700, 400); // <---- Dimension of the LoginScene
+        Scene LoginScene = new Scene(main, 700, 400); // <---- Dimension of the LoginScene
+
 
 
         // Button -> login
@@ -237,7 +261,7 @@ public class Main extends Application implements Authentication {
             else {
                 // The user does not exist
                 System.out.println("Does not exist");
-                AlertField.showAlert("Autentication error", "User not found or incorrect credentials.");
+                AlertField.showAlert("Authentication error", "User not found or incorrect credentials.");
                 AlertField.invalidField(usernameFieldLogin, passwordFieldLogin);
             }
 
@@ -252,14 +276,6 @@ public class Main extends Application implements Authentication {
         Button switchScenesLogin = new Button("Return to Login");
         Button registerButton = new Button("Register");
 
-//        // Temporary button for GUI test to skip login faster
-//        Button gui = new Button("GUI");
-//        gui.setOnAction(e->{
-//            WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, userRegistered);
-//            primaryStage.setTitle("Start App");
-//            primaryStage.setScene(welcomePane.getScene());
-//        });
-
         // Adjusting layout of the login GridPane
         layoutLogin.setPadding(new Insets(20)); // Defining a uniform quantity of pixels between the components of the layout and its edge
         layoutLogin.setHgap(10); // Defining a gap between columns of the grid
@@ -267,14 +283,13 @@ public class Main extends Application implements Authentication {
         layoutLogin.setAlignment(Pos.CENTER); // Aligning the GridPane in the CENTER
 
         // Adding elements to the login GridPane
-        layoutLogin.add(titleLogin, 0, 0, 2, 1);
-        layoutLogin.add(usernameLabelLogin, 0, 1);
-        layoutLogin.add(usernameFieldLogin, 1, 1);
-        layoutLogin.add(passwordLabelLogin, 0, 2);
-        layoutLogin.add(passwordFieldLogin, 1, 2);
-        layoutLogin.add(loginButton, 0, 3);
-        layoutLogin.add(switchScenesRegister, 1, 3);
-//        layoutLogin.add(gui, 2, 4);
+        layoutLogin.add(titleLogin, 0, 2);
+        layoutLogin.add(usernameLabelLogin, 0, 3);
+        layoutLogin.add(usernameFieldLogin, 1, 3);
+        layoutLogin.add(passwordLabelLogin, 0, 4);
+        layoutLogin.add(passwordFieldLogin, 1, 4);
+        layoutLogin.add(loginButton, 0, 5);
+        layoutLogin.add(switchScenesRegister, 1, 5);
 
         // Adjusting layout of the register GridPane
         layoutRegister.setPadding(new Insets(20));
@@ -290,8 +305,8 @@ public class Main extends Application implements Authentication {
         layoutRegister.add(passwordFieldRegister, 1, 2);
         layoutRegister.add(emailLabelRegister, 0, 3);
         layoutRegister.add(emailFieldRegister,1,3);
-        layoutRegister.add(registerButton, 3, 4);
-        layoutRegister.add(switchScenesLogin,4,4);
+        layoutRegister.add(registerButton, 0, 4);
+        layoutRegister.add(switchScenesLogin,1,4);
 
         //Defining the RegisterScene and it's dimension
         Scene RegisterScene = new Scene(layoutRegister, 700, 400); // <---- Dimension of the RegisterScene

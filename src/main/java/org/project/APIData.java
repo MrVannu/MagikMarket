@@ -18,7 +18,7 @@ public class APIData {
     private JSONObject data;
     private ObjectMapper mapper = new ObjectMapper();
 
-    public APIData() {}
+    public APIData(String symbol) {this.symbol=symbol;}
     //Requesting APIData (live)
     public void fetchData(/*String symbol*/) {
         HttpRequest request = HttpRequest.newBuilder()
@@ -100,6 +100,8 @@ public class APIData {
     }
 
 
+
+
     public double regularMarketChangePercent(){
         double value = 101;
         try {
@@ -118,6 +120,8 @@ public class APIData {
         System.out.println(value);
         return value;
     }
+
+
 
 
     public double preMarketChange(){
@@ -174,6 +178,27 @@ public class APIData {
             if (maxAgeNode != null) {
                 value = maxAgeNode.asDouble();
             } else System.out.println("Value not available: regularMarketPreviousClose");
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(value);
+        return value;
+    }
+
+    public double regularMarketDayOpen(){
+        double value = 101;
+        try {
+            JsonNode toRead = mapper.readTree(data.toString());
+            JsonNode maxAgeNode = toRead.get("regularMarketOpen");
+
+            System.out.println(maxAgeNode);
+            toRead= mapper.readTree(maxAgeNode.toString());
+            maxAgeNode = toRead.get("raw");
+
+            // Check if maxAgeNode is null or if it can be converted to a double
+            if (maxAgeNode != null) {
+                value = maxAgeNode.asDouble();
+            } else System.out.println("Value not available: regularMarketDayOpen");
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

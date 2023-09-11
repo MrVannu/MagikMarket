@@ -136,7 +136,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
 
     public WelcomePane(Stage primaryStage, Scene LoginScene, User userRegistered){
-        super();
+        super("");
 
         // Define a list of checkBoxes
         List<CheckBox> checkBoxes = new ArrayList<>();
@@ -158,20 +158,20 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         // Define VBox for the right pane of the main SplitPane
         VBox rightPaneBox = new VBox();
 
-            // Define internal panes of the vertical split pane
-            StackPane topRightPane = new StackPane();
-            StackPane bottomRightPane = new StackPane();
+        // Define internal panes of the vertical split pane
+        StackPane topRightPane = new StackPane();
+        StackPane bottomRightPane = new StackPane();
 
-            // Define the vertical SplitPane
-            SplitPane rightVerticalSplitPane = new SplitPane();
-            rightVerticalSplitPane.setDividerPositions(0, 0.6); // Set SplitPane dimension
-            rightVerticalSplitPane.getItems().addAll(topRightPane, bottomRightPane); // Add the pane inside the SplitPane
-            rightVerticalSplitPane.setOrientation(javafx.geometry.Orientation.VERTICAL);
+        // Define the vertical SplitPane
+        SplitPane rightVerticalSplitPane = new SplitPane();
+        rightVerticalSplitPane.setDividerPositions(0.1, 0.6); // Set SplitPane dimension
+        rightVerticalSplitPane.getItems().addAll(topRightPane, bottomRightPane); // Add the pane inside the SplitPane
+        rightVerticalSplitPane.setOrientation(javafx.geometry.Orientation.VERTICAL);
 
-            // Add the internalVerticalSplitPane to the right pane (of the main splitPane)
-            rightPaneBox.getChildren().add(rightVerticalSplitPane);
+        // Add the internalVerticalSplitPane to the right pane (of the main splitPane)
+        rightPaneBox.getChildren().add(rightVerticalSplitPane);
 
-            VBox.setVgrow(rightVerticalSplitPane, Priority.ALWAYS);
+        VBox.setVgrow(rightVerticalSplitPane, Priority.ALWAYS);
 
 
         // Define logOut button
@@ -213,7 +213,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         Label moneyLabel = new Label(Double.toString(userRegistered.getUserCredit())); // Replace with the actual amount
         moneyLabel.getStyleClass().add("money-label"); // You can define a CSS class for styling
 
-        ArrayList<Stock>stocksBetOn = new ArrayList<>();
+        ArrayList<Stock> stocksBetOn = new ArrayList<>();
         Label listOfBetStock= new Label() ;
 
         /*
@@ -277,13 +277,13 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                     boolean callMade = false;
 
                     // API CALL!!
-                            /*testObj = new APIData(symbol);
+                            testObj = new APIData(symbol);
                             testObj.fetchData(); // !WARNING: this line requires API usage
                             //nameOfCompany = testObj.extractNameOfCompany();
 
                             Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany());
                             System.out.println(testObj.extractNameOfCompany());
-                            callMade = true;*/
+                            callMade = true;
 
 
                     //String aa= String.valueOf(p1);
@@ -307,9 +307,9 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
                     newSeries.getData().addAll(
                             //(testObj==null? nameOfCompany: testObj.extractNameOfCompany())
-                            new XYChart.Data<>(1, (callMade? testObj.regularMarketDayLow(): 50)),
-                            new XYChart.Data<>(2, (callMade? testObj.regularMarketDayHigh(): 50)),
-                            new XYChart.Data<>(3, (callMade? testObj.regularMarketPreviousClose(): 200)));
+                            new XYChart.Data<>(0, (callMade? testObj.regularMarketDayOpen()/1000: 50)),
+                            new XYChart.Data<>(1, (callMade? testObj.regularMarketDayHigh()/1000: 50)),
+                            new XYChart.Data<>(2, (callMade? testObj.regularMarketPreviousClose()/1000: 200)));
 
 
                     // Add the new series to the line chart
@@ -329,7 +329,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                 // Handle the "Bet" button action here
                 betTooltip.show(bet, bet.getScene().getWindow().getX() + bet.getScene().getX() + bet.getLayoutX() + bet.getWidth(), bet.getScene().getWindow().getY() + bet.getScene().getY() + bet.getLayoutY());
             });
-
 
             submitBetButton.setOnAction(event -> {
                 if(!betAmountField.getText().isEmpty()) { // If the field is not empty and
@@ -408,92 +407,98 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         });
 
         // Define the menu bar in the top of the mainPain
-            MenuBar menuBar = new MenuBar();// Create a menu bar
+        MenuBar menuBar = new MenuBar();// Create a menu bar
 
-                // Create a "File" menu
-                Menu fileMenu = new Menu("File");
-                    // Create menu items for the "File" menu
-                    MenuItem instructionsItem = new MenuItem("Instructions");
-                        instructionsItem.setOnAction(e->{
-                            AlertField.showSuccessAlert("Information","This is a simulation of an " +
-                                    "application that can help you look at the real market. You can invest some " +
-                                    "money in some Stocks. The available Stocks are listed in the left part of the " +
-                                    "application. You have an amount of money that is, by default, 1,000. As much as " +
-                                    "you invest, the amount of money will decrease. There will be a simulation that " +
-                                    "will show you if your prediction was like that or not.");
-                        });
-                    MenuItem exitItem = new MenuItem("Exit");
-                        // Exit the application if you click the exit item
-                        exitItem.setOnAction(e -> {
-                            System.exit(0); // Exit the application
-                        });
-                // Add menu items to the "File" menu and use a separator before the last element
-                fileMenu.getItems().addAll(instructionsItem, new SeparatorMenuItem(), exitItem);
+        // Create a "File" menu
+        Menu fileMenu = new Menu("File");
+        // Create menu items for the "File" menu
+        MenuItem instructionsItem = new MenuItem("Instructions");
+        instructionsItem.setOnAction(e->{
+            AlertField.showSuccessAlert("Information","This is a simulation of an " +
+                    "application that can help you look at the real market. You can invest some " +
+                    "money in some Stocks. You can have a look at the Stocks by selecting from the " +
+                    "checkboxes the Stocks you are interested on. You can select maximum 4 Stocks" +
+                    "You have an amount of money that is, by default, 1,000. As much as " +
+                    "you invest, the amount of money will decrease. There will be a simulation that " +
+                    "will show you if your prediction was correct or not.");
+        });
+        MenuItem exitItem = new MenuItem("Exit");
+        // Exit the application if you click the exit item
+        exitItem.setOnAction(e -> {
+            System.exit(0); // Exit the application
+        });
+        // Add menu items to the "File" menu and use a separator before the last element
+        fileMenu.getItems().addAll(instructionsItem, new SeparatorMenuItem(), exitItem);
 
-                // Create an "Edit" menu
-                Menu editMenu = new Menu("Edit");
-                    // Create menu item for the "Edit" menu
-                    // Create amountItem where the user can change his amount
-                    MenuItem amountItem = new MenuItem("Amount");
+        // Create an "Edit" menu
+        Menu editMenu = new Menu("Edit");
+        // Create menu item for the "Edit" menu
+        // Create amountItem where the user can change his amount
+        MenuItem amountItem = new MenuItem("Amount");
 
-                        // Handle actions when the "Amount" menu item is clicked
-                        amountItem.setOnAction(e -> {
-                            // Create a custom popup using a Stage
-                            Stage popup = new Stage();
-                            popup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
-                            popup.initOwner(primaryStage); // Set primaryStage as the parent of popup
-                            popup.setTitle("Amount Input");
+        // Handle actions when the "Amount" menu item is clicked
+        amountItem.setOnAction(e -> {
+            // Create a custom popup using a Stage
+            Stage popup = new Stage();
+            popup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
+            popup.initOwner(primaryStage); // Set primaryStage as the parent of popup
+            popup.setTitle("Amount Input");
+            popup.setWidth(400);
+            popup.setHeight(200);
 
-                            // Create UI elements for the custom popup
-                            Label instr = new Label("Set your new amount");
-                            TextField newCredit = new TextField();
-                            Button submitCredit = new Button("Submit");
-                            Button closePopup = new Button("Close");
-                            HBox inputBox = new HBox(submitCredit, closePopup);
-                            VBox windowBox = new VBox(instr, newCredit, inputBox);
-                            windowBox.setPadding(new Insets(10));
-                            windowBox.setSpacing(10);
-                            windowBox.setAlignment(Pos.CENTER);
+            // Create UI elements for the custom popup
+            Label instr = new Label("Set your new amount");
+            TextField newCredit = new TextField();
+            Button submitCredit = new Button("Submit");
+            Button closePopup = new Button("Close");
+            HBox inputBox = new HBox(submitCredit, closePopup);
+            inputBox.setSpacing(30);
 
-                            // Handle actions when the "Submit" button is clicked
-                            submitCredit.setOnAction(submitEvent -> {
-                                // Process the user input here
-                                String userInput = newCredit.getText();
-                                System.out.println("User input: " + userInput);
+            // Define Box with elements for the popup
+            VBox windowBox = new VBox(instr, newCredit, inputBox);
+            windowBox.setPadding(new Insets(10));
+            windowBox.setSpacing(10);
+            windowBox.setAlignment(Pos.CENTER);
 
-                                // Close the custom popup
-                                popup.close();
-                            });
+            // Handle actions when the "Submit" button is clicked
+            submitCredit.setOnAction(submitEvent -> {
+                // Process the user input here
+                String userInput = newCredit.getText();
+                System.out.println("User input: " + userInput);
 
-                            // Handle actions when the "Close" button is clicked
-                            closePopup.setOnAction(closeEvent -> {
-                                // Close the custom popup without processing the input
-                                popup.close();
-                            });
+                // Close the custom popup
+                popup.close();
+            });
 
-                            // Create a scene for the custom popup
-                            Scene popupScene = new Scene(windowBox);
-                            popup.setScene(popupScene);
+            // Handle actions when the "Close" button is clicked
+            closePopup.setOnAction(closeEvent -> {
+                // Close the custom popup without processing the input
+                popup.close();
+            });
 
-                            // Show the custom popup
-                            popup.showAndWait(); // Use showAndWait to wait for user interaction before continuing
-                        });
+            // Create a scene for the custom popup
+            Scene popupScene = new Scene(windowBox);
+            popup.setScene(popupScene);
 
-                // Add menu items to the "Edit" menu
-                editMenu.getItems().addAll(amountItem);
+            // Show the custom popup
+            popup.showAndWait(); // Use showAndWait to wait for user interaction before continuing
+        });
 
-                // Create a "LogOut" menu
-                Menu logOutMenu = new Menu("LogOut");
-                    MenuItem logOutItem = new MenuItem("Log out");
-                        logOutItem.setOnAction(e->{
-                            primaryStage.setTitle("Start App");
-                            primaryStage.setScene(LoginScene);
-                        });
-                // Add menu items to the "LogOut" menu
-                logOutMenu.getItems().addAll(logOutItem);
+        // Add menu items to the "Edit" menu
+        editMenu.getItems().addAll(amountItem);
 
-            // Add menus to the menu bar
-            menuBar.getMenus().addAll(fileMenu, editMenu, logOutMenu);
+        // Create a "LogOut" menu
+        Menu logOutMenu = new Menu("LogOut");
+        MenuItem logOutItem = new MenuItem("Log out");
+        logOutItem.setOnAction(e->{
+            primaryStage.setTitle("Start App");
+            primaryStage.setScene(LoginScene);
+        });
+        // Add menu items to the "LogOut" menu
+        logOutMenu.getItems().addAll(logOutItem);
+
+        // Add menus to the menu bar
+        menuBar.getMenus().addAll(fileMenu, editMenu, logOutMenu);
 
         // Define the main SplitPane that contains the left and right panes
         SplitPane splitPane = new SplitPane();
@@ -509,7 +514,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 //        mainPane.setMinHeight(700); // Minimum height for the pane
 
         // Instantiate the whole scene and define its dimension
-        WelcomeScene = new Scene(mainPane, 1200, 700); // <---- Dimension of the WelcomePane
+        WelcomeScene = new Scene(mainPane, 1400, 900); // <---- Dimension of the WelcomePane
         WelcomeScene.getStylesheets().add("styles.css"); // Reference to the CSS file0
 
         // Define elements and HBox for the topRightPane
@@ -518,8 +523,8 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
         // Create an ImageView for the user image
         ImageView imgView = new ImageView();
-        imgView.setFitWidth(60);
-        imgView.setFitHeight(60);
+        imgView.setFitWidth(30); // Dimension of the image
+        imgView.setFitHeight(30);
 
         // Create a FileChooser so that the user can insert an image
         FileChooser fileChooser = new FileChooser();
@@ -548,6 +553,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         // Create a layout for the UI
         HBox profilePic = new HBox(imgView, selectImageButton);
         profilePic.setAlignment(Pos.CENTER);
+        profilePic.setSpacing(10);
 
         // Label for the stocks bet on
         String stringOfBetStocks = " Stocks bet on:\n";
@@ -556,7 +562,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         listOfBetStock = new Label(stringOfBetStocks);
 
         // Add all the elements into the tobBox
-        topBox.getChildren().addAll(profilePic,username, moneyLabel, listOfBetStock);
+        topBox.getChildren().addAll(profilePic, username, moneyLabel, listOfBetStock);
 
         // Define an GridPane to better align logOut button. It contains the topBox
         GridPane underGridPane = new GridPane();
@@ -566,7 +572,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         underGridPane.setAlignment(Pos.CENTER);
 
         underGridPane.add(topBox, 0, 0);
-        underGridPane.add(logOut, 6, 0);
+//        underGridPane.add(logOut, 6, 0);
 
         topRightPane.getChildren().addAll(underGridPane);
 

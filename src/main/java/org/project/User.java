@@ -35,13 +35,13 @@ public class User {
     }
 
     // Method to modify the userCredit value into the UserDB
-    public double getUserCredit() {
+    public String getUserCredit() {
         try (CSVReader reader = new CSVReader(new FileReader(pathUserDB))) {
             String[] nextLine;  // Stores what is contained in the row
 
             while ((nextLine = reader.readNext()) != null) {
                 // If username is related to the password inserted
-                if (nextLine[0].equals(username)) return Double.parseDouble(nextLine[3]);
+                if (nextLine[0].equals(username)) return nextLine[3];
             }
         } catch (IOException ex) {
             ex.printStackTrace();

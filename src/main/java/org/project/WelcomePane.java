@@ -205,7 +205,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         topBox.setVgap(10);
 
         // Create a label for the amount of money
-        Label moneyLabel = new Label(Double.toString(userRegistered.getUserCredit())); // Replace with the actual amount
+        Label moneyLabel = new Label(userRegistered.getUserCredit()); // Replace with the actual amount
         moneyLabel.getStyleClass().add("money-label"); // You can define a CSS class for styling
 
         ArrayList<Stock> stocksBetOn = new ArrayList<>();
@@ -340,9 +340,9 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                         double betAmount = Double.parseDouble(betAmountField.getText());
 
                         //Decreases the user's amount of money in the GUI label
-                        userRegistered.setUserCredit(userRegistered.getUserCredit() - Double.parseDouble(betAmountField.getText()));
+                        userRegistered.setUserCredit(Double.parseDouble(userRegistered.getUserCredit()) - Double.parseDouble(betAmountField.getText()));
                         //Update the money label
-                        moneyLabel.setText(Double.toString(userRegistered.getUserCredit()));
+                        moneyLabel.setText(String.valueOf(userRegistered.getUserCredit()));
                         betAmountField.clear();
                         betTooltip.hide();
                         stocksBetOn.add(new Stock(symbol, nameOfCompany));
@@ -469,8 +469,12 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             // Handle actions when the "Submit" button is clicked
             submitCredit.setOnAction(submitEvent -> {
                 // Process the user input here
-                String userInput = newCredit.getText();
-                System.out.println("User input: " + userInput);
+                String newAmount = newCredit.getText();
+
+                // This functionality is implemented on purely simulation purposes
+                userRegistered.setUserCredit(Double.valueOf(newAmount));
+                moneyLabel.setText(userRegistered.getUserCredit());
+                System.out.println("User input: " + newAmount);
 
                 // Close the custom popup
                 popup.close();

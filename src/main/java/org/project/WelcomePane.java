@@ -114,6 +114,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             for (int k = 0; k < precisionRange; k++) {
                 if (k < linesToSave.size()) {
                     String[] currentLine = linesToSave.get(k);
+
                     prevision += Integer.parseInt(currentLine[2]); // To sum the postMarketChangePercent
                 }
             }

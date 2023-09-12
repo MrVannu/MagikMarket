@@ -467,18 +467,40 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             windowBox.setAlignment(Pos.CENTER);
 
             // Handle actions when the "Submit" button is clicked
+            // Handle actions when the "Submit" button is clicked
             submitCredit.setOnAction(submitEvent -> {
-                // Process the user input here
-                String newAmount = newCredit.getText();
+                String nativeData = newCredit.getText();
 
-                // This functionality is implemented on purely simulation purposes
-                userRegistered.setUserCredit(Double.valueOf(newAmount));
-                moneyLabel.setText(userRegistered.getUserCredit());
-                System.out.println("User input: " + newAmount);
+                // Utilizza una regex per verificare se nativeData è un numero valido
+                String regex = "^\\d+(\\.\\d{1,2})?$";
 
-                // Close the custom popup
-                popup.close();
+                if (nativeData.matches(regex)) {
+                    try {
+                        double newAmount = Double.parseDouble(nativeData);
+
+                        if (newAmount > 10000.0) {
+                            // Messaggio di errore se l'importo è troppo grande
+                            AlertField.showAlert("Big amount", "The amount is too large. Choose another amount");
+                            newCredit.setText("");
+                        } else {
+                            // Imposta il nuovo valore dell'etichetta
+                            userRegistered.setUserCredit(newAmount);
+                            moneyLabel.setText(String.valueOf(newAmount));
+                            System.out.println("User input: " + newAmount);
+
+                            // Chiudi
+                            popup.close();
+                        }
+                    } catch (NumberFormatException k) {
+                        // Gestisci l'eccezione se il testo non può essere convertito in double
+                        System.out.println("Input non valido: " + nativeData);
+                        newCredit.setText(""); // Pulisci
+                    }
+                } else {
+                    System.out.println("ERR: Input non valido");
+                }
             });
+
 
             // Handle actions when the "Close" button is clicked
             closePopup.setOnAction(closeEvent -> {

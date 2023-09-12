@@ -21,4 +21,4 @@ public interface Authentication {
 }
 
 
-// to be implemented: password recovery proccess
+// to be implemented: password recovery process

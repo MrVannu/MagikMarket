@@ -198,6 +198,13 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         leftPaneBox.setAlignment(Pos.CENTER_LEFT);
         leftPaneBox.setPadding(new Insets(10));
 
+        // Define imageView for the logo image and define its dimensions
+        ImageView logoImg = new ImageView(new Image("mk.png"));
+        logoImg.setFitHeight(100);
+        logoImg.setFitWidth(170);
+        // Add the logoImg to the layout
+        leftPaneBox.getChildren().add(logoImg);
+
         // Define an HBox to hold the elements inside the underGridPane(GridPane),see declaration below
         FlowPane topBox = new FlowPane(); // Use FlowPane to adjust the space as needed
         topBox.setAlignment(Pos.CENTER);
@@ -547,8 +554,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         WelcomeScene.getStylesheets().add("styles.css"); // Reference to the CSS file0
 
         // Define elements and HBox for the topRightPane
-        Label username = new Label("Username");
-//        username.setText(""); // Set the username as text of the label
+        Label username = new Label(userRegistered.getUsername());// Set the username as text of the label
 
         // Create an ImageView for the user image
         ImageView imgView = new ImageView();

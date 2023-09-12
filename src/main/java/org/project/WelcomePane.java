@@ -275,8 +275,21 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
                     // API CALL!!
                             testObj = new APIData(symbol);
-                            testObj.fetchData(); // !WARNING: this line requires API usage
+                            testObj.fetchData("tsla"); // !WARNING: this line requires API usage
                             //nameOfCompany = testObj.extractNameOfCompany();
+
+                    System.out.println(maxAge());
+                    System.out.println(postMarketChangePercent());
+                    System.out.println(regularMarketChangePercent());
+                    System.out.println(preMarketChange());
+                    System.out.println(extractNameOfCompany());
+                    System.out.println(regularMarketDayHigh());
+                    System.out.println(regularMarketDayHigh());
+                    System.out.println(regularMarketDayOpen());
+                    System.out.println(regularMarketDayLow());
+                    System.out.println(regularMarketPreviousClose());
+                    System.out.println(extractSymbolOfCompany());
+                    System.out.println(extractCurrencySymbol());
 
                             Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany());
                             System.out.println(testObj.extractNameOfCompany());
@@ -386,7 +399,11 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
         // Prevision action
         previsionButton.setOnAction(e->{
-
+            try {
+                updateDataHistory(1, 1.0, 1.0, 1.0, "test", 1.0,1.0,1.0, "test", "test");
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         });
 
         // Add the button to the leftPaneBox, below the checkboxes

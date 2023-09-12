@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public interface HistoryManagement {
 
-    static void updateDataHistory(
+    default void updateDataHistory(
             int maxAge,
             double postMarketChangePercent,
             double regularMarketChangePercent,

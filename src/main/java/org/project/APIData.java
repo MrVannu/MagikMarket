@@ -20,7 +20,7 @@ public class APIData {
 
     public APIData(String symbol) {this.symbol=symbol;}
     //Requesting APIData (live)
-    public void fetchData(/*String symbol*/) {
+    public void fetchData(String symbol) {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://yahoo-finance127.p.rapidapi.com/price/"+symbol))
                 .header("content-type", "application/octet-stream")
@@ -37,9 +37,7 @@ public class APIData {
             throw new RuntimeException(e);
         }
 
-        System.out.println(response.body());
-        JSONObject jsonResponse = new JSONObject(response.body());
-        data = jsonResponse;
+        data = new JSONObject(response.body());
         System.out.println("RESPONSE is: " + response.body());
     }
 
@@ -61,23 +59,33 @@ public class APIData {
 
 
     public int maxAge() {
-        int value = 101;
+        int defaultValue = 101; // Valore predefinito
+
         try {
-            JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode maxAgeNode = toRead.get("maxAge");
-            System.out.println(maxAgeNode);
-            toRead= mapper.readTree(maxAgeNode.toString());
-            maxAgeNode = toRead.get("raw");
-            // Check if maxAgeNode is null or if it can be converted to a double
-            if (maxAgeNode != null) {
-                value = maxAgeNode.asInt();
-            } else System.out.println("Value not available: regularMarketPreviousClose");
+            if (data != null) {
+                JsonNode toRead = mapper.readTree(data.toString());
+                JsonNode maxAgeNode = toRead.get("maxAge");
+
+                // Controlla se maxAgeNode non è null e può essere convertito in un intero
+                if (maxAgeNode != null && maxAgeNode.isInt()) {
+                    return maxAgeNode.asInt();
+                } else {
+                    System.out.println("Value not available or invalid: maxAge");
+                }
+            } else {
+                System.out.println("Data is null.");
+            }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(value);
-        return value;
+
+        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito
+        System.out.println("Using default value: " + defaultValue);
+        return defaultValue;
     }
+
+
+
 
 
     public double postMarketChangePercent(){

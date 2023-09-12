@@ -268,30 +268,24 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                 APIData testObj = null;
                 //For adding new line
                 if (checkBox.isSelected()) {
-
                     boolean callMade = false;
 
-                    // API CALL!!
-                            testObj = new APIData();
-                            testObj.fetchData("tsla"); // !WARNING: this line requires API usage
-                            //nameOfCompany = testObj.extractNameOfCompany();
 
-                    System.out.println(testObj.maxAge());
-                    System.out.println(testObj.postMarketChangePercent());
-                    System.out.println(testObj.regularMarketChangePercent());
-                    System.out.println(testObj.preMarketChange());
+
+                    /* API CALL!!
+                    testObj = new APIData();
+                    */
+                    for (CheckBox cb : checkBoxes) {
+                        if (cb.isSelected()) {
+                            //assert false;  //Not to be used
+                            //testObj.fetchData(cb.getText()); // !WARNING: this line requires API usage
+                        }
+                    }
+
+
+                    Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany());
                     System.out.println(testObj.extractNameOfCompany());
-                    System.out.println(testObj.regularMarketDayHigh());
-                    System.out.println(testObj.regularMarketDayHigh());
-                    System.out.println(testObj.regularMarketDayOpen());
-                    System.out.println(testObj.regularMarketDayLow());
-                    System.out.println(testObj.regularMarketPreviousClose());
-                    System.out.println(testObj.extractSymbolOfCompany());
-                    System.out.println(testObj.extractCurrencySymbol());
-
-                            Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany());
-                            System.out.println(testObj.extractNameOfCompany());
-                            callMade = true;
+                    callMade = true;
 
 
                     //String aa= String.valueOf(p1);
@@ -302,6 +296,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
 
                     try {
+                        // Placeholders for testing
                         updateDataHistory(1, 1.0, 1.0, 1.0, "", 1.0,1.0,1.0, "", "");
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);

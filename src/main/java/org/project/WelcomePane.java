@@ -466,38 +466,35 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             windowBox.setSpacing(10);
             windowBox.setAlignment(Pos.CENTER);
 
-            // Handle actions when the "Submit" button is clicked
+
             // Handle actions when the "Submit" button is clicked
             submitCredit.setOnAction(submitEvent -> {
                 String nativeData = newCredit.getText();
-
-                // Utilizza una regex per verificare se nativeData è un numero valido
                 String regex = "^\\d+(\\.\\d{1,2})?$";
 
                 if (nativeData.matches(regex)) {
                     try {
                         double newAmount = Double.parseDouble(nativeData);
-
                         if (newAmount > 10000.0) {
-                            // Messaggio di errore se l'importo è troppo grande
+                            // If amount is too large
                             AlertField.showAlert("Big amount", "The amount is too large. Choose another amount");
                             newCredit.setText("");
                         } else {
-                            // Imposta il nuovo valore dell'etichetta
+                            // New label value
                             userRegistered.setUserCredit(newAmount);
                             moneyLabel.setText(String.valueOf(newAmount));
-                            System.out.println("User input: " + newAmount);
+                            //System.out.println("User input: " + newAmount);
 
-                            // Chiudi
+                            // Close
                             popup.close();
                         }
                     } catch (NumberFormatException k) {
-                        // Gestisci l'eccezione se il testo non può essere convertito in double
-                        System.out.println("Input non valido: " + nativeData);
-                        newCredit.setText(""); // Pulisci
+                        //System.out.println("Input non valido: " + nativeData);
+                        newCredit.setText(""); // Clean out
                     }
                 } else {
                     System.out.println("ERR: Input non valido");
+                    throw new AmountNotAllowed();
                 }
             });
 

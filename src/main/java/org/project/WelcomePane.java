@@ -34,8 +34,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
     private Map<CheckBox, XYChart.Series<Number, Number>> checkBoxSeriesMap;
 
-
-
     //DATA HISTORY MANAGEMENT
     public void updateDataHistory(
             int maxAge,
@@ -126,7 +124,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
     }
 
 
-
     public void giveATip(String nameToScanFor, String parameter){
         // To be implemented
     }
@@ -193,7 +190,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         //HBox bottomBox = new HBox(logOut);
         //bottomRightPane.getChildren().addAll(logOut);
 
-
+        // Create main line chart
         LineChart<Number, Number> lineChart= createLineChart("nameOfCompany");
 
 
@@ -331,7 +328,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             });
 
             submitBetButton.setOnAction(event -> {
-                if(!betAmountField.getText().isEmpty()) { // If the field is not empty and
+                if(!betAmountField.getText().isEmpty()) { // If the field is not empty
                     try{
                         // Attempt to parse the text as a double. If parsing is successful, it's a valid number
                         double betAmount = Double.parseDouble(betAmountField.getText());
@@ -360,7 +357,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                     // The field is empty
                     AlertField.showAlert("Invalid input", "Please enter a bet amount.");
                     System.out.println("Field is empty. Please enter a bet amount.");
-
                 }
             });
 

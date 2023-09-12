@@ -15,11 +15,9 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.apache.commons.collections.bag.SynchronizedSortedBag;
 
 import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 public class WelcomePane extends APIData implements HistoryManagement { // To use data from api obj
@@ -133,7 +131,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
 
     public WelcomePane(Stage primaryStage, Scene LoginScene, User userRegistered){
-        super("");
+        super();
 
         // Define a list of checkBoxes
         List<CheckBox> checkBoxes = new ArrayList<>();
@@ -274,22 +272,22 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                     boolean callMade = false;
 
                     // API CALL!!
-                            testObj = new APIData(symbol);
+                            testObj = new APIData();
                             testObj.fetchData("tsla"); // !WARNING: this line requires API usage
                             //nameOfCompany = testObj.extractNameOfCompany();
 
-                    System.out.println(maxAge());
-                    System.out.println(postMarketChangePercent());
-                    System.out.println(regularMarketChangePercent());
-                    System.out.println(preMarketChange());
-                    System.out.println(extractNameOfCompany());
-                    System.out.println(regularMarketDayHigh());
-                    System.out.println(regularMarketDayHigh());
-                    System.out.println(regularMarketDayOpen());
-                    System.out.println(regularMarketDayLow());
-                    System.out.println(regularMarketPreviousClose());
-                    System.out.println(extractSymbolOfCompany());
-                    System.out.println(extractCurrencySymbol());
+                    System.out.println(testObj.maxAge());
+                    System.out.println(testObj.postMarketChangePercent());
+                    System.out.println(testObj.regularMarketChangePercent());
+                    System.out.println(testObj.preMarketChange());
+                    System.out.println(testObj.extractNameOfCompany());
+                    System.out.println(testObj.regularMarketDayHigh());
+                    System.out.println(testObj.regularMarketDayHigh());
+                    System.out.println(testObj.regularMarketDayOpen());
+                    System.out.println(testObj.regularMarketDayLow());
+                    System.out.println(testObj.regularMarketPreviousClose());
+                    System.out.println(testObj.extractSymbolOfCompany());
+                    System.out.println(testObj.extractCurrencySymbol());
 
                             Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany());
                             System.out.println(testObj.extractNameOfCompany());

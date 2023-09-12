@@ -18,7 +18,7 @@ public class APIData {
     private JSONObject data;
     private ObjectMapper mapper = new ObjectMapper();
 
-    public APIData(String symbol) {this.symbol=symbol;}
+    public APIData() {this.symbol=symbol;}
     //Requesting APIData (live)
     public void fetchData(String symbol) {
         HttpRequest request = HttpRequest.newBuilder()
@@ -88,211 +88,256 @@ public class APIData {
 
 
 
-    public double postMarketChangePercent(){
-        double value = 101;
+    public double postMarketChangePercent() {
+        double defaultValue = 101.0; // Valore predefinito
+
         try {
             JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode maxAgeNode = toRead.get("postMarketChangePercent");
-            System.out.println(maxAgeNode);
-            toRead= mapper.readTree(maxAgeNode.toString());
-            maxAgeNode = toRead.get("raw");
-            // Check if maxAgeNode is null or if it can be converted to a double
-            if (maxAgeNode != null) {
-                value = maxAgeNode.asDouble();
-            } else System.out.println("Value not available: regularMarketPreviousClose");
+            JsonNode postMarketChangePercentNode = toRead.get("postMarketChangePercent");
+
+            // Controlla se postMarketChangePercentNode non è null e può essere convertito in un double
+            if (postMarketChangePercentNode != null && postMarketChangePercentNode.isDouble()) {
+                return postMarketChangePercentNode.asDouble();
+            } else {
+                System.out.println("Value not available or invalid: postMarketChangePercent");
+            }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+
+        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito
+        System.out.println("Using default value: " + defaultValue);
+        return defaultValue;
+    }
+
+
+
+
+
+    public double regularMarketChangePercent() {
+        double defaultValue = 101.0; // Valore predefinito
+
+        try {
+            JsonNode toRead = mapper.readTree(data.toString());
+            JsonNode regularMarketChangePercentNode = toRead.get("regularMarketChangePercent");
+
+            // Controlla se regularMarketChangePercentNode non è null e può essere convertito in un double
+            if (regularMarketChangePercentNode != null && regularMarketChangePercentNode.isDouble()) {
+                return regularMarketChangePercentNode.asDouble();
+            } else {
+                System.out.println("Value not available or invalid: regularMarketChangePercent");
+            }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito
+        System.out.println("Using default value: " + defaultValue);
+        return defaultValue;
+    }
+
+
+
+
+    public double preMarketChange() {
+        double defaultValue = 101.0; // Valore predefinito
+
+        try {
+            JsonNode toRead = mapper.readTree(data.toString());
+            JsonNode preMarketChangeNode = toRead.get("preMarketChange");
+
+            // Controlla se preMarketChangeNode non è null e può essere convertito in un double
+            if (preMarketChangeNode != null && preMarketChangeNode.isDouble()) {
+                return preMarketChangeNode.asDouble();
+            } else {
+                System.out.println("Value not available or invalid: preMarketChange");
+            }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito
+        System.out.println("Using default value: " + defaultValue);
+        return defaultValue;
+    }
+
+
+
+    public String extractNameOfCompany() {
+        String value = "101"; // Inizializza come una stringa vuota
+
+        try {
+            JsonNode toRead = mapper.readTree(data.toString());
+            JsonNode shortNameNode = toRead.get("shortName");
+
+            // Controlla se shortNameNode non è null
+            if (shortNameNode != null) {
+                value = shortNameNode.asText();
+            } else {
+                System.out.println("Value not available: shortName");
+            }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
         System.out.println(value);
         return value;
     }
 
 
 
+    public double regularMarketDayHigh() {
+        double defaultValue = 101.0; // Valore predefinito
 
-    public double regularMarketChangePercent(){
-        double value = 101;
         try {
             JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode maxAgeNode = toRead.get("regularMarketChangePercent");
-            System.out.println(maxAgeNode);
-            toRead= mapper.readTree(maxAgeNode.toString());
-            maxAgeNode = toRead.get("raw");
-            // Check if maxAgeNode is null or if it can be converted to a double
-            if (maxAgeNode != null) {
-                value = maxAgeNode.asDouble();
-            } else System.out.println("Value not available: regularMarketPreviousClose");
+            JsonNode regularMarketDayHighNode = toRead.get("regularMarketDayHigh");
+
+            // Controlla se regularMarketDayHighNode non è null e può essere convertito in un double
+            if (regularMarketDayHighNode != null && regularMarketDayHighNode.isDouble()) {
+                return regularMarketDayHighNode.asDouble();
+            } else {
+                System.out.println("Value not available or invalid: regularMarketDayHigh");
+            }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(value);
-        return value;
+
+        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito
+        System.out.println("Using default value: " + defaultValue);
+        return defaultValue;
     }
 
 
 
 
-    public double preMarketChange(){
-        double value = 101;
+
+    public double regularMarketDayOpen() {
+        double defaultValue = 101.0; // Valore predefinito
+
         try {
             JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode maxAgeNode = toRead.get("preMarketChange");
-            System.out.println(maxAgeNode);
-            toRead= mapper.readTree(maxAgeNode.toString());
-            maxAgeNode = toRead.get("raw");
-            // Check if maxAgeNode is null or if it can be converted to a double
-            if (maxAgeNode != null) {
-                value = maxAgeNode.asDouble();
-            } else System.out.println("Value not available: regularMarketPreviousClose");
+            JsonNode regularMarketOpenNode = toRead.get("regularMarketOpen");
+
+            // Controlla se regularMarketOpenNode non è null e può essere convertito in un double
+            if (regularMarketOpenNode != null && regularMarketOpenNode.isDouble()) {
+                return regularMarketOpenNode.asDouble();
+            } else {
+                System.out.println("Value not available or invalid: regularMarketOpen");
+            }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(value);
-        return value;
+
+        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito
+        System.out.println("Using default value: " + defaultValue);
+        return defaultValue;
     }
 
 
-    public String extractNameOfCompany(){
-        String value = "101";
+
+
+
+
+    public double regularMarketDayLow() {
+        double defaultValue = 101.0; // Valore predefinito
+
         try {
             JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode maxAgeNode = toRead.get("shortName");
-            System.out.println(maxAgeNode);
-            toRead= mapper.readTree(maxAgeNode.toString());
-            maxAgeNode = toRead.get("raw");
-            // Check if maxAgeNode is null or if it can be converted to a double
-            if (maxAgeNode != null) {
-                value = maxAgeNode.toString();
-            } else System.out.println("Value not available: regularMarketPreviousClose");
+            JsonNode regularMarketDayLowNode = toRead.get("regularMarketDayLow");
+
+            // Controlla se regularMarketDayLowNode non è null e può essere convertito in un double
+            if (regularMarketDayLowNode != null && regularMarketDayLowNode.isDouble()) {
+                return regularMarketDayLowNode.asDouble();
+            } else {
+                System.out.println("Value not available or invalid: regularMarketDayLow");
+            }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(value);
-        return value;
+
+        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito
+        System.out.println("Using default value: " + defaultValue);
+        return defaultValue;
     }
 
 
-    public double regularMarketDayHigh(){
-        double value = 101;
+
+
+
+
+    public double regularMarketPreviousClose() {
+        double defaultValue = 101.0; // Valore predefinito
+
         try {
             JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode maxAgeNode = toRead.get("regularMarketDayHigh");
+            JsonNode regularMarketPreviousCloseNode = toRead.get("regularMarketPreviousClose");
 
-            System.out.println(maxAgeNode);
-            toRead= mapper.readTree(maxAgeNode.toString());
-            maxAgeNode = toRead.get("raw");
-
-            // Check if maxAgeNode is null or if it can be converted to a double
-            if (maxAgeNode != null) {
-                value = maxAgeNode.asDouble();
-            } else System.out.println("Value not available: regularMarketPreviousClose");
+            // Controlla se regularMarketPreviousCloseNode non è null e può essere convertito in un double
+            if (regularMarketPreviousCloseNode != null && regularMarketPreviousCloseNode.isDouble()) {
+                return regularMarketPreviousCloseNode.asDouble();
+            } else {
+                System.out.println("Value not available or invalid: regularMarketPreviousClose");
+            }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(value);
-        return value;
+
+        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito
+        System.out.println("Using default value: " + defaultValue);
+        return defaultValue;
     }
 
-    public double regularMarketDayOpen(){
-        double value = 101;
+
+
+
+
+    public String extractSymbolOfCompany() {
+        String defaultValue = "101"; // Valore predefinito
+
         try {
             JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode maxAgeNode = toRead.get("regularMarketOpen");
+            JsonNode symbolNode = toRead.get("symbol");
 
-            System.out.println(maxAgeNode);
-            toRead= mapper.readTree(maxAgeNode.toString());
-            maxAgeNode = toRead.get("raw");
-
-            // Check if maxAgeNode is null or if it can be converted to a double
-            if (maxAgeNode != null) {
-                value = maxAgeNode.asDouble();
-            } else System.out.println("Value not available: regularMarketDayOpen");
+            // Controlla se symbolNode non è null
+            if (symbolNode != null && symbolNode.isTextual()) {
+                return symbolNode.asText();
+            } else {
+                System.out.println("Value not available or invalid: symbol");
+            }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(value);
-        return value;
+
+        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito
+        System.out.println("Using default value: " + defaultValue);
+        return defaultValue;
     }
 
 
-    public double regularMarketDayLow(){
-        double value = 101;
+
+    public String extractCurrencySymbol() {
+        String defaultValue = "101"; // Valore predefinito
+
         try {
             JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode maxAgeNode = toRead.get("regularMarketDayLow");
-            System.out.println(maxAgeNode);
-            toRead= mapper.readTree(maxAgeNode.toString());
-            maxAgeNode = toRead.get("raw");
-            // Check if maxAgeNode is null or if it can be converted to a double
-            if (maxAgeNode != null) {
-                value = maxAgeNode.asDouble();
-            } else System.out.println("Value not available: regularMarketPreviousClose");
+            JsonNode currencySymbolNode = toRead.get("currencySymbol");
+
+            // Controlla se currencySymbolNode non è null
+            if (currencySymbolNode != null && currencySymbolNode.isTextual()) {
+                return currencySymbolNode.asText();
+            } else {
+                System.out.println("Value not available or invalid: currencySymbol");
+            }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(value);
-        return value;
+
+        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito "N/A"
+        System.out.println("Using default value: " + defaultValue);
+        return defaultValue;
     }
 
-
-    public double regularMarketPreviousClose(){
-        double value = 101;
-        try {
-            JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode maxAgeNode = toRead.get("regularMarketPreviousClose");
-            System.out.println(maxAgeNode);
-            toRead= mapper.readTree(maxAgeNode.toString());
-            maxAgeNode = toRead.get("raw");
-            // Check if maxAgeNode is null or if it can be converted to a double
-            if (maxAgeNode != null) {
-                value = maxAgeNode.asDouble();
-            } else System.out.println("Value not available: regularMarketPreviousClose");
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println(value);
-        return value;
-    }
-
-
-    public String extractSymbolOfCompany(){
-        String value = "101";
-        try {
-            JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode maxAgeNode = toRead.get("symbol");
-            System.out.println(maxAgeNode);
-            toRead= mapper.readTree(maxAgeNode.toString());
-            maxAgeNode = toRead.get("raw");
-            // Check if maxAgeNode is null or if it can be converted to a double
-            if (maxAgeNode != null) {
-                value = maxAgeNode.toString();
-            } else System.out.println("Value not available: regularMarketPreviousClose");
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println(value);
-        return value;
-    }
-
-
-    public String extractCurrencySymbol(){
-        String value = "101";
-        try {
-            JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode maxAgeNode = toRead.get("currencySymbol");
-            System.out.println(maxAgeNode);
-            toRead= mapper.readTree(maxAgeNode.toString());
-            maxAgeNode = toRead.get("raw");
-            // Check if maxAgeNode is null or if it can be converted to a double
-            if (maxAgeNode != null) {
-                value = maxAgeNode.toString();
-            } else System.out.println("Value not available: regularMarketPreviousClose");
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println(value);
-        return value;
-    }
 
 
 }

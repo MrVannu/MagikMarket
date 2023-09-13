@@ -12,7 +12,7 @@ public class NoCreditException extends RuntimeException {
         Alert alert = new Alert(AlertType.WARNING);
         alert.setTitle("CREDIT MISSING!");
         alert.setHeaderText(null);
-        alert.setContentText("You do not enough credit, please consider to recharge your account!");
+        alert.setContentText("You do not have enough credit, please consider to recharge your account!");
         alert.showAndWait();
     }
 }

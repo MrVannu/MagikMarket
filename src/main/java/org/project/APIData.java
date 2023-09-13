@@ -186,16 +186,19 @@ public class APIData {
 
 
 
+
     public double regularMarketDayHigh() {
         double defaultValue = 101.0; // Valore predefinito
 
         try {
             JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode regularMarketDayHighNode = toRead.get("regularMarketDayHigh");
+            JsonNode regularMarketOpenNode = toRead.get("regularMarketDayHigh");
 
-            // Controlla se regularMarketDayHighNode non è null e può essere convertito in un double
-            if (regularMarketDayHighNode != null && regularMarketDayHighNode.isDouble()) {
-                return regularMarketDayHighNode.asDouble();
+            // Controlla se regularMarketOpenNode non è null e può essere convertito in un double
+            if (regularMarketOpenNode != null ) { //&& regularMarketOpenNode.isDouble()
+                double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
+                System.out.println("Value in fmt format: " + fmtValue);
+                return fmtValue;
             } else {
                 System.out.println("Value not available or invalid: regularMarketDayHigh");
             }
@@ -209,9 +212,6 @@ public class APIData {
     }
 
 
-
-
-
     public double regularMarketDayOpen() {
         double defaultValue = 101.0; // Valore predefinito
 
@@ -220,8 +220,10 @@ public class APIData {
             JsonNode regularMarketOpenNode = toRead.get("regularMarketOpen");
 
             // Controlla se regularMarketOpenNode non è null e può essere convertito in un double
-            if (regularMarketOpenNode != null && regularMarketOpenNode.isDouble()) {
-                return regularMarketOpenNode.asDouble();
+            if (regularMarketOpenNode != null ) { //&& regularMarketOpenNode.isDouble()
+                double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
+                System.out.println("Value in fmt format: " + fmtValue);
+                return fmtValue;
             } else {
                 System.out.println("Value not available or invalid: regularMarketOpen");
             }
@@ -236,19 +238,18 @@ public class APIData {
 
 
 
-
-
-
     public double regularMarketDayLow() {
         double defaultValue = 101.0; // Valore predefinito
 
         try {
             JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode regularMarketDayLowNode = toRead.get("regularMarketDayLow");
+            JsonNode regularMarketOpenNode = toRead.get("regularMarketDayLow");
 
-            // Controlla se regularMarketDayLowNode non è null e può essere convertito in un double
-            if (regularMarketDayLowNode != null && regularMarketDayLowNode.isDouble()) {
-                return regularMarketDayLowNode.asDouble();
+            // Controlla se regularMarketOpenNode non è null e può essere convertito in un double
+            if (regularMarketOpenNode != null ) { //&& regularMarketOpenNode.isDouble()
+                double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
+                System.out.println("Value in fmt format: " + fmtValue);
+                return fmtValue;
             } else {
                 System.out.println("Value not available or invalid: regularMarketDayLow");
             }
@@ -262,20 +263,18 @@ public class APIData {
     }
 
 
-
-
-
-
     public double regularMarketPreviousClose() {
         double defaultValue = 101.0; // Valore predefinito
 
         try {
             JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode regularMarketPreviousCloseNode = toRead.get("regularMarketPreviousClose");
+            JsonNode regularMarketOpenNode = toRead.get("regularMarketPreviousClose");
 
-            // Controlla se regularMarketPreviousCloseNode non è null e può essere convertito in un double
-            if (regularMarketPreviousCloseNode != null && regularMarketPreviousCloseNode.isDouble()) {
-                return regularMarketPreviousCloseNode.asDouble();
+            // Controlla se regularMarketOpenNode non è null e può essere convertito in un double
+            if (regularMarketOpenNode != null ) { //&& regularMarketOpenNode.isDouble()
+                double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
+                System.out.println("Value in fmt format: " + fmtValue);
+                return fmtValue;
             } else {
                 System.out.println("Value not available or invalid: regularMarketPreviousClose");
             }
@@ -289,15 +288,13 @@ public class APIData {
     }
 
 
-
-
-
     public String extractSymbolOfCompany() {
         String defaultValue = "101"; // Valore predefinito
 
         try {
             JsonNode toRead = mapper.readTree(data.toString());
             JsonNode symbolNode = toRead.get("symbol");
+            //System.out.println(symbolNode);
 
             // Controlla se symbolNode non è null
             if (symbolNode != null && symbolNode.isTextual()) {

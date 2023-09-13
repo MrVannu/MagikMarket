@@ -11,6 +11,7 @@ public class Stock {
     private String name;
     private String description;
     private boolean available;
+    private boolean investedOn = false;
 
     public Stock(String symbol, String name){
         this.symbol= symbol;

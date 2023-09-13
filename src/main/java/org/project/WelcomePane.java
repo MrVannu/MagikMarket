@@ -278,20 +278,18 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                     boolean callMade = false;
 
 
-
                     /* API CALL!!
                     testObj = new APIData();
                     */
+
                     for (CheckBox cb : checkBoxes) {
                         if (cb.isSelected()) {
                             //assert false;  //Not to be used
-                            //testObj.fetchData(cb.getText()); // !WARNING: this line requires API usage
+                            // testObj.fetchData(cb.getText()); // !WARNING: this line requires API usage
                         }
                     }
 
 
-                    Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany());
-                    System.out.println(testObj.extractNameOfCompany());
                     callMade = true;
 
 
@@ -341,7 +339,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             });
 
             submitBetButton.setOnAction(event -> {
-                if(!betAmountField.getText().isEmpty()) { // If the field is not empty
+                if(!betAmountField.getText().isEmpty() && !betAmountField.getText().equals("0")) { // If the field is not empty
                     try{
                         // Attempt to parse the text as a double. If parsing is successful, it's a valid number
                         double betAmount = Double.parseDouble(betAmountField.getText());
@@ -368,8 +366,8 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                     }
                 } else {
                     // The field is empty
-                    AlertField.showAlert("Invalid input", "Please enter a bet amount.");
-                    System.out.println("Field is empty. Please enter a bet amount.");
+                    AlertField.showAlert("Invalid input", "Please enter a valid amount.");
+                    System.out.println("Field is empty. Please enter a valid amount.");
                 }
             });
 

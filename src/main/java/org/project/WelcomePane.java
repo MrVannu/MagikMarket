@@ -194,9 +194,9 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
         // Define VBox for the left split pane and insert checkBoxes inside
         // VBox topLeftPane = new  VBox(10); //Box for other purpose
-        VBox leftPaneBox = new VBox(10);// Box to contain the checkboxes
+        VBox leftPaneBox = new VBox();// Box to contain the checkboxes
         leftPaneBox.setAlignment(Pos.CENTER_LEFT);
-        leftPaneBox.setPadding(new Insets(10));
+        leftPaneBox.setPadding(new Insets(20));
 
         // Define imageView for the logo image and define its dimensions
         ImageView logoImg = new ImageView(new Image("mk.png"));
@@ -277,18 +277,16 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                 if (checkBox.isSelected()) {
                     boolean callMade = false;
 
-
-
                     /* API CALL!!
-                    testObj = new APIData();
-                    */
-                    for (CheckBox cb : checkBoxes) {
-                        if (cb.isSelected()) {
-                            //assert false;  //Not to be used
-                            //testObj.fetchData(cb.getText()); // !WARNING: this line requires API usage
+
+                    */testObj = new APIData();
+
+                    for (CheckBox cb : checkBoxes) { // For each cheacBox
+                        if (cb.isSelected()) { // If checkBox is selected
+                            assert false;  //Not to be used
+                            testObj.fetchData(cb.getText()); // !WARNING: this line requires API usage
                         }
                     }
-
 
                     Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany());
                     System.out.println(testObj.extractNameOfCompany());
@@ -384,7 +382,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             checkBoxes.add(checkBox);
 
             //topLeftPane.getChildren().addAll();
-            leftPaneBox.getChildren().addAll(checkBoxWithBetButton);
+            leftPaneBox.getChildren().addAll(checkBoxWithBetButton); // Add the checkBoxes with bet button to the layout
 
         } // CLOSE FOREACH
 

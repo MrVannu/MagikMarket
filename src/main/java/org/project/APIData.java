@@ -9,6 +9,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.sql.SQLOutput;
 
 
 //Fetch the data + return a list
@@ -219,9 +220,11 @@ public class APIData {
             JsonNode toRead = mapper.readTree(data.toString());
             JsonNode regularMarketOpenNode = toRead.get("regularMarketOpen");
 
-            // Controlla se regularMarketOpenNode non è null e può essere convertito in un double
-            if (regularMarketOpenNode != null && regularMarketOpenNode.isDouble()) {
-                return regularMarketOpenNode.asDouble();
+            // Check if regularMarketOpenNode is not null
+            if (regularMarketOpenNode != null ) { //&& regularMarketOpenNode.isDouble()
+                double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
+                System.out.println("Value in fmt format: " + fmtValue);
+                return fmtValue;
             } else {
                 System.out.println("Value not available or invalid: regularMarketOpen");
             }
@@ -233,8 +236,6 @@ public class APIData {
         System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
-
-
 
 
 

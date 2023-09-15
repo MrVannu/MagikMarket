@@ -202,18 +202,18 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             // Create a HBox to contain both VBoxes
             HBox lowerLeftBox = new HBox(boxBox,betButtonsBox);
             lowerLeftBox.setSpacing(20);
-        // Define imageView for the logo image and define its dimensions
-        ImageView logoImg = new ImageView(new Image("mk.png"));
-        logoImg.setFitHeight(100);
-        logoImg.setFitWidth(170);
+            // Define imageView for the logo image and define its dimensions
+            ImageView logoImg = new ImageView(new Image("mk.png"));
+            logoImg.setFitHeight(100);
+            logoImg.setFitWidth(170);
 
-        // Define a Box for the logo
-        VBox logoBox = new VBox(logoImg);
-        logoBox.setAlignment(Pos.CENTER);
-        VBox.setVgrow(logoBox, Priority.ALWAYS);
+            // Define a Box for the logo
+            VBox logoBox = new VBox(logoImg);
+            logoBox.setAlignment(Pos.CENTER);
+            VBox.setVgrow(logoBox, Priority.ALWAYS);
 
-        // Add the logoBox to the layout
-        leftPaneBox.getChildren().add(logoBox);
+            // Add the logoBox to the layout
+            leftPaneBox.getChildren().add(logoBox);
 
         // Define a FlowPane to hold the elements inside the underGridPane(GridPane),see declaration below
         FlowPane topBox = new FlowPane(); // Use FlowPane to adjust the space as needed
@@ -235,6 +235,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         for (String symbol : symbols) {
             HBox checkBoxWithBetButton = new HBox(10);
             Button bet = new Button("Invest"); // Name of the bet buttons
+            bet.getStyleClass().add("my-button");
 
             CheckBox checkBox = new CheckBox(symbol);
             checkBox.getStyleClass().add("checkbox");
@@ -260,6 +261,28 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
             // Set the Tooltip to the "Bet" button
             Tooltip.install(bet, betTooltip);
+
+                // Create a custom popup using a Stage
+                Stage popup = new Stage();
+                popup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
+                popup.initOwner(primaryStage); // Set primaryStage as the parent of popup
+                popup.setTitle("Amount Input");
+                popup.setWidth(400);
+                popup.setHeight(200);
+
+                // Create UI elements for the custom popup
+                Label instr = new Label("Set your new amount");
+                TextField newCredit = new TextField();
+                Button submitCredit = new Button("Submit");
+                Button closePopup = new Button("Close");
+                HBox inputBox = new HBox(submitCredit, closePopup);
+                inputBox.setSpacing(30);
+
+                // Define Box with elements for the popup
+                VBox windowBox = new VBox(instr, newCredit, inputBox);
+                windowBox.setPadding(new Insets(10));
+                windowBox.setSpacing(10);
+                windowBox.setAlignment(Pos.CENTER);
 
             //Placeholders values in case something goes wrong with API call
             String sym = "phSymbol";
@@ -391,7 +414,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
             closeBetButton.setOnAction(event -> {
                 betTooltip.hide();
-            } );
+            });
 
             // Add the checkBox into the HBox
             checkBoxWithBetButton.getChildren().addAll(checkBox);
@@ -412,10 +435,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
         // Add the checkBox + betButton into the layout
         leftPaneBox.getChildren().addAll(lowerLeftBox);
-
-        // Empty label for space
-        Label empty = new Label(" ");
-        Label empty1 = new Label(" ");
+        VBox.setVgrow(lowerLeftBox, Priority.ALWAYS);
 
         // Image for the prevision button
         Image arrowGui = new Image("file:src/main/resources/frecciale.png");
@@ -429,7 +449,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         HBox previsionBox = new HBox(previsionButton);
         previsionBox.setAlignment(Pos.CENTER);
 
-
         // Prevision action
         previsionButton.setOnAction(e->{
             stocksCheckedOn.forEach(stock -> {
@@ -442,8 +461,11 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             }*/
         });
 
+        // Layout purpose
+        VBox.setVgrow(previsionBox, Priority.ALWAYS);
+
         // Add the button to the leftPaneBox, below the checkboxes
-        leftPaneBox.getChildren().addAll(empty,empty1, previsionBox);
+        leftPaneBox.getChildren().addAll(previsionBox);
         leftPaneBox.setSpacing(10); // Define space between the elements inside the box
 
         // Add the line chart to the bottomRightPane
@@ -513,7 +535,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             // Handle actions when the "Submit" button is clicked
             submitCredit.setOnAction(submitEvent -> {
                 String nativeData = newCredit.getText();
-                String regex = "^\\d+(\\.\\d{1,2})?$";
+                String regex = "^\\d+(\\.\\d{1,2})?$"; // Regex to check if user insert a number
 
                 if (nativeData.matches(regex)) {
                     try {
@@ -536,7 +558,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                         newCredit.setText(""); // Clean out
                     }
                 } else {
-                    System.out.println("ERR: Input non valido");
+                    System.out.println("ERR: No valid input");
                     throw new AmountNotAllowed();
                 }
             });
@@ -560,17 +582,17 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         editMenu.getItems().addAll(amountItem);
 
         // Create a "LogOut" menu
-        Menu logOutMenu = new Menu("LogOut");
+        Menu options = new Menu("Options");
         MenuItem logOutItem = new MenuItem("Log out");
         logOutItem.setOnAction(e->{
             primaryStage.setTitle("Start App");
             primaryStage.setScene(LoginScene);
         });
         // Add menu items to the "LogOut" menu
-        logOutMenu.getItems().addAll(logOutItem);
+        options.getItems().addAll(logOutItem);
 
         // Add menus to the menu bar
-        menuBar.getMenus().addAll(fileMenu, editMenu, logOutMenu);
+        menuBar.getMenus().addAll(fileMenu, editMenu, options);
 
         // Define the main SplitPane that contains the left and right panes
         SplitPane splitPane = new SplitPane();
@@ -587,7 +609,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
         // Instantiate the whole scene and define its dimension
         WelcomeScene = new Scene(mainPane, 1400, 900); // <---- Dimension of the WelcomePane
-        WelcomeScene.getStylesheets().add("styles.css"); // Reference to the CSS file0
+        WelcomeScene.getStylesheets().add("styles.css"); // Reference to the CSS file
 
         // Define elements and HBox for the topRightPane
         Label username = new Label(userRegistered.getUsername());// Set the username as text of the label
@@ -609,6 +631,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         userView.setFitWidth(24); // Set the desired width for the image
         userView.setFitHeight(24); // Set the desired height for the image
 
+        // Button for updating an image
         Button selectImageButton = new Button();
         selectImageButton.setGraphic(userView);
         selectImageButton.setOnAction(e -> {

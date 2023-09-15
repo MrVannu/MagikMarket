@@ -71,3 +71,10 @@
     -fx-padding: 5px;
     -fx-background-color: #e5d7ff;
 }
+
+/* Il selettore CSS per il tuo bottone */
+.my-button:hover {
+    /* Stile dell'hover */
+    -fx-background-color: #5C3190; /* Cambia il colore di sfondo al passaggio del mouse */
+    -fx-text-fill: white; /* Cambia il colore del testo al passaggio del mouse */
+}

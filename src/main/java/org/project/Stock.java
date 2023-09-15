@@ -3,31 +3,51 @@ package org.project;
 import javafx.css.StyleableStringProperty;
 
 public class Stock {
-    private double price;
+    //private double price;
     private double regularMarketDayHigh;
     private double regularMarketDayLow;
-    private double markerPreviousClose;
+    private double regularMarketOpen;
+    private double marketPreviousClose;
     private String symbol;
     private String name;
     private String description;
     private boolean available;
     private boolean investedOn = false;
 
-    public Stock(String symbol, String name){
+    public Stock(String symbol, String name, double regularMarketOpen, double regularMarketDayHigh, double regularMarketDayLow, double marketPreviousClose){
         this.symbol= symbol;
         this.name = name;
     }
-    public double getSymbol() {
-        return price;
-    }
+
     public void setSymbol(String sym) {
         this.symbol = symbol;
     }
     public double getMarkerPreviousClose() {
-        return markerPreviousClose;
+        return marketPreviousClose;
     }
+
+    public double getMarketPreviousClose() {
+        return marketPreviousClose;
+    }
+
+    public double getRegularMarketOpen() {
+        return regularMarketOpen;
+    }
+
+    public void setMarketPreviousClose(double marketPreviousClose) {
+        this.marketPreviousClose = marketPreviousClose;
+    }
+
+    public void setRegularMarketOpen(double regularMarketOpen) {
+        this.regularMarketOpen = regularMarketOpen;
+    }
+
+    public void setInvestedOn(boolean investedOn) {
+        this.investedOn = investedOn;
+    }
+
     public void setMarkerPreviousClose(double markerPreviousClose) {
-        this.markerPreviousClose = markerPreviousClose;
+        this.marketPreviousClose = markerPreviousClose;
     }
     public String getName() {
         return name;

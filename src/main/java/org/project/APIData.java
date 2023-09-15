@@ -17,6 +17,7 @@ public class APIData {
     private String symbol;
     private JSONObject data;
     private ObjectMapper mapper = new ObjectMapper();
+    private String nameOfCompany;
 
     public APIData() {this.symbol=symbol;}
     //Requesting APIData (live)
@@ -39,6 +40,7 @@ public class APIData {
 
         data = new JSONObject(response.body());
         System.out.println("RESPONSE is: " + response.body());
+        nameOfCompany=this.extractNameOfCompany();
     }
 
 
@@ -57,6 +59,10 @@ public class APIData {
     // \"fromCurrency\":null,\"toCurrency\":null,\"lastMarket\":null,\"volume24Hr\":{},\"volumeAllCurrencies\":{},\"circulatingSupply\":{},
     // \"marketCap\":{\"raw\":532412596224,\"fmt\":\"532.41B\",\"longFmt\":\"532,412,596,224.00\"}}";
 
+
+    public String getNameOfCompany() {
+        return nameOfCompany;
+    }
 
     public int maxAge() {
         int defaultValue = 101; // Valore predefinito
@@ -92,14 +98,16 @@ public class APIData {
         double defaultValue = 101.0; // Default value
 
         try {
-            JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode postMarketChangePercentNode = toRead.get("postMarketChangePercent");
+            if(data != null) {
+                JsonNode toRead = mapper.readTree(data.toString());
+                JsonNode postMarketChangePercentNode = toRead.get("postMarketChangePercent");
 
-            // Check if postMarketChangePercentNode is not null and could not be parsed in double
-            if (postMarketChangePercentNode != null && postMarketChangePercentNode.isDouble()) {
-                return postMarketChangePercentNode.asDouble();
-            } else {
-                System.out.println("Value not available or invalid: postMarketChangePercent");
+                // Check if postMarketChangePercentNode is not null and could not be parsed in double
+                if (postMarketChangePercentNode != null && postMarketChangePercentNode.isDouble()) {
+                    return postMarketChangePercentNode.asDouble();
+                } else {
+                    System.out.println("Value not available or invalid: postMarketChangePercent");
+                }
             }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -115,14 +123,16 @@ public class APIData {
         double defaultValue = 101.0; // Defined value
 
         try {
-            JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode regularMarketChangePercentNode = toRead.get("regularMarketChangePercent");
+            if(data != null) {
+                JsonNode toRead = mapper.readTree(data.toString());
+                JsonNode regularMarketChangePercentNode = toRead.get("regularMarketChangePercent");
 
-            // Check if regularMarketChangePercentNode is not null, and it can be pared with double
-            if (regularMarketChangePercentNode != null && regularMarketChangePercentNode.isDouble()) {
-                return regularMarketChangePercentNode.asDouble();
-            } else {
-                System.out.println("Value not available or invalid: regularMarketChangePercent");
+                // Check if regularMarketChangePercentNode is not null, and it can be pared with double
+                if (regularMarketChangePercentNode != null && regularMarketChangePercentNode.isDouble()) {
+                    return regularMarketChangePercentNode.asDouble();
+                } else {
+                    System.out.println("Value not available or invalid: regularMarketChangePercent");
+                }
             }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -140,14 +150,18 @@ public class APIData {
         double defaultValue = 101.0; // Valore predefinito
 
         try {
-            JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode preMarketChangeNode = toRead.get("preMarketChange");
+            if(data != null) {
+                {
+                    JsonNode toRead = mapper.readTree(data.toString());
+                    JsonNode preMarketChangeNode = toRead.get("preMarketChange");
 
-            // Controlla se preMarketChangeNode non è null e può essere convertito in un double
-            if (preMarketChangeNode != null && preMarketChangeNode.isDouble()) {
-                return preMarketChangeNode.asDouble();
-            } else {
-                System.out.println("Value not available or invalid: preMarketChange");
+                    // Controlla se preMarketChangeNode non è null e può essere convertito in un double
+                    if (preMarketChangeNode != null && preMarketChangeNode.isDouble()) {
+                        return preMarketChangeNode.asDouble();
+                    } else {
+                        System.out.println("Value not available or invalid: preMarketChange");
+                    }
+                }
             }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -164,14 +178,16 @@ public class APIData {
         String value = "101"; // Inizializza come una stringa vuota
 
         try {
-            JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode shortNameNode = toRead.get("shortName");
+            if(data != null) {
+                JsonNode toRead = mapper.readTree(data.toString());
+                JsonNode shortNameNode = toRead.get("shortName");
 
-            // Controlla se shortNameNode non è null
-            if (shortNameNode != null) {
-                value = shortNameNode.asText();
-            } else {
-                System.out.println("Value not available: shortName");
+                // Controlla se shortNameNode non è null
+                if (shortNameNode != null) {
+                    value = shortNameNode.asText();
+                } else {
+                    System.out.println("Value not available: shortName");
+                }
             }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -188,16 +204,18 @@ public class APIData {
         double defaultValue = 101.0; // Valore predefinito
 
         try {
-            JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode regularMarketOpenNode = toRead.get("regularMarketDayHigh");
+            if(data != null) {
+                JsonNode toRead = mapper.readTree(data.toString());
+                JsonNode regularMarketOpenNode = toRead.get("regularMarketDayHigh");
 
-            // Controlla se regularMarketOpenNode non è null e può essere convertito in un double
-            if (regularMarketOpenNode != null ) { //&& regularMarketOpenNode.isDouble()
-                double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
-                System.out.println("Value in fmt format: " + fmtValue);
-                return fmtValue;
-            } else {
-                System.out.println("Value not available or invalid: regularMarketDayHigh");
+                // Controlla se regularMarketOpenNode non è null e può essere convertito in un double
+                if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
+                    double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
+                    System.out.println("Value in fmt format: " + fmtValue);
+                    return fmtValue;
+                } else {
+                    System.out.println("Value not available or invalid: regularMarketDayHigh");
+                }
             }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -213,16 +231,18 @@ public class APIData {
         double defaultValue = 101.0; // Valore predefinito
 
         try {
-            JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode regularMarketOpenNode = toRead.get("regularMarketOpen");
+            if(data != null) {
+                JsonNode toRead = mapper.readTree(data.toString());
+                JsonNode regularMarketOpenNode = toRead.get("regularMarketOpen");
 
-            // Controlla se regularMarketOpenNode non è null e può essere convertito in un double
-            if (regularMarketOpenNode != null ) { //&& regularMarketOpenNode.isDouble()
-                double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
-                System.out.println("Value in fmt format: " + fmtValue);
-                return fmtValue;
-            } else {
-                System.out.println("Value not available or invalid: regularMarketOpen");
+                // Controlla se regularMarketOpenNode non è null e può essere convertito in un double
+                if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
+                    double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
+                    System.out.println("Value in fmt format: " + fmtValue);
+                    return fmtValue;
+                } else {
+                    System.out.println("Value not available or invalid: regularMarketOpen");
+                }
             }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -239,16 +259,18 @@ public class APIData {
         double defaultValue = 101.0; // Valore predefinito
 
         try {
-            JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode regularMarketOpenNode = toRead.get("regularMarketDayLow");
+            if(data != null) {
+                JsonNode toRead = mapper.readTree(data.toString());
+                JsonNode regularMarketOpenNode = toRead.get("regularMarketDayLow");
 
-            // Controlla se regularMarketOpenNode non è null e può essere convertito in un double
-            if (regularMarketOpenNode != null ) { //&& regularMarketOpenNode.isDouble()
-                double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
-                System.out.println("Value in fmt format: " + fmtValue);
-                return fmtValue;
-            } else {
-                System.out.println("Value not available or invalid: regularMarketDayLow");
+                // Controlla se regularMarketOpenNode non è null e può essere convertito in un double
+                if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
+                    double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
+                    System.out.println("Value in fmt format: " + fmtValue);
+                    return fmtValue;
+                } else {
+                    System.out.println("Value not available or invalid: regularMarketDayLow");
+                }
             }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -264,16 +286,18 @@ public class APIData {
         double defaultValue = 101.0; // Valore predefinito
 
         try {
-            JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode regularMarketOpenNode = toRead.get("regularMarketPreviousClose");
+            if(data != null) {
+                JsonNode toRead = mapper.readTree(data.toString());
+                JsonNode regularMarketOpenNode = toRead.get("regularMarketPreviousClose");
 
-            // Controlla se regularMarketOpenNode non è null e può essere convertito in un double
-            if (regularMarketOpenNode != null ) { //&& regularMarketOpenNode.isDouble()
-                double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
-                System.out.println("Value in fmt format: " + fmtValue);
-                return fmtValue;
-            } else {
-                System.out.println("Value not available or invalid: regularMarketPreviousClose");
+                // Controlla se regularMarketOpenNode non è null e può essere convertito in un double
+                if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
+                    double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
+                    System.out.println("Value in fmt format: " + fmtValue);
+                    return fmtValue;
+                } else {
+                    System.out.println("Value not available or invalid: regularMarketPreviousClose");
+                }
             }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -289,15 +313,17 @@ public class APIData {
         String defaultValue = "101"; // Valore predefinito
 
         try {
-            JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode symbolNode = toRead.get("symbol");
-            //System.out.println(symbolNode);
+            if(data != null) {
+                JsonNode toRead = mapper.readTree(data.toString());
+                JsonNode symbolNode = toRead.get("symbol");
+                //System.out.println(symbolNode);
 
-            // Controlla se symbolNode non è null
-            if (symbolNode != null && symbolNode.isTextual()) {
-                return symbolNode.asText();
-            } else {
-                System.out.println("Value not available or invalid: symbol");
+                // Controlla se symbolNode non è null
+                if (symbolNode != null && symbolNode.isTextual()) {
+                    return symbolNode.asText();
+                } else {
+                    System.out.println("Value not available or invalid: symbol");
+                }
             }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -314,14 +340,16 @@ public class APIData {
         String defaultValue = "101"; // Valore predefinito
 
         try {
-            JsonNode toRead = mapper.readTree(data.toString());
-            JsonNode currencySymbolNode = toRead.get("currencySymbol");
+            if(data != null) {
+                JsonNode toRead = mapper.readTree(data.toString());
+                JsonNode currencySymbolNode = toRead.get("currencySymbol");
 
-            // Controlla se currencySymbolNode non è null
-            if (currencySymbolNode != null && currencySymbolNode.isTextual()) {
-                return currencySymbolNode.asText();
-            } else {
-                System.out.println("Value not available or invalid: currencySymbol");
+                // Controlla se currencySymbolNode non è null
+                if (currencySymbolNode != null && currencySymbolNode.isTextual()) {
+                    return currencySymbolNode.asText();
+                } else {
+                    System.out.println("Value not available or invalid: currencySymbol");
+                }
             }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

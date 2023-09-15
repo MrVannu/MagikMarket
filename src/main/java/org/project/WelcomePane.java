@@ -202,12 +202,18 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             // Create a HBox to contain both VBoxes
             HBox lowerLeftBox = new HBox(boxBox,betButtonsBox);
             lowerLeftBox.setSpacing(20);
-            // Define imageView for the logo image and define its dimensions
-            ImageView logoImg = new ImageView(new Image("mk.png"));
-            logoImg.setFitHeight(100);
-            logoImg.setFitWidth(170);
-            // Add the logoImg to the layout
-            leftPaneBox.getChildren().add(logoImg);
+        // Define imageView for the logo image and define its dimensions
+        ImageView logoImg = new ImageView(new Image("mk.png"));
+        logoImg.setFitHeight(100);
+        logoImg.setFitWidth(170);
+
+        // Define a Box for the logo
+        VBox logoBox = new VBox(logoImg);
+        logoBox.setAlignment(Pos.CENTER);
+        VBox.setVgrow(logoBox, Priority.ALWAYS);
+
+        // Add the logoBox to the layout
+        leftPaneBox.getChildren().add(logoBox);
 
         // Define a FlowPane to hold the elements inside the underGridPane(GridPane),see declaration below
         FlowPane topBox = new FlowPane(); // Use FlowPane to adjust the space as needed
@@ -219,8 +225,8 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         Label moneyLabel = new Label(userRegistered.getUserCredit()); // Replace with the actual amount
         moneyLabel.getStyleClass().add("money-label"); // You can define a CSS class for styling
 
-        ArrayList<Stock> stocksBetOn = new ArrayList<>();
-        Label listOfBetStock= new Label() ;
+        ArrayList<Stock> stocksCheckedOn = new ArrayList<>();
+        Label listOfBetStock = new Label() ;
 
         /*
             In this foreach the Stock CheckBoxes will be defined. Next to the checkboxes a bet button is added.
@@ -259,6 +265,9 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             String sym = "phSymbol";
             String nameOfCompany = "phNameOfCompany";
 
+            //API CALL!!
+            final APIData testObj  = new APIData();
+
             checkBox.setOnAction(event -> {
                 //For limiting of the selection of max checkboxes
                 int selectedCount = (int) checkBoxes.stream().filter(CheckBox::isSelected).count();
@@ -276,26 +285,24 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                     checkBoxes.forEach(cb -> cb.setDisable(false));
                 }
 
-                APIData testObj = null;
+
                 //For adding new line
                 if (checkBox.isSelected()) {
                     boolean callMade = false;
 
 
 
-                    /* API CALL!!
-                    testObj = new APIData();
-                    */
                     for (CheckBox cb : checkBoxes) {
                         if (cb.isSelected()) {
-                            //assert false;  //Not to be used
-                            //testObj.fetchData(cb.getText()); // !WARNING: this line requires API usage
+                            assert false;  //Not to be used
+                            testObj.fetchData(cb.getText()); // !WARNING: this line requires API usage
                         }
                     }
 
 
-                    Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany());
-                    System.out.println(testObj.extractNameOfCompany());
+                    Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany(), testObj.regularMarketDayOpen(), testObj.regularMarketDayHigh(), testObj.regularMarketDayLow(), testObj.regularMarketPreviousClose());
+                    //System.out.println(testObj.extractNameOfCompany());
+                    stocksCheckedOn.add(stock);
                     callMade = true;
 
 
@@ -316,8 +323,8 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
                     // Create a new series for this checkbox
                     XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
-                    newSeries.setName((testObj==null? nameOfCompany: testObj.extractNameOfCompany()));
-
+                    newSeries.setName((testObj==null? nameOfCompany: testObj.extractSymbolOfCompany()));
+                    //nameOfCompany= testObj.extractNameOfCompany();
 
                     newSeries.getData().addAll(
                             //(testObj==null? nameOfCompany: testObj.extractNameOfCompany())
@@ -333,10 +340,12 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                     //bottomRightPane.getChildren().add(lineChart);
 
 
-                } else {
-                    final String temp = (testObj==null? nameOfCompany: testObj.extractNameOfCompany());
+                }
+                if (!checkBox.isSelected() ) {
+                    final String temp = (testObj == null ? nameOfCompany : checkBox.getText()).toUpperCase();
                     lineChart.getData().removeIf(serie -> serie.getName().equals(temp));
                 }
+
             });
 
             bet.setOnAction(event -> {
@@ -356,13 +365,16 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                         moneyLabel.setText(String.valueOf(userRegistered.getUserCredit()));
                         betAmountField.clear();
                         betTooltip.hide();
-                        stocksBetOn.add(new Stock(symbol, nameOfCompany));
 
                         /*if (stocksBetOn.stream().anyMatch(stock -> {
                             return stock.getName().equals(symbol);
                         })) */
                         //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
                         topBox.getChildren().add(new Label(symbol));
+                        stocksCheckedOn.forEach(stock -> {
+                            if(stock.getName().equals(symbol))
+                                stock.setInvestedOn(true);
+                        });
                     }
                     catch(NumberFormatException e){
                         // Parsing failed, the text is not a valid number
@@ -405,18 +417,29 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         Label empty = new Label(" ");
         Label empty1 = new Label(" ");
 
-        // Define the prevision button inside a Box
-        Button previsionButton = new Button("Prevision");
+        // Image for the prevision button
+        Image arrowGui = new Image("file:src/main/resources/frecciale.png");
+        ImageView arrowGuiImg = new ImageView(arrowGui);
+        arrowGuiImg.setFitHeight(20);
+        arrowGuiImg.setFitWidth(30);
+
+        // Define the prevision button and its box
+        Button previsionButton = new Button();
+        previsionButton.setGraphic(arrowGuiImg); // Insert img inside button
         HBox previsionBox = new HBox(previsionButton);
         previsionBox.setAlignment(Pos.CENTER);
 
+
         // Prevision action
         previsionButton.setOnAction(e->{
-            try {
+            stocksCheckedOn.forEach(stock -> {
+                //Algorithm to modify the stocks
+            });
+            /*try {
                 updateDataHistory(1, 1.0, 1.0, 1.0, "test", 1.0,1.0,1.0, "test", "test");
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
-            }
+            }*/
         });
 
         // Add the button to the leftPaneBox, below the checkboxes

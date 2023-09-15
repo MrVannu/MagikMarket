@@ -15,7 +15,6 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import java.io.*;
 import java.util.*;
 
@@ -166,8 +165,8 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         // Add the internalVerticalSplitPane to the right pane (of the main splitPane)
         rightPaneBox.getChildren().add(rightVerticalSplitPane);
 
+//        // Tell the splitPane to occupy whole space in the VBox
         VBox.setVgrow(rightVerticalSplitPane, Priority.ALWAYS);
-
 
         // Define logOut button
         Button logOut = new  Button();
@@ -191,21 +190,26 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         // Create main line chart
         LineChart<Number, Number> lineChart= createLineChart("nameOfCompany");
 
+        // Define layout for the left split pane
+            //Define leftPaneBox to be a VBox
+            VBox leftPaneBox = new VBox(10);
+            leftPaneBox.setAlignment(Pos.CENTER_LEFT);
+            leftPaneBox.setPadding(new Insets(10));
+            // Create a Box to contain the checkBoxes
+            VBox boxBox = new VBox(10);
+            // Create a Box to contain the bet button
+            VBox betButtonsBox = new VBox(13);
+            // Create a HBox to contain both VBoxes
+            HBox lowerLeftBox = new HBox(boxBox,betButtonsBox);
+            lowerLeftBox.setSpacing(20);
+            // Define imageView for the logo image and define its dimensions
+            ImageView logoImg = new ImageView(new Image("mk.png"));
+            logoImg.setFitHeight(100);
+            logoImg.setFitWidth(170);
+            // Add the logoImg to the layout
+            leftPaneBox.getChildren().add(logoImg);
 
-        // Define VBox for the left split pane and insert checkBoxes inside
-        // VBox topLeftPane = new  VBox(10); //Box for other purpose
-        VBox leftPaneBox = new VBox(10);// Box to contain the checkboxes
-        leftPaneBox.setAlignment(Pos.CENTER_LEFT);
-        leftPaneBox.setPadding(new Insets(10));
-
-        // Define imageView for the logo image and define its dimensions
-        ImageView logoImg = new ImageView(new Image("mk.png"));
-        logoImg.setFitHeight(100);
-        logoImg.setFitWidth(170);
-        // Add the logoImg to the layout
-        leftPaneBox.getChildren().add(logoImg);
-
-        // Define an HBox to hold the elements inside the underGridPane(GridPane),see declaration below
+        // Define a FlowPane to hold the elements inside the underGridPane(GridPane),see declaration below
         FlowPane topBox = new FlowPane(); // Use FlowPane to adjust the space as needed
         topBox.setAlignment(Pos.CENTER);
         topBox.setHgap(10);
@@ -377,16 +381,25 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                 betTooltip.hide();
             } );
 
-            checkBoxWithBetButton.getChildren().addAll(checkBox, bet);
-            checkBoxWithBetButton.setAlignment(Pos.CENTER_LEFT);
+            // Add the checkBox into the HBox
+            checkBoxWithBetButton.getChildren().addAll(checkBox);
 
+            // Add the bet button into the list
             betButtons.add(bet);
+
+            // Add the checkBox into the list
             checkBoxes.add(checkBox);
 
-            //topLeftPane.getChildren().addAll();
-            leftPaneBox.getChildren().addAll(checkBoxWithBetButton);
+            // Add the HBox into the leftPaneBox
+            boxBox.getChildren().addAll(checkBoxWithBetButton); // Add the checkBoxes with bet button to the layout
+
+            // Add the bet button into the betButtonsBox
+            betButtonsBox.getChildren().addAll(bet);
 
         } // CLOSE FOREACH
+
+        // Add the checkBox + betButton into the layout
+        leftPaneBox.getChildren().addAll(lowerLeftBox);
 
         // Empty label for space
         Label empty = new Label(" ");

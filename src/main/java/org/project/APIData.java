@@ -89,13 +89,13 @@ public class APIData {
 
 
     public double postMarketChangePercent() {
-        double defaultValue = 101.0; // Valore predefinito
+        double defaultValue = 101.0; // Default value
 
         try {
             JsonNode toRead = mapper.readTree(data.toString());
             JsonNode postMarketChangePercentNode = toRead.get("postMarketChangePercent");
 
-            // Controlla se postMarketChangePercentNode non è null e può essere convertito in un double
+            // Check if postMarketChangePercentNode is not null and could not be parsed in double
             if (postMarketChangePercentNode != null && postMarketChangePercentNode.isDouble()) {
                 return postMarketChangePercentNode.asDouble();
             } else {
@@ -105,23 +105,20 @@ public class APIData {
             throw new RuntimeException(e);
         }
 
-        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito
+        // If a value couldn't be obtained, return the default value
         System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
 
 
-
-
-
     public double regularMarketChangePercent() {
-        double defaultValue = 101.0; // Valore predefinito
+        double defaultValue = 101.0; // Defined value
 
         try {
             JsonNode toRead = mapper.readTree(data.toString());
             JsonNode regularMarketChangePercentNode = toRead.get("regularMarketChangePercent");
 
-            // Controlla se regularMarketChangePercentNode non è null e può essere convertito in un double
+            // Check if regularMarketChangePercentNode is not null, and it can be pared with double
             if (regularMarketChangePercentNode != null && regularMarketChangePercentNode.isDouble()) {
                 return regularMarketChangePercentNode.asDouble();
             } else {
@@ -131,7 +128,7 @@ public class APIData {
             throw new RuntimeException(e);
         }
 
-        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito
+        // If a value couldn't be obtained, return the default value
         System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }

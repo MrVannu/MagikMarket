@@ -52,7 +52,7 @@
 
 /* Style for the line chart */
 .chart-view {
-    -fx-background-color: white;
+    -fx-background-color: red;
 }
 
 /* Style for the left pane (checkboxes) */

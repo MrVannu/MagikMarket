@@ -287,7 +287,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                     checkBoxesArrayList.forEach(cb -> cb.setDisable(false));
                 }
 
-
                 //For adding new line
                 if (checkBox.isSelected()) {
                     boolean callMade = false;
@@ -333,13 +332,11 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                             new XYChart.Data<>(2, (callMade? testObj.regularMarketDayLow()/10: 50)),
                             new XYChart.Data<>(3, (callMade? testObj.regularMarketPreviousClose(): 200)));
 
-
                     // Add the new series to the line chart
                     lineChart.setTitle((testObj==null? nameOfCompany: testObj.extractNameOfCompany()));
 
                     lineChart.getData().add(newSeries);
                     //bottomRightPane.getChildren().add(lineChart);
-
 
                 }
                 if (!checkBox.isSelected() ) {
@@ -512,6 +509,41 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             // Handle prevision button action
         previsionButton.setOnAction(e->{
 
+            // Check if stock has been invested
+
+            // Popup for new graph
+                Stage previsionStage = new Stage();
+                previsionStage.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
+                previsionStage.initOwner(primaryStage); // Set primaryStage as the parent of popup
+                previsionStage.setTitle("Bet Input");
+                previsionStage.setWidth(800);
+                previsionStage.setHeight(500);
+
+                // Define a line chart
+                LineChart<Number, Number> lineChartPrevision= createLineChart("Prevision");
+
+                // Create UI elements for the custom popup
+                Button closePrevisionPopup = new Button("Close");
+                HBox previsionPopupBox = new HBox(closePrevisionPopup);
+                previsionPopupBox.setSpacing(30);
+
+                // Define Box with elements for the popup
+                VBox windowBetBox = new VBox(lineChartPrevision, closePrevisionPopup);
+                windowBetBox.setPadding(new Insets(10));
+                windowBetBox.setSpacing(10);
+                windowBetBox.setAlignment(Pos.CENTER);
+
+                // Create a scene for the custom popup
+                Scene previsionScene = new Scene(windowBetBox);
+                previsionStage.setScene(previsionScene);
+
+                // Show the custom popup
+                previsionStage.showAndWait(); // Use showAndWait to wait for user interaction before continuing
+
+                closePrevisionPopup.setOnAction(ex->{
+                    previsionStage.close();
+                });
+
             System.out.println("Stocks checked on: \n");
             stocksCheckedOn.forEach(stock -> {
                 final double  MODIFIER = 2;
@@ -536,7 +568,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         // Add the Box with prevision button to the leftPaneBox (it is below the checkboxes)
         leftPaneBox.getChildren().addAll(previsionBox);
         leftPaneBox.setSpacing(10); // Define space between the elements inside the box
-
 
         // Add the line chart to the bottomRightPane
         bottomRightPane.getChildren().add(lineChart);
@@ -755,7 +786,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         lineChart.setTitle(nameOfCompany);
 
         lineChart.getData().addAll(checkBoxSeriesMap.values());
-
 
         return lineChart;
     }

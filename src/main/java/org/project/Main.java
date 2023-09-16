@@ -161,7 +161,8 @@ public class Main extends Application implements Authentication {
         Label titleLogin = new Label("Login");
         Label titleRegister = new Label("Register");
         Label welcomeLabel = new Label("Welcome!");
-
+        Font customFont = Font.font("Arial",18);
+        welcomeLabel.setFont(customFont);
         welcomeLabel.setPadding(new Insets(20));
 
         titleLogin.setFont(Font.font("Arial", FontWeight.BOLD, 20));
@@ -170,6 +171,7 @@ public class Main extends Application implements Authentication {
 
         // Define a separator
         Separator separator = new Separator(Orientation.HORIZONTAL); // Create a horizontal separator
+        separator.setStyle("-fx-background-color: #5C3190;");
         separator.setMaxWidth(250); // Maximum width
 
         // Define a VBox to be the upper part of the layout
@@ -225,7 +227,6 @@ public class Main extends Application implements Authentication {
             if (newValue.length() > 30) {
                 emailFieldRegister.setText(oldValue); // Prevent entering more than 15 characters
             }
-
         });
 
         // Define main BorderPane

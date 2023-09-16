@@ -237,8 +237,6 @@ public class Main extends Application implements Authentication {
         // Defining the LoginScene which is the FIRST SCENE
         Scene LoginScene = new Scene(main, 700, 400); // <---- Dimension of the LoginScene
 
-
-
         // Button -> login
         Button loginButton = new Button("Login");
         loginButton.setOnAction(e -> {

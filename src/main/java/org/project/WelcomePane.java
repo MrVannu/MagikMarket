@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -126,15 +127,12 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
     }
 
 
-
-
-
     public WelcomePane(Stage primaryStage, Scene LoginScene, User userRegistered){
         super();
 
         // Define a list of checkBoxes
-        List<CheckBox> checkBoxes = new ArrayList<>();
-        List<Button> betButtons = new ArrayList<>();
+        List<CheckBox> checkBoxesArrayList = new ArrayList<>();
+        List<Button> betButtonsArrayList = new ArrayList<>();
         symbols.add("amc");
         symbols.add("x");
         symbols.add("tsla");
@@ -165,7 +163,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         // Add the internalVerticalSplitPane to the right pane (of the main splitPane)
         rightPaneBox.getChildren().add(rightVerticalSplitPane);
 
-//        // Tell the splitPane to occupy whole space in the VBox
+        // Tell the splitPane to occupy the whole space in the VBox
         VBox.setVgrow(rightVerticalSplitPane, Priority.ALWAYS);
 
         // Define logOut button
@@ -228,12 +226,13 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         ArrayList<Stock> stocksCheckedOn = new ArrayList<>();
         Label listOfBetStock = new Label() ;
 
-        /*
-            In this foreach the Stock CheckBoxes will be defined. Next to the checkboxes a bet button is added.
-            A tooltip is created together with the button where the amount of bet money is inserted
-         */
+    /*
+       In this foreach the Stock CheckBoxes are defined. Next to the checkboxes a button is added that permits the
+       user to invest an amount of money to a specific Stock.
+       A custom popup appears where the amount of bet money is inserted
+    */
         for (String symbol : symbols) {
-            HBox checkBoxWithBetButton = new HBox(10);
+            HBox checkBoxInsideHBox = new HBox(10);
             Button bet = new Button("Invest"); // Name of the bet buttons
             bet.getStyleClass().add("my-button");
 
@@ -247,81 +246,57 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             // Save the series into the map associated with the checkbox
             checkBoxSeriesMap.put(checkBox, series);
 
-            // Create a TextField and a Submit button within a VBox for user input
-            Label userInstruction = new Label("How much do you want to bet?");
-            TextField betAmountField = new TextField(); // Define the field to insert the amount of betting
-            Button submitBetButton = new Button("Submit");
-            Button closeBetButton = new Button("Close");
-            HBox inputButtons = new HBox(submitBetButton, closeBetButton);
-            VBox userInputBox = new VBox(userInstruction, betAmountField, inputButtons);
+// The following commented elements belong to the tooltip which has been changed to a custom popup
+//            // Create a TextField and a Submit button within a VBox for user input
+//            Label userInstruction = new Label("How much do you want to bet?");
+//            TextField betAmountField = new TextField(); // Define the field to insert the amount of betting
+//            Button submitBetButton = new Button("Submit");
+//            Button closeBetButton = new Button("Close");
+//            HBox inputButtons = new HBox(submitBetButton, closeBetButton);
+//            VBox userInputBox = new VBox(userInstruction, betAmountField, inputButtons);
 
-            // Create a Tooltip and set the VBox containing the input elements as its graphic
-            Tooltip betTooltip = new Tooltip();
-            betTooltip.setGraphic(userInputBox);
+//            // Create a Tooltip and set the VBox containing the input elements as its graphic
+//            Tooltip betTooltip = new Tooltip();
+//            betTooltip.setGraphic(userInputBox);
 
-            // Set the Tooltip to the "Bet" button
-            Tooltip.install(bet, betTooltip);
+//            // Set the Tooltip to the "Bet" button
+//            Tooltip.install(bet, betTooltip);
 
-                // Create a custom popup using a Stage
-                Stage popup = new Stage();
-                popup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
-                popup.initOwner(primaryStage); // Set primaryStage as the parent of popup
-                popup.setTitle("Amount Input");
-                popup.setWidth(400);
-                popup.setHeight(200);
-
-                // Create UI elements for the custom popup
-                Label instr = new Label("Set your new amount");
-                TextField newCredit = new TextField();
-                Button submitCredit = new Button("Submit");
-                Button closePopup = new Button("Close");
-                HBox inputBox = new HBox(submitCredit, closePopup);
-                inputBox.setSpacing(30);
-
-                // Define Box with elements for the popup
-                VBox windowBox = new VBox(instr, newCredit, inputBox);
-                windowBox.setPadding(new Insets(10));
-                windowBox.setSpacing(10);
-                windowBox.setAlignment(Pos.CENTER);
-
-            //Placeholders values in case something goes wrong with API call
+            // Placeholders values in case something goes wrong with API call
             String sym = "phSymbol";
             String nameOfCompany = "phNameOfCompany";
 
             //API CALL!!
             final APIData testObj  = new APIData();
 
+            // Handle CheckBox action foreach checkBox
             checkBox.setOnAction(event -> {
                 //For limiting of the selection of max checkboxes
-                int selectedCount = (int) checkBoxes.stream().filter(CheckBox::isSelected).count();
+                int selectedCount = (int) checkBoxesArrayList.stream().filter(CheckBox::isSelected).count();
                 //Add a limit of selection of "MAX_SELECTED_CHECKBOXES" (for instance  max 4 check boxes)
                 if (selectedCount > MAX_SELECTED_CHECKBOXES) {
                     checkBox.setSelected(false);
 
                     //Disable the not selected checkboxes when limit is reached
-                    for (CheckBox cb : checkBoxes) {
+                    for (CheckBox cb : checkBoxesArrayList) {
                         if (!cb.isSelected()) {
                             cb.setDisable(true);
                         }
                     }
                 } else {
-                    checkBoxes.forEach(cb -> cb.setDisable(false));
+                    checkBoxesArrayList.forEach(cb -> cb.setDisable(false));
                 }
-
 
                 //For adding new line
                 if (checkBox.isSelected()) {
                     boolean callMade = false;
 
-
-
-                    for (CheckBox cb : checkBoxes) {
+                    for (CheckBox cb : checkBoxesArrayList) {
                         if (cb.isSelected()) {
                             assert false;  //Not to be used
                             testObj.fetchData(cb.getText()); // !WARNING: this line requires API usage
                         }
                     }
-
 
                     Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany(), testObj.regularMarketDayOpen(), testObj.regularMarketDayHigh(), testObj.regularMarketDayLow(), testObj.regularMarketPreviousClose());
                     //System.out.println(testObj.extractNameOfCompany());
@@ -369,64 +344,136 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                     lineChart.getData().removeIf(serie -> serie.getName().equals(temp));
                 }
 
-            });
+            }); // Closing checkBox action
 
+            // Handle the "Bet" button action here
             bet.setOnAction(event -> {
-                // Handle the "Bet" button action here
-                betTooltip.show(bet, bet.getScene().getWindow().getX() + bet.getScene().getX() + bet.getLayoutX() + bet.getWidth(), bet.getScene().getWindow().getY() + bet.getScene().getY() + bet.getLayoutY());
-            });
+                // Create a custom popup using a Stage
+                Stage betPopup = new Stage();
+                betPopup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
+                betPopup.initOwner(primaryStage); // Set primaryStage as the parent of popup
+                betPopup.setTitle("Bet Input");
+                betPopup.setWidth(400);
+                betPopup.setHeight(200);
 
-            submitBetButton.setOnAction(event -> {
-                if(!betAmountField.getText().isEmpty()) { // If the field is not empty
-                    try{
-                        // Attempt to parse the text as a double. If parsing is successful, it's a valid number
-                        double betAmount = Double.parseDouble(betAmountField.getText());
+                // Create UI elements for the custom popup
+                Label instruction = new Label("Set the bet amount");
+                TextField betField = new TextField();
+                Button submitBetAmount = new Button("Submit");
+                Button closeBetPopup = new Button("Close");
+                HBox buttonsBetBox = new HBox(submitBetAmount, closeBetPopup);
+                buttonsBetBox.setSpacing(30);
 
-                        //Decreases the user's amount of money in the GUI label
-                        userRegistered.setUserCredit(Double.parseDouble(userRegistered.getUserCredit()) - Double.parseDouble(betAmountField.getText()));
-                        //Update the money label
-                        moneyLabel.setText(String.valueOf(userRegistered.getUserCredit()));
-                        betAmountField.clear();
-                        betTooltip.hide();
+                // Define Box with elements for the popup
+                VBox windowBetBox = new VBox(instruction, betField, buttonsBetBox);
+                windowBetBox.setPadding(new Insets(10));
+                windowBetBox.setSpacing(10);
+                windowBetBox.setAlignment(Pos.CENTER);
 
+                    //Handle submitBetAmount button
+                    submitBetAmount.setOnAction(e->{
+                        if(!betField.getText().isEmpty()) { // If the field is not empty
+                            try{
+                                // Attempt to parse the text as a double. If parsing is successful, it's a valid number
+                                Double.parseDouble(betField.getText());
+
+                                //Decreases the user's amount of money in the GUI label
+                                userRegistered.setUserCredit(Double.parseDouble(userRegistered.getUserCredit()) - Double.parseDouble(betField.getText()));
+                                //Update the money label
+                                moneyLabel.setText(String.valueOf(userRegistered.getUserCredit()));
+                                betField.clear();
+                                betPopup.close();
                         /*if (stocksBetOn.stream().anyMatch(stock -> {
                             return stock.getName().equals(symbol);
                         })) */
-                        //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
-                        topBox.getChildren().add(new Label(symbol));
-                        stocksCheckedOn.forEach(stock -> {
-                            if(stock.getName().equals(symbol))
-                                stock.setInvestedOn(true);
-                        });
-                    }
-                    catch(NumberFormatException e){
-                        // Parsing failed, the text is not a valid number
-                        // Handle the case where the input is not a number
-                        AlertField.showAlert("Invalid input", "Please enter a valid number.");
-                        System.out.println("Invalid input. Please enter a valid number.");
-                    }
-                } else {
-                    // The field is empty
-                    AlertField.showAlert("Invalid input", "Please enter a bet amount.");
-                    System.out.println("Field is empty. Please enter a bet amount.");
-                }
+                                //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
+                                topBox.getChildren().add(new Label(symbol));
+                                stocksCheckedOn.forEach(stock -> {
+                                    if(stock.getName().equals(symbol))
+                                        stock.setInvestedOn(true);
+                                });
+                            }
+                            catch(NumberFormatException er){
+                                // Parsing failed, the text is not a valid number
+                                // Handle the case where the input is not a number
+                                AlertField.showAlert("Invalid input", "Please enter a valid number.");
+                                System.out.println("Invalid input. Please enter a valid number.");
+                            }
+                        } else {
+                            // The field is empty
+                            AlertField.showAlert("Invalid input", "Please enter a bet amount.");
+                            System.out.println("Field is empty. Please enter a bet amount.");
+                        }
+                    });
+
+                    // Handle closeBetPopup button
+                    closeBetPopup.setOnAction(e->{
+                        betPopup.close();
+                    });
+
+                // Create a scene for the custom popup
+                Scene betPopupScene = new Scene(windowBetBox);
+                betPopup.setScene(betPopupScene);
+
+                // Show the custom popup
+                betPopup.showAndWait(); // Use showAndWait to wait for user interaction before continuing
+
+//                // Handle the "Bet" button action here. Working with the betTooltip
+//                betTooltip.show(bet, bet.getScene().getWindow().getX() + bet.getScene().getX() + bet.getLayoutX() + bet.getWidth(), bet.getScene().getWindow().getY() + bet.getScene().getY() + bet.getLayoutY());
             });
 
-            closeBetButton.setOnAction(event -> {
-                betTooltip.hide();
-            });
+// Handle submitBetButton in the tooltip
+//            submitBetButton.setOnAction(event -> {
+//                if(!betAmountField.getText().isEmpty()) { // If the field is not empty
+//                    try{
+//                        // Attempt to parse the text as a double. If parsing is successful, it's a valid number
+//                        double betAmount = Double.parseDouble(betAmountField.getText());
+//
+//                        //Decreases the user's amount of money in the GUI label
+//                        userRegistered.setUserCredit(Double.parseDouble(userRegistered.getUserCredit()) - Double.parseDouble(betAmountField.getText()));
+//                        //Update the money label
+//                        moneyLabel.setText(String.valueOf(userRegistered.getUserCredit()));
+//                        betAmountField.clear();
+//                        betTooltip.hide();
+//
+//                        /*if (stocksBetOn.stream().anyMatch(stock -> {
+//                            return stock.getName().equals(symbol);
+//                        })) */
+//                        //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
+//                        topBox.getChildren().add(new Label(symbol));
+//                        stocksCheckedOn.forEach(stock -> {
+//                            if(stock.getName().equals(symbol))
+//                                stock.setInvestedOn(true);
+//                        });
+//                    }
+//                    catch(NumberFormatException e){
+//                        // Parsing failed, the text is not a valid number
+//                        // Handle the case where the input is not a number
+//                        AlertField.showAlert("Invalid input", "Please enter a valid number.");
+//                        System.out.println("Invalid input. Please enter a valid number.");
+//                    }
+//                } else {
+//                    // The field is empty
+//                    AlertField.showAlert("Invalid input", "Please enter a bet amount.");
+//                    System.out.println("Field is empty. Please enter a bet amount.");
+//                }
+//            });
+// Handle the closeBetButton inside the tooltip
+//            closeBetButton.setOnAction(event -> {
+//                betTooltip.hide();
+//            });
 
-            // Add the checkBox into the HBox
-            checkBoxWithBetButton.getChildren().addAll(checkBox);
+            // Add the checkBoxes into the HBox
+            checkBoxInsideHBox.getChildren().addAll(checkBox);
 
-            // Add the bet button into the list
-            betButtons.add(bet);
+            // Add the bet button into the ArrayList
+            betButtonsArrayList.add(bet);
 
-            // Add the checkBox into the list
-            checkBoxes.add(checkBox);
+            // Add the checkBox into the ArrayList
+            checkBoxesArrayList.add(checkBox);
 
-            // Add the HBox into the leftPaneBox
-            boxBox.getChildren().addAll(checkBoxWithBetButton); // Add the checkBoxes with bet button to the layout
+            // Add the HBox into the VBox for vertical layout
+            boxBox.getChildren().addAll(checkBoxInsideHBox);// boxBox is previously added into lowerLeftBox
 
             // Add the bet button into the betButtonsBox
             betButtonsBox.getChildren().addAll(bet);
@@ -435,38 +482,49 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
         // Add the checkBox + betButton into the layout
         leftPaneBox.getChildren().addAll(lowerLeftBox);
+        // Let previsionBox occupy all the space inside the VBox it is inserted
         VBox.setVgrow(lowerLeftBox, Priority.ALWAYS);
 
-        // Image for the prevision button
-        Image arrowGui = new Image("file:src/main/resources/frecciale.png");
-        ImageView arrowGuiImg = new ImageView(arrowGui);
-        arrowGuiImg.setFitHeight(20);
-        arrowGuiImg.setFitWidth(30);
+    // Define Prevision button and its layout
+                // Define image for the button
+                Image arrowGui = new Image("file:src/main/resources/frecciale.png");
+                ImageView arrowGuiImg = new ImageView(arrowGui);
+                arrowGuiImg.setFitHeight(10);
+                arrowGuiImg.setFitWidth(15);
 
-        // Define the prevision button and its box
-        Button previsionButton = new Button();
-        previsionButton.setGraphic(arrowGuiImg); // Insert img inside button
-        HBox previsionBox = new HBox(previsionButton);
-        previsionBox.setAlignment(Pos.CENTER);
+                // Define button name
+                String previsionString = "Prevision";
 
-        // Prevision action
-        previsionButton.setOnAction(e->{
-            stocksCheckedOn.forEach(stock -> {
-                //Algorithm to modify the stocks
+            // Define HBox with button name and button image
+            HBox content = new HBox(3);
+            content.getChildren().addAll(new Text(previsionString), arrowGuiImg);
+            content.setAlignment(Pos.CENTER);
+
+            // Define the prevision button and its box
+            Button previsionButton = new Button();
+            previsionButton.setGraphic(content); // Insert img inside button
+            HBox previsionBox = new HBox(previsionButton);
+            previsionBox.setAlignment(Pos.CENTER);
+
+            // Handle prevision button action
+            previsionButton.setOnAction(e->{
+                stocksCheckedOn.forEach(stock -> {
+                    //Algorithm to modify the stocks
+                });
+                /*try {
+                    updateDataHistory(1, 1.0, 1.0, 1.0, "test", 1.0,1.0,1.0, "test", "test");
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }*/
             });
-            /*try {
-                updateDataHistory(1, 1.0, 1.0, 1.0, "test", 1.0,1.0,1.0, "test", "test");
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }*/
-        });
 
-        // Layout purpose
+        // Let previsionBox occupy all the space inside the VBox it is inserted
         VBox.setVgrow(previsionBox, Priority.ALWAYS);
 
-        // Add the button to the leftPaneBox, below the checkboxes
+        // Add the Box with prevision button to the leftPaneBox (it is below the checkboxes)
         leftPaneBox.getChildren().addAll(previsionBox);
         leftPaneBox.setSpacing(10); // Define space between the elements inside the box
+
 
         // Add the line chart to the bottomRightPane
         bottomRightPane.getChildren().add(lineChart);
@@ -477,147 +535,145 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             primaryStage.setScene(LoginScene);
         });
 
+    // Define the menu bar
         // Define the menu bar in the top of the mainPain
         MenuBar menuBar = new MenuBar();// Create a menu bar
 
-        // Create a "File" menu
-        Menu fileMenu = new Menu("File");
-        // Create menu items for the "File" menu
-        MenuItem instructionsItem = new MenuItem("Instructions");
-        instructionsItem.setOnAction(e->{
-            AlertField.showSuccessAlert("Information","This is a simulation of an " +
-                    "application that can help you look at the real market. You can invest some " +
-                    "money in some Stocks. You can have a look at the Stocks by selecting from the " +
-                    "checkboxes the Stocks you are interested on. You can select maximum 4 Stocks" +
-                    "You have an amount of money that is, by default, 1,000. As much as " +
-                    "you invest, the amount of money will decrease. There will be a simulation that " +
-                    "will show you if your prediction was correct or not.");
-        });
-        MenuItem exitItem = new MenuItem("Exit");
-        // Exit the application if you click the exit item
-        exitItem.setOnAction(e -> {
-            System.exit(0); // Exit the application
-        });
-        // Add menu items to the "File" menu and use a separator before the last element
-        fileMenu.getItems().addAll(instructionsItem, new SeparatorMenuItem(), exitItem);
+            // Create a "Info" menu
+            Menu infoMenu = new Menu("Info");
+                    // Create menu items for the "File" menu
+                    MenuItem instructionsItem = new MenuItem("Instructions");
+                    instructionsItem.setOnAction(e->{
+                        AlertField.showSuccessAlert("Information","This is a simulation of an " +
+                                "application that can help you having a look at the real market. You can invest some " +
+                                "money in some Stocks. You can have a look at the Stocks by selecting from the " +
+                                "checkboxes the Stocks you are interested on. You can select maximum 4 Stocks" +
+                                "You have an amount of money that is, by default, 1,000 (you can modify it form the edit" +
+                                "menu). As much as you invest, the amount of money will decrease. There will be " +
+                                "a simulation that will show you if your prediction was correct or not.");
+                    });
+                    MenuItem exitItem = new MenuItem("Exit");
+                    // Exit the application if you click the exit item
+                    exitItem.setOnAction(e -> {
+                        System.exit(0); // Exit the application
+                    });
+            // Add menu items into the "Info" menu and use a separator before the last element
+            infoMenu.getItems().addAll(instructionsItem, new SeparatorMenuItem(), exitItem);
 
-        // Create an "Edit" menu
-        Menu editMenu = new Menu("Edit");
-        // Create menu item for the "Edit" menu
-        // Create amountItem where the user can change his amount
-        MenuItem amountItem = new MenuItem("Amount");
+            // Create an "Edit" menu
+            Menu editMenu = new Menu("Edit");
+            // Create menu item for the "Edit" menu
+                // Create amountItem where the user can change his amount
+                MenuItem amountItem = new MenuItem("Amount");
 
-        // Handle actions when the "Amount" menu item is clicked
-        amountItem.setOnAction(e -> {
-            // Create a custom popup using a Stage
-            Stage popup = new Stage();
-            popup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
-            popup.initOwner(primaryStage); // Set primaryStage as the parent of popup
-            popup.setTitle("Amount Input");
-            popup.setWidth(400);
-            popup.setHeight(200);
+                    // Handle actions when the "Amount" menu item is clicked
+                    amountItem.setOnAction(e -> {
+                        // Create a custom popup using a Stage
+                        Stage popup = new Stage();
+                        popup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
+                        popup.initOwner(primaryStage); // Set primaryStage as the parent of popup
+                        popup.setTitle("Amount Input");
+                        popup.setWidth(400);
+                        popup.setHeight(200);
 
-            // Create UI elements for the custom popup
-            Label instr = new Label("Set your new amount");
-            TextField newCredit = new TextField();
-            Button submitCredit = new Button("Submit");
-            Button closePopup = new Button("Close");
-            HBox inputBox = new HBox(submitCredit, closePopup);
-            inputBox.setSpacing(30);
+                        // Create UI elements for the custom popup
+                        Label instr = new Label("Set your new amount");
+                        TextField newCredit = new TextField();
+                        Button submitCredit = new Button("Submit");
+                        Button closePopup = new Button("Close");
+                        HBox inputBox = new HBox(submitCredit, closePopup);
+                        inputBox.setSpacing(30);
 
-            // Define Box with elements for the popup
-            VBox windowBox = new VBox(instr, newCredit, inputBox);
-            windowBox.setPadding(new Insets(10));
-            windowBox.setSpacing(10);
-            windowBox.setAlignment(Pos.CENTER);
+                        // Define Box with elements for the popup
+                        VBox windowBox = new VBox(instr, newCredit, inputBox);
+                        windowBox.setPadding(new Insets(10));
+                        windowBox.setSpacing(10);
+                        windowBox.setAlignment(Pos.CENTER);
+
+                        // Handle actions when the "Submit" button is clicked
+                        submitCredit.setOnAction(submitEvent -> {
+                            String nativeData = newCredit.getText();
+                            String regex = "^\\d+(\\.\\d{1,2})?$"; // Regex to check if user insert a number
+
+                            if (nativeData.matches(regex)) {
+                                try {
+                                    double newAmount = Double.parseDouble(nativeData);
+                                    if (newAmount > 10000.0) {
+                                        // If amount is too large
+                                        AlertField.showAlert("Big amount", "The amount is too large. Choose another amount");
+                                        newCredit.setText("");
+                                    } else {
+                                        // New label value
+                                        userRegistered.setUserCredit(newAmount);
+                                        moneyLabel.setText(String.valueOf(newAmount));
+                                        //System.out.println("User input: " + newAmount);
+
+                                        // Close
+                                        popup.close();
+                                    }
+                                } catch (NumberFormatException k) {
+                                    //System.out.println("Input non valido: " + nativeData);
+                                    newCredit.setText(""); // Clean out
+                                }
+                            } else {
+                                System.out.println("ERR: No valid input");
+                                throw new AmountNotAllowed();
+                            }
+                        });
 
 
-            // Handle actions when the "Submit" button is clicked
-            submitCredit.setOnAction(submitEvent -> {
-                String nativeData = newCredit.getText();
-                String regex = "^\\d+(\\.\\d{1,2})?$"; // Regex to check if user insert a number
-
-                if (nativeData.matches(regex)) {
-                    try {
-                        double newAmount = Double.parseDouble(nativeData);
-                        if (newAmount > 10000.0) {
-                            // If amount is too large
-                            AlertField.showAlert("Big amount", "The amount is too large. Choose another amount");
-                            newCredit.setText("");
-                        } else {
-                            // New label value
-                            userRegistered.setUserCredit(newAmount);
-                            moneyLabel.setText(String.valueOf(newAmount));
-                            //System.out.println("User input: " + newAmount);
-
-                            // Close
+                        // Handle actions when the "Close" button is clicked
+                        closePopup.setOnAction(closeEvent -> {
+                            // Close the custom popup without processing the input
                             popup.close();
-                        }
-                    } catch (NumberFormatException k) {
-                        //System.out.println("Input non valido: " + nativeData);
-                        newCredit.setText(""); // Clean out
-                    }
-                } else {
-                    System.out.println("ERR: No valid input");
-                    throw new AmountNotAllowed();
-                }
+                        });
+
+                        // Create a scene for the custom popup
+                        Scene popupScene = new Scene(windowBox);
+                        popup.setScene(popupScene);
+
+                        // Show the custom popup
+                        popup.showAndWait(); // Use showAndWait to wait for user interaction before continuing
+                    });
+
+            // Add menu items to the "Edit" menu
+            editMenu.getItems().addAll(amountItem);
+
+            // Create a "LogOut" menu
+            Menu options = new Menu("Options");
+            MenuItem logOutItem = new MenuItem("Log out");
+            logOutItem.setOnAction(e->{
+                primaryStage.setTitle("Start App");
+                primaryStage.setScene(LoginScene);
             });
-
-
-            // Handle actions when the "Close" button is clicked
-            closePopup.setOnAction(closeEvent -> {
-                // Close the custom popup without processing the input
-                popup.close();
-            });
-
-            // Create a scene for the custom popup
-            Scene popupScene = new Scene(windowBox);
-            popup.setScene(popupScene);
-
-            // Show the custom popup
-            popup.showAndWait(); // Use showAndWait to wait for user interaction before continuing
-        });
-
-        // Add menu items to the "Edit" menu
-        editMenu.getItems().addAll(amountItem);
-
-        // Create a "LogOut" menu
-        Menu options = new Menu("Options");
-        MenuItem logOutItem = new MenuItem("Log out");
-        logOutItem.setOnAction(e->{
-            primaryStage.setTitle("Start App");
-            primaryStage.setScene(LoginScene);
-        });
-        // Add menu items to the "LogOut" menu
-        options.getItems().addAll(logOutItem);
+            // Add menu items to the "LogOut" menu
+            options.getItems().addAll(logOutItem);
 
         // Add menus to the menu bar
-        menuBar.getMenus().addAll(fileMenu, editMenu, options);
+        menuBar.getMenus().addAll(infoMenu, editMenu, options);
 
+    // Define the parent Scene and Panes
         // Define the main SplitPane that contains the left and right panes
         SplitPane splitPane = new SplitPane();
-
         splitPane.getItems().addAll(leftPaneBox, rightPaneBox);
         splitPane.setDividerPositions(0.2, 0.6); // Configure SplitPane dimension
 
-        // Define the mainPane that will contain the main splitPane and the menuBar
+        // Define the first pane that will contain the main splitPane and the menuBar. It will contain everything
         BorderPane mainPane = new BorderPane(splitPane);
         mainPane.setTop(menuBar);
-
-//        mainPane.setMinWidth(1000); // Minimum width for the pane
-//        mainPane.setMinHeight(700); // Minimum height for the pane
 
         // Instantiate the whole scene and define its dimension
         WelcomeScene = new Scene(mainPane, 1400, 900); // <---- Dimension of the WelcomePane
         WelcomeScene.getStylesheets().add("styles.css"); // Reference to the CSS file
 
-        // Define elements and HBox for the topRightPane
-        Label username = new Label(userRegistered.getUsername());// Set the username as text of the label
+    // Define elements and HBox for the topRightPane
+        // Define username label to show username from the DB
+        Label username = new Label(userRegistered.getUsername());
 
         // Create an ImageView for the user image
         ImageView imgView = new ImageView();
         imgView.setFitWidth(30); // Dimension of the image
-        imgView.setFitHeight(30);
+        imgView.setFitHeight(30); // Dimension of the image
 
         // Create a FileChooser so that the user can insert an image
         FileChooser fileChooser = new FileChooser();
@@ -631,7 +687,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         userView.setFitWidth(24); // Set the desired width for the image
         userView.setFitHeight(24); // Set the desired height for the image
 
-        // Button for updating an image
+        // Section for updating the image
         Button selectImageButton = new Button();
         selectImageButton.setGraphic(userView);
         selectImageButton.setOnAction(e -> {
@@ -658,17 +714,16 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         // Add all the elements into the tobBox
         topBox.getChildren().addAll(profilePic, username, moneyLabel, listOfBetStock);
 
-        // Define an GridPane to better align logOut button. It contains the topBox
-        GridPane underGridPane = new GridPane();
-        underGridPane.setPadding(new Insets(10));
-        underGridPane.setHgap(10);
-        underGridPane.setVgap(0);
-        underGridPane.setAlignment(Pos.CENTER);
+//        // Define an GridPane to better align logOut button. It contains the topBox  << OLD
+//        GridPane underGridPane = new GridPane();
+//        underGridPane.setPadding(new Insets(10));
+//        underGridPane.setHgap(10);
+//        underGridPane.setVgap(0);
+//        underGridPane.setAlignment(Pos.CENTER);
+//        underGridPane.add(topBox, 0, 0);
+////        underGridPane.add(logOut, 6, 0);
 
-        underGridPane.add(topBox, 0, 0);
-//        underGridPane.add(logOut, 6, 0);
-
-        topRightPane.getChildren().addAll(underGridPane);
+        topRightPane.getChildren().addAll(topBox);
 
     } // Close WelcomePane
 

@@ -5,10 +5,7 @@ import com.opencsv.exceptions.CsvValidationException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.PieChart;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -146,8 +143,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         symbols.add("googl");
         symbols.add("ENL.BE");
 
-        checkBoxSeriesMap = new HashMap<>();
-
         // Define VBox for the right pane of the main SplitPane
         VBox rightPaneBox = new VBox();
 
@@ -182,8 +177,11 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
         logOut.setGraphic(logoutImageView);
 
-        // Create main line chart
+        // Create line chart
         LineChart<Number, Number> lineChart= createLineChart("Choose a company");
+
+        // Crate the bar chart
+        BarChart<String, Number> mainBarChart= createBarChart("Choose a company");
 
         // Define layout for the left split pane
             //Define leftPaneBox to be a VBox
@@ -240,9 +238,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             XYChart.Series<Number, Number> series = new XYChart.Series<>();
             series.setName(symbol); // Set the name of the serie
 
-            // Save the series into the map associated with the checkbox
-            checkBoxSeriesMap.put(checkBox, series);
-
             // Placeholders values in case something goes wrong with API call
             String sym = "phSymbol";
             String nameOfCompany = "phNameOfCompany";
@@ -272,6 +267,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                 if (checkBox.isSelected()) {
                     boolean callMade = false;
 
+                    // To make the API call
                     for (CheckBox cb : checkBoxesArrayList) {
                         if (cb.isSelected()) {
                             assert false;  //Not to be used
@@ -279,47 +275,60 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                         }
                     }
 
-
+                    // Initialize the stock and put the stock into the ArrayList
                     Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany(), testObj.regularMarketDayOpen(), testObj.regularMarketDayHigh(), testObj.regularMarketDayLow(), testObj.regularMarketPreviousClose());
-                    //System.out.println(testObj.extractNameOfCompany());
                     stocksCheckedOn.add(stock);
-                    callMade = false;
+                    callMade = true; // If true then API CALL, if false then PlaceHold data
 
-
-                    //String aa= String.valueOf(p1);
-                    //double p2 = testObj.postMarketChangePercent();
-                    //String bb = String.valueOf(p2);
-
-                    //test.setVisible(false);
-
-
+                    // Placeholder data
                     try {
                         // Placeholders for testing
                         updateDataHistory(1, 1.0, 1.0, 1.0, "", 1.0,1.0,1.0, "", "");
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
-                    //});
 
-                    // Create a new series for this checkbox
-                    XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
-                    newSeries.setName((testObj==null? nameOfCompany: testObj.extractSymbolOfCompany()));
-                    //nameOfCompany= testObj.extractNameOfCompany();
+                    // Define the lineChart with all the data
+                        // Create a new series for this checkBox
+                        XYChart.Series<Number, Number> lineChartSeries = new XYChart.Series<>();
+                        // Define caption; if testObj is null then placeHolderString as name, otherwise SymbolOfCompany as name of the serie
+                        lineChartSeries.setName((testObj==null? nameOfCompany: testObj.extractSymbolOfCompany()));
 
-                    newSeries.getData().addAll(
-                            //(testObj==null? nameOfCompany: testObj.extractNameOfCompany())
-                            new XYChart.Data<>(0, (callMade? testObj.regularMarketDayOpen(): 50)),
-                            new XYChart.Data<>(1, (callMade? testObj.regularMarketDayHigh()*10: 50)),
-                            new XYChart.Data<>(2, (callMade? testObj.regularMarketDayLow()/10: 50)),
-                            new XYChart.Data<>(3, (callMade? testObj.regularMarketPreviousClose(): 200)));
+                        // Define the points of the line chart
+                        lineChartSeries.getData().addAll(
+                                //(testObj==null? nameOfCompany: testObj.extractNameOfCompany())
+                                new XYChart.Data<>(0, (callMade? testObj.regularMarketDayOpen(): 50)),
+                                new XYChart.Data<>(1, (callMade? testObj.regularMarketDayHigh()*10: 50)),
+                                new XYChart.Data<>(2, (callMade? testObj.regularMarketDayLow()/10: 50)),
+                                new XYChart.Data<>(3, (callMade? testObj.regularMarketPreviousClose(): 200))
+                        );
 
-                    // Add the new series to the line chart
-                    lineChart.setTitle((testObj==null? nameOfCompany: testObj.extractNameOfCompany()));
+                        // Define chart title; if object is null then name placeholder name, otherwise nameOfCompany
+                        lineChart.setTitle((testObj==null ? nameOfCompany : testObj.extractNameOfCompany()));
 
-                    lineChart.getData().add(newSeries);
-                    //bottomRightPane.getChildren().add(lineChart);
+                        // Add the data (points) to the line chart
+                        lineChart.getData().add(lineChartSeries);
 
-                }
+                    // Define the barChart with all the data
+                        //Create a new series for this checkBox
+                        XYChart.Series<String, Number> barChartSeries = new XYChart.Series<>();
+                        // Set the title
+                        series.setName("Data for " + symbol);
+
+//                        // Define the bar, inserting the data
+//                        barChartSeries.getData().addAll(
+//                                new XYChart.Data<>(testObj.extractSymbolOfCompany(), testObj.extractAverageDailyVolume3MonthFmt())
+//                        );
+
+                        // Define chart title
+                        mainBarChart.setTitle(testObj==null ? nameOfCompany : testObj.extractNameOfCompany());
+
+                        // Add the data to the barChart
+                        mainBarChart.getData().add(barChartSeries);
+
+                } // Close if
+
+                // If checkbox is not selected then remove the line from the chart
                 if (!checkBox.isSelected() ) {
                     final String temp = (testObj == null ? nameOfCompany : checkBox.getText()).toUpperCase();
                     lineChart.getData().removeIf(serie -> serie.getName().equals(temp));
@@ -509,27 +518,54 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         leftPaneBox.getChildren().addAll(previsionBox);
         leftPaneBox.setSpacing(10); // Define space between the elements inside the box
 
-    //Define PieChart for other datas
-        PieChart.Data[] pieChartData = {
-                new PieChart.Data("USD", 25000000),
-                new PieChart.Data("EUR", 18000000),
-                new PieChart.Data("JPY", 15000000),
-                // Aggiungi altre valute e i rispettivi volumi
-        };
+//    //Define PieChart for other datas
+//        PieChart.Data[] pieChartData = {
+//                new PieChart.Data("USD", 25000000),
+//                new PieChart.Data("EUR", 18000000),
+//                new PieChart.Data("JPY", 15000000),
+//                // Aggiungi altre valute e i rispettivi volumi
+//        };
+//
+//        // Create pie chart
+//        PieChart pieChart = new PieChart();
+//        pieChart.getData().addAll(pieChartData);
+//
+//        // Set title to pie chart
+//        pieChart.setTitle("Distribution of Currency Volume");
 
-        // Create pie chart
-        PieChart pieChart = new PieChart();
-        pieChart.getData().addAll(pieChartData);
-
-        // Set title to pie chart
-        pieChart.setTitle("Distribution of Currency Volume");
-
-        //Create a box to insert line and pie chart
+        //Create a box to insert all the charts
         VBox chartsBox = new VBox(10);
-        chartsBox.getChildren().addAll(lineChart, pieChart);
+        chartsBox.getChildren().addAll(lineChart);
+
+//        chartsBox.getChildren().addAll(lineChart, pieChart);
+
+//    // Define a BarChart for volume data
+//        // Define the graph axes
+//        final CategoryAxis xAxis = new CategoryAxis();
+//        final NumberAxis yAxis = new NumberAxis();
+//
+//        // Create the bar chart
+//        final BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
+//        barChart.setTitle("Bar chart");
+//
+//        // Crate a series of data
+//        XYChart.Series<String, Number> series = new XYChart.Series<>();
+//        series.setName("Data");
+//
+//        // Add the data to the series
+//        series.getData().add(new XYChart.Data<>("AMC", 10));
+//        series.getData().add(new XYChart.Data<>("Categoria 2", 20));
+//        series.getData().add(new XYChart.Data<>("Categoria 3", 15));
+//        series.getData().add(new XYChart.Data<>("Categoria 4", 5));
+//
+//        // Add the series to the chart
+//        barChart.getData().add(series);
+
+        // Add the barChart to the chartsBox
+        chartsBox.getChildren().addAll(mainBarChart);
 
         // Add the line chart to the bottomRightPane
-        bottomRightPane.getChildren().add(chartsBox);
+        bottomRightPane.getChildren().addAll(chartsBox);
 
         // Define the action of the logOut button
         logOut.setOnAction(e ->{
@@ -736,9 +772,19 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
         lineChart.setTitle(nameOfCompany);
 
-        lineChart.getData().addAll(checkBoxSeriesMap.values());
-
         return lineChart;
+    }
+
+    private BarChart<String, Number> createBarChart(String symbol) {
+        // Create X and Y axes for the bar chart
+        final CategoryAxis xAxis = new CategoryAxis();
+        final NumberAxis yAxis = new NumberAxis();
+
+        // Create the bar chart
+        final BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
+        barChart.setTitle("Bar Chart for " + symbol);
+
+        return barChart;
     }
 
     public Scene getScene(){

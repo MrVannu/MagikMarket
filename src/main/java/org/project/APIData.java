@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
+import org.springframework.ui.context.support.ResourceBundleThemeSource;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -360,17 +362,21 @@ public class APIData {
         return defaultValue;
     }
 
-    public double extractAverageDailyVolume3Month() {
-        double defaultValue = 0.0; // Defined value
+    /**
+     * Extracts the "fmt" value from the "averageDailyVolume3Month" field.
+     * @return The "fmt" value as a string, or a default message if not available or invalid.
+     */
+    public String extractAverageDailyVolume3MonthFmt() {
+        String defaultValue = "Value not available or invalid"; // Default value
 
         try {
             if (data != null) {
                 JsonNode toRead = mapper.readTree(data.toString());
                 JsonNode averageDailyVolume3MonthNode = toRead.get("averageDailyVolume3Month");
 
-                // Check if averageDailyVolume3MonthNode is not null and could be converted into double
-                if (averageDailyVolume3MonthNode != null && averageDailyVolume3MonthNode.isDouble()) {
-                    return averageDailyVolume3MonthNode.asDouble();
+                // Check if averageDailyVolume3MonthNode is not null and contains the "fmt" key
+                if (averageDailyVolume3MonthNode != null && averageDailyVolume3MonthNode.has("fmt")) {
+                    return averageDailyVolume3MonthNode.get("fmt").asText();
                 } else {
                     System.out.println("Value not available or invalid: averageDailyVolume3Month");
                 }
@@ -379,10 +385,12 @@ public class APIData {
             throw new RuntimeException(e);
         }
 
-        // If it wasn't possible to obtain a value, return the default value
-        System.out.println("Usage of default value: " + defaultValue);
+        // If it wasn't possible to obtain a value, return the default message
+        System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
+
+
 
 
 }

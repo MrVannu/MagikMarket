@@ -25,7 +25,7 @@ public class APIData {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://yahoo-finance127.p.rapidapi.com/price/"+symbol))
                 .header("content-type", "application/octet-stream")
-                .header("X-RapidAPI-Key", "c3f98819famsh3e9d4ed812b7142p19441fjsnee76f5e53fe3")
+                .header("X-RapidAPI-Key", "53a9ffe29bmshe9a312dbe835035p107921jsnd394d54af9d8")
                 .header("X-RapidAPI-Host", "yahoo-finance127.p.rapidapi.com")
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
@@ -65,14 +65,14 @@ public class APIData {
     }
 
     public int maxAge() {
-        int defaultValue = 101; // Valore predefinito
+        int defaultValue = 101; // Defined value
 
         try {
             if (data != null) {
                 JsonNode toRead = mapper.readTree(data.toString());
                 JsonNode maxAgeNode = toRead.get("maxAge");
 
-                // Controlla se maxAgeNode non è null e può essere convertito in un intero
+                // Check if maxAgeNode is null and if it could be converted into int
                 if (maxAgeNode != null && maxAgeNode.isInt()) {
                     return maxAgeNode.asInt();
                 } else {
@@ -85,7 +85,7 @@ public class APIData {
             throw new RuntimeException(e);
         }
 
-        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito
+        //If it was not possible to obtain a value, return the default value
         System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
@@ -147,7 +147,7 @@ public class APIData {
 
 
     public double preMarketChange() {
-        double defaultValue = 101.0; // Valore predefinito
+        double defaultValue = 101.0; // Defined value
 
         try {
             if(data != null) {
@@ -175,14 +175,14 @@ public class APIData {
 
 
     public String extractNameOfCompany() {
-        String value = "101"; // Inizializza come una stringa vuota
+        String value = "101"; // Initialize as empty string
 
         try {
             if(data != null) {
                 JsonNode toRead = mapper.readTree(data.toString());
                 JsonNode shortNameNode = toRead.get("shortName");
 
-                // Controlla se shortNameNode non è null
+                // Check if shortNameNot is not null
                 if (shortNameNode != null) {
                     value = shortNameNode.asText();
                 } else {
@@ -201,14 +201,14 @@ public class APIData {
 
 
     public double regularMarketDayHigh() {
-        double defaultValue = 101.0; // Valore predefinito
+        double defaultValue = 101.0; // Defined value
 
         try {
             if(data != null) {
                 JsonNode toRead = mapper.readTree(data.toString());
                 JsonNode regularMarketOpenNode = toRead.get("regularMarketDayHigh");
 
-                // Controlla se regularMarketOpenNode non è null e può essere convertito in un double
+                // Check if regualrMarketOpenNode is not null
                 if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
                     double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
                     System.out.println("Value in fmt format: " + fmtValue);
@@ -221,21 +221,21 @@ public class APIData {
             throw new RuntimeException(e);
         }
 
-        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito
+        // If it wasn't possible to obtain a value, return the default value
         System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
 
 
     public double regularMarketDayOpen() {
-        double defaultValue = 101.0; // Valore predefinito
+        double defaultValue = 101.0; // Defined value
 
         try {
             if(data != null) {
                 JsonNode toRead = mapper.readTree(data.toString());
                 JsonNode regularMarketOpenNode = toRead.get("regularMarketOpen");
 
-                // Controlla se regularMarketOpenNode non è null e può essere convertito in un double
+                // Check if regularMarketOpenNode is not null
                 if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
                     double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
                     System.out.println("Value in fmt format: " + fmtValue);
@@ -248,7 +248,7 @@ public class APIData {
             throw new RuntimeException(e);
         }
 
-        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito
+        // If it wasn't possible to obtain a value, return the default value
         System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
@@ -256,14 +256,14 @@ public class APIData {
 
 
     public double regularMarketDayLow() {
-        double defaultValue = 101.0; // Valore predefinito
+        double defaultValue = 101.0; // Define value
 
         try {
             if(data != null) {
                 JsonNode toRead = mapper.readTree(data.toString());
                 JsonNode regularMarketOpenNode = toRead.get("regularMarketDayLow");
 
-                // Controlla se regularMarketOpenNode non è null e può essere convertito in un double
+                // Check if regularMarketOpenNode is not null
                 if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
                     double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
                     System.out.println("Value in fmt format: " + fmtValue);
@@ -276,21 +276,21 @@ public class APIData {
             throw new RuntimeException(e);
         }
 
-        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito
+        // If it wasn't possible to obtain a value, return the default value
         System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
 
 
     public double regularMarketPreviousClose() {
-        double defaultValue = 101.0; // Valore predefinito
+        double defaultValue = 101.0; // Defined value
 
         try {
             if(data != null) {
                 JsonNode toRead = mapper.readTree(data.toString());
                 JsonNode regularMarketOpenNode = toRead.get("regularMarketPreviousClose");
 
-                // Controlla se regularMarketOpenNode non è null e può essere convertito in un double
+                // Check if regularMarketOpenNode is not null
                 if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
                     double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
                     System.out.println("Value in fmt format: " + fmtValue);
@@ -303,14 +303,14 @@ public class APIData {
             throw new RuntimeException(e);
         }
 
-        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito
+        // If it wasn't possible to obtain a value, return the default value
         System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
 
 
     public String extractSymbolOfCompany() {
-        String defaultValue = "101"; // Valore predefinito
+        String defaultValue = "101"; // Defined value
 
         try {
             if(data != null) {
@@ -318,7 +318,7 @@ public class APIData {
                 JsonNode symbolNode = toRead.get("symbol");
                 //System.out.println(symbolNode);
 
-                // Controlla se symbolNode non è null
+                // Check if symbolNode is not null and if symbolNode has a string
                 if (symbolNode != null && symbolNode.isTextual()) {
                     return symbolNode.asText();
                 } else {
@@ -329,7 +329,7 @@ public class APIData {
             throw new RuntimeException(e);
         }
 
-        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito
+        // If it wasn't possible to obtain a value, return the default value
         System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
@@ -337,14 +337,14 @@ public class APIData {
 
 
     public String extractCurrencySymbol() {
-        String defaultValue = "101"; // Valore predefinito
+        String defaultValue = "101"; // Defined value
 
         try {
             if(data != null) {
                 JsonNode toRead = mapper.readTree(data.toString());
                 JsonNode currencySymbolNode = toRead.get("currencySymbol");
 
-                // Controlla se currencySymbolNode non è null
+                // Check if currencySymbolNode is not null and if currecySymbolNode contains a string
                 if (currencySymbolNode != null && currencySymbolNode.isTextual()) {
                     return currencySymbolNode.asText();
                 } else {
@@ -355,11 +355,34 @@ public class APIData {
             throw new RuntimeException(e);
         }
 
-        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito "N/A"
+        // If it wasn't possible to obtain a value, return the default value "N/A"
         System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
 
+    public double extractAverageDailyVolume3Month() {
+        double defaultValue = 0.0; // Defined value
+
+        try {
+            if (data != null) {
+                JsonNode toRead = mapper.readTree(data.toString());
+                JsonNode averageDailyVolume3MonthNode = toRead.get("averageDailyVolume3Month");
+
+                // Check if averageDailyVolume3MonthNode is not null and could be converted into double
+                if (averageDailyVolume3MonthNode != null && averageDailyVolume3MonthNode.isDouble()) {
+                    return averageDailyVolume3MonthNode.asDouble();
+                } else {
+                    System.out.println("Value not available or invalid: averageDailyVolume3Month");
+                }
+            }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        // If it wasn't possible to obtain a value, return the default value
+        System.out.println("Usage of default value: " + defaultValue);
+        return defaultValue;
+    }
 
 
 }

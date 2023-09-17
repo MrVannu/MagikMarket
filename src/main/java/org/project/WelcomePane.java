@@ -7,6 +7,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -163,8 +164,8 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         // Add the internalVerticalSplitPane to the right pane (of the main splitPane)
         rightPaneBox.getChildren().add(rightVerticalSplitPane);
 
-        // Tell the splitPane to occupy the whole space in the VBox
-        VBox.setVgrow(rightVerticalSplitPane, Priority.ALWAYS);
+//        // Tell the splitPane to occupy the whole space in the VBox
+//        VBox.setVgrow(rightVerticalSplitPane, Priority.ALWAYS);
 
         // Define logOut button
         Button logOut = new  Button();
@@ -180,10 +181,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         logoutImageView.setFitHeight(24); // Set the desired height
 
         logOut.setGraphic(logoutImageView);
-
-        // Define HBox for the bottomRightPane
-        //HBox bottomBox = new HBox(logOut);
-        //bottomRightPane.getChildren().addAll(logOut);
 
         // Create main line chart
         LineChart<Number, Number> lineChart= createLineChart("Choose a company");
@@ -245,22 +242,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
             // Save the series into the map associated with the checkbox
             checkBoxSeriesMap.put(checkBox, series);
-
-// The following commented elements belong to the tooltip which has been changed to a custom popup
-//            // Create a TextField and a Submit button within a VBox for user input
-//            Label userInstruction = new Label("How much do you want to bet?");
-//            TextField betAmountField = new TextField(); // Define the field to insert the amount of betting
-//            Button submitBetButton = new Button("Submit");
-//            Button closeBetButton = new Button("Close");
-//            HBox inputButtons = new HBox(submitBetButton, closeBetButton);
-//            VBox userInputBox = new VBox(userInstruction, betAmountField, inputButtons);
-
-//            // Create a Tooltip and set the VBox containing the input elements as its graphic
-//            Tooltip betTooltip = new Tooltip();
-//            betTooltip.setGraphic(userInputBox);
-
-//            // Set the Tooltip to the "Bet" button
-//            Tooltip.install(bet, betTooltip);
 
             // Placeholders values in case something goes wrong with API call
             String sym = "phSymbol";
@@ -417,51 +398,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
                 // Show the custom popup
                 betPopup.showAndWait(); // Use showAndWait to wait for user interaction before continuing
-
-//                // Handle the "Bet" button action here. Working with the betTooltip
-//                betTooltip.show(bet, bet.getScene().getWindow().getX() + bet.getScene().getX() + bet.getLayoutX() + bet.getWidth(), bet.getScene().getWindow().getY() + bet.getScene().getY() + bet.getLayoutY());
             });
-
-// Handle submitBetButton in the tooltip
-//            submitBetButton.setOnAction(event -> {
-//                if(!betAmountField.getText().isEmpty()) { // If the field is not empty
-//                    try{
-//                        // Attempt to parse the text as a double. If parsing is successful, it's a valid number
-//                        double betAmount = Double.parseDouble(betAmountField.getText());
-//
-//                        //Decreases the user's amount of money in the GUI label
-//                        userRegistered.setUserCredit(Double.parseDouble(userRegistered.getUserCredit()) - Double.parseDouble(betAmountField.getText()));
-//                        //Update the money label
-//                        moneyLabel.setText(String.valueOf(userRegistered.getUserCredit()));
-//                        betAmountField.clear();
-//                        betTooltip.hide();
-//
-//                        /*if (stocksBetOn.stream().anyMatch(stock -> {
-//                            return stock.getName().equals(symbol);
-//                        })) */
-//                        //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
-//                        topBox.getChildren().add(new Label(symbol));
-//                        stocksCheckedOn.forEach(stock -> {
-//                            if(stock.getName().equals(symbol))
-//                                stock.setInvestedOn(true);
-//                        });
-//                    }
-//                    catch(NumberFormatException e){
-//                        // Parsing failed, the text is not a valid number
-//                        // Handle the case where the input is not a number
-//                        AlertField.showAlert("Invalid input", "Please enter a valid number.");
-//                        System.out.println("Invalid input. Please enter a valid number.");
-//                    }
-//                } else {
-//                    // The field is empty
-//                    AlertField.showAlert("Invalid input", "Please enter a bet amount.");
-//                    System.out.println("Field is empty. Please enter a bet amount.");
-//                }
-//            });
-// Handle the closeBetButton inside the tooltip
-//            closeBetButton.setOnAction(event -> {
-//                betTooltip.hide();
-//            });
 
             // Add the checkBoxes into the HBox
             checkBoxInsideHBox.getChildren().addAll(checkBox);
@@ -507,9 +444,10 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             previsionBox.setAlignment(Pos.CENTER);
 
             // Handle prevision button action
-        previsionButton.setOnAction(e->{
+            previsionButton.setOnAction(e->{
 
             // Check if stock has been invested
+
 
             // Popup for new graph
                 Stage previsionStage = new Stage();
@@ -523,6 +461,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                 LineChart<Number, Number> lineChartPrevision= createLineChart("Prevision");
 
                 // Create UI elements for the custom popup
+
                 Button closePrevisionPopup = new Button("Close");
                 HBox previsionPopupBox = new HBox(closePrevisionPopup);
                 previsionPopupBox.setSpacing(30);
@@ -533,16 +472,17 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                 windowBetBox.setSpacing(10);
                 windowBetBox.setAlignment(Pos.CENTER);
 
+                // Handle close button inside the popup
+                            closePrevisionPopup.setOnAction(ex->{
+                                previsionStage.close();
+                            });
+
                 // Create a scene for the custom popup
                 Scene previsionScene = new Scene(windowBetBox);
                 previsionStage.setScene(previsionScene);
 
                 // Show the custom popup
                 previsionStage.showAndWait(); // Use showAndWait to wait for user interaction before continuing
-
-                closePrevisionPopup.setOnAction(ex->{
-                    previsionStage.close();
-                });
 
             System.out.println("Stocks checked on: \n");
             stocksCheckedOn.forEach(stock -> {
@@ -569,8 +509,27 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         leftPaneBox.getChildren().addAll(previsionBox);
         leftPaneBox.setSpacing(10); // Define space between the elements inside the box
 
+    //Define PieChart for other datas
+        PieChart.Data[] pieChartData = {
+                new PieChart.Data("USD", 25000000),
+                new PieChart.Data("EUR", 18000000),
+                new PieChart.Data("JPY", 15000000),
+                // Aggiungi altre valute e i rispettivi volumi
+        };
+
+        // Create pie chart
+        PieChart pieChart = new PieChart();
+        pieChart.getData().addAll(pieChartData);
+
+        // Set title to pie chart
+        pieChart.setTitle("Distribution of Currency Volume");
+
+        //Create a box to insert line and pie chart
+        VBox chartsBox = new VBox(10);
+        chartsBox.getChildren().addAll(lineChart, pieChart);
+
         // Add the line chart to the bottomRightPane
-        bottomRightPane.getChildren().add(lineChart);
+        bottomRightPane.getChildren().add(chartsBox);
 
         // Define the action of the logOut button
         logOut.setOnAction(e ->{
@@ -757,15 +716,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         // Add all the elements into the tobBox
         topBox.getChildren().addAll(profilePic, username, moneyLabel, listOfBetStock);
 
-//        // Define an GridPane to better align logOut button. It contains the topBox  << OLD
-//        GridPane underGridPane = new GridPane();
-//        underGridPane.setPadding(new Insets(10));
-//        underGridPane.setHgap(10);
-//        underGridPane.setVgap(0);
-//        underGridPane.setAlignment(Pos.CENTER);
-//        underGridPane.add(topBox, 0, 0);
-////        underGridPane.add(logOut, 6, 0);
-
+        // Add the topBot into the StackPane
         topRightPane.getChildren().addAll(topBox);
 
     } // Close WelcomePane

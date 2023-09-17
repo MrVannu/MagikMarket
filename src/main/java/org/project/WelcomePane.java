@@ -296,7 +296,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
                 //For adding new line
                 if (checkBox.isSelected()) {
-                    boolean callMade = false;
+                    boolean callMade = true; // Activate/deactivate api call
 
                     for (CheckBox cb : checkBoxesArrayList) {
                         if (cb.isSelected()) {
@@ -308,7 +308,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                     // Initialize the stock and put the stock into the ArrayList
                     //Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany(), testObj.regularMarketDayOpen(), testObj.regularMarketDayHigh(), testObj.regularMarketDayLow(), testObj.regularMarketPreviousClose());
                     //stocksCheckedOn.add(stock);
-                    callMade = true; // If true then API CALL, if false then PlaceHold data
 
                     // Placeholder data
                     try {
@@ -324,59 +323,67 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                         // Define caption; if testObj is null then placeHolderString as name, otherwise SymbolOfCompany as name of the serie
                         lineChartSeries.setName((testObj==null? nameOfCompany: testObj.extractSymbolOfCompany()));
 
-
-                    callMade = true;
-                    lineChartSeries.getData().addAll(
-                            //(testObj==null? nameOfCompany: testObj.extractNameOfCompany())
-                            new XYChart.Data<>(0, (callMade? testObj.regularMarketDayOpen(): 50)),
-                            new XYChart.Data<>(1, (callMade? (testObj.regularMarketDayHigh()*10 + testObj.regularMarketDayOpen())/1.8: 50)),
-                            new XYChart.Data<>(2, (callMade? testObj.regularMarketDayHigh()*10: 50)),
-                            new XYChart.Data<>(3, (callMade? (testObj.regularMarketDayHigh()*10 + testObj.regularMarketDayLow())/2: 50)),
-                            new XYChart.Data<>(4, (callMade? testObj.regularMarketDayLow()/10: 50)),
-                            new XYChart.Data<>(5, (callMade? (testObj.regularMarketDayLow()*10 + testObj.regularMarketPreviousClose())/2.2: 50)),
-                            new XYChart.Data<>(6, (callMade? testObj.regularMarketPreviousClose(): 200)));
-
-
+                        lineChartSeries.getData().addAll(
+                                //(testObj==null? nameOfCompany: testObj.extractNameOfCompany())
+                                new XYChart.Data<>(0, (callMade? testObj.regularMarketDayOpen(): 50)),
+                                new XYChart.Data<>(1, (callMade? (testObj.regularMarketDayHigh()*10 + testObj.regularMarketDayOpen())/1.8: 50)),
+                                new XYChart.Data<>(2, (callMade? testObj.regularMarketDayHigh()*10: 50)),
+                                new XYChart.Data<>(3, (callMade? (testObj.regularMarketDayHigh()*10 + testObj.regularMarketDayLow())/2: 50)),
+                                new XYChart.Data<>(4, (callMade? testObj.regularMarketDayLow()/10: 50)),
+                                new XYChart.Data<>(5, (callMade? (testObj.regularMarketDayLow()*10 + testObj.regularMarketPreviousClose())/2.2: 50)),
+                                new XYChart.Data<>(6, (callMade? testObj.regularMarketPreviousClose(): 200))
+                        );
 
 
                     Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany(), testObj.regularMarketDayOpen(), testObj.regularMarketDayHigh(), testObj.regularMarketDayLow(), testObj.regularMarketPreviousClose());
-                    //System.out.println(testObj.extractNameOfCompany());
                     stocksCheckedOn.add(stock);
 
 
-                    //updateDataHistory();
-                    // Add the new series to the line chart
-                    lineChart.setTitle((testObj==null? nameOfCompany: testObj.extractNameOfCompany()));
-                        // Define chart title; if object is null then name placeholder name, otherwise nameOfCompany
-                        lineChart.setTitle((testObj==null ? nameOfCompany : testObj.extractNameOfCompany()));
+                        // Add the new series to the line chart
+                        lineChart.setTitle((testObj==null? nameOfCompany: testObj.extractNameOfCompany()));
+                            // Define chart title; if object is null then name placeholder name, otherwise nameOfCompany
+                            lineChart.setTitle((testObj==null ? nameOfCompany : testObj.extractNameOfCompany()));
 
-                        // Add the data (points) to the line chart
-                        lineChart.getData().add(lineChartSeries);
+                            // Add the data (points) to the line chart
+                            lineChart.getData().add(lineChartSeries);
 
                     // Define the barChart with all the data
                         //Create a new series for this checkBox
-                        XYChart.Series<String, Number> barChartSeries = new XYChart.Series<>();
+                            XYChart.Series<String, Number> barChartSeries = new XYChart.Series<>();
                         // Set the title
-                        series.setName("Data for " + symbol);
+                        barChartSeries.setName((testObj==null? nameOfCompany: testObj.extractSymbolOfCompany()));
 
-//                        // Define the bar, inserting the data
-//                        barChartSeries.getData().addAll(
-//                                new XYChart.Data<>(testObj.extractSymbolOfCompany(), testObj.extractAverageDailyVolume3MonthFmt())
-//                        );
+                        // Data management for barChart
+                            // Extract symbol and average daily volume (formatted) from JSON response
+                            String stringSymbol = testObj.extractSymbolOfCompany();
+                            String averageDailyVolumeFmt = testObj.extractAverageDailyVolume3MonthFmt();
+                                // Output data to console
+                                System.out.println("DATA:"+averageDailyVolumeFmt);
+                            // If string value is not empty then parse with the right format
+                            double averageDailyVolume = 0.0;
+                            if(!averageDailyVolumeFmt.equals("")) averageDailyVolume = testObj.parseFormattedValue(averageDailyVolumeFmt);
+                            else System.out.println("Empty averageDailyVolumeFmt!");
 
-                        // Define chart title
-                        mainBarChart.setTitle(testObj==null ? nameOfCompany : testObj.extractNameOfCompany());
-
-                        // Add the data to the barChart
-                        mainBarChart.getData().add(barChartSeries);
+                        // Define the bar chart and enter the manipulated data
+                            barChartSeries.getData().add(
+                                    new XYChart.Data<>(stringSymbol, callMade? 12.00 :  averageDailyVolume)
+                            );
+                            // Define chart title
+                            mainBarChart.setTitle(testObj==null ? nameOfCompany : testObj.extractNameOfCompany());
+                            // Add the data to the barChart
+                            mainBarChart.getData().add(barChartSeries);
 
                 } // Close if
 
                 // If checkbox is not selected then remove the line from the chart
-                if (!checkBox.isSelected() ) {
-                    final String temp = (testObj == null ? nameOfCompany : checkBox.getText()).toUpperCase();
-                    lineChart.getData().removeIf(serie -> serie.getName().equals(temp));
-                }
+                    if (!checkBox.isSelected() ) {
+                        // Take the symbol of the deselected checkBox
+                        final String temp = (testObj == null ? nameOfCompany : checkBox.getText()).toUpperCase();
+                        // Remove the series of data with the same symbol of the checkBox
+                        lineChart.getData().removeIf(serieLine -> serieLine.getName().equals(temp));
+                        //Revome the series of data with the same symbol of the checkBox
+                        mainBarChart.getData().removeIf(serieBar -> serieBar.getName().equals(temp));
+                    }
 
             }); // Closing checkBox action
 
@@ -404,7 +411,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                 windowBetBox.setSpacing(10);
                 windowBetBox.setAlignment(Pos.CENTER);
 
-                    //Handle submitBetAmount button
+                //Handle submitBetAmount button
                     submitBetAmount.setOnAction(e->{
                         if(!betField.getText().isEmpty()) { // If the field is not empty
                             try{
@@ -474,12 +481,12 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
         } // CLOSE FOREACH
 
-        // Add the checkBox + betButton into the layout
-        leftPaneBox.getChildren().addAll(lowerLeftBox);
-        // Let previsionBox occupy all the space inside the VBox it is inserted
-        VBox.setVgrow(lowerLeftBox, Priority.ALWAYS);
+            // Add the checkBox + betButton into the layout
+            leftPaneBox.getChildren().addAll(lowerLeftBox);
+            // Let previsionBox occupy all the space inside the VBox it is inserted
+            VBox.setVgrow(lowerLeftBox, Priority.ALWAYS);
 
-    // Define Prevision button and its layout
+        // Define Prevision button and its layout
                 // Define image for the button
                 Image arrowGui = new Image("file:src/main/resources/frecciale.png");
                 ImageView arrowGuiImg = new ImageView(arrowGui);
@@ -543,8 +550,8 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                         new XYChart.Data<>(3,  (stock.getRegularMarketDayHigh()*10 + stock.getRegularMarketDayLow())/2),
                         new XYChart.Data<>(4,  stock.getRegularMarketDayLow()/10),
                         new XYChart.Data<>(5,  (stock.getRegularMarketDayLow()*10 + stock.getMarketPreviousClose())/2.2),
-                        new XYChart.Data<>(6,  stock.getMarkerPreviousClose()));
-
+                        new XYChart.Data<>(6,  stock.getMarkerPreviousClose())
+                );
 
                 lineChartPrevision.getData().add(newSeries);
                 System.out.println(stock.getName());
@@ -828,6 +835,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
     } // Close WelcomePane
 
 
+
     // Data history management
     // Method to update data history database
 
@@ -854,7 +862,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
         // Create the bar chart
         final BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
-        barChart.setTitle("Bar Chart for " + symbol);
+//        barChart.setTitle();
 
         return barChart;
     }

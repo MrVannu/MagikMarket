@@ -27,7 +27,7 @@ public class APIData{
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://yahoo-finance127.p.rapidapi.com/price/"+symbol))
                 .header("content-type", "application/octet-stream")
-                .header("X-RapidAPI-Key", "53a9ffe29bmshe9a312dbe835035p107921jsnd394d54af9d8")
+                .header("X-RapidAPI-Key", "2478fea22fmsh73a2ac5221c9d74p11b02ejsne6a31b2c227c")
                 .header("X-RapidAPI-Host", "yahoo-finance127.p.rapidapi.com")
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
@@ -390,6 +390,16 @@ public class APIData{
         return defaultValue;
     }
 
+    public double parseFormattedValue(String averageDailyVolumeFmt) {
+        // Remove any commas or other non-numeric characters
+        String cleanedValue = averageDailyVolumeFmt.replaceAll("[^0-9.]", "");
+
+        // Parse the cleaned string to a double
+        double numericValue = Double.parseDouble(cleanedValue);
+
+        // Round the numeric value to two decimal places and return it
+        return Math.round(numericValue * 100.0) / 100.0;
+    }
 
 
 

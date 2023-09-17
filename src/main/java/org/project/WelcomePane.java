@@ -92,7 +92,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         List<String> closingRates = new ArrayList<>();
         List<String> highestRates = new ArrayList<>();
         List<String> lowestRates = new ArrayList<>();
-        List<Double> returnValues = new ArrayList<>();
+        ArrayList<Double> returnValues = new ArrayList<>();
 
         try (CSVReader reader = new CSVReader(new FileReader(pathDataHistoryDB))) {
             String[] nextLine;

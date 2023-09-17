@@ -19,6 +19,6 @@ public interface HistoryManagement {
 
     double generateNextPrevision(String nameToScanFor, String parameter, short precisionRange);
 
-    void giveATip(String nameToScanFor, String parameter);
+
 
 }

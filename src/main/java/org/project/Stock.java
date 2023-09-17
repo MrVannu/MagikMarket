@@ -12,11 +12,28 @@ public class Stock {
     private String name;
     private String description;
     private boolean available;
+    private double amountBetted=0.0;
     private boolean investedOn = false;
 
     public Stock(String symbol, String name, double regularMarketOpen, double regularMarketDayHigh, double regularMarketDayLow, double marketPreviousClose){
         this.symbol= symbol;
         this.name = name;
+        this.regularMarketOpen = regularMarketOpen;
+        this.regularMarketDayHigh = regularMarketDayHigh;
+        this.regularMarketDayLow= regularMarketDayLow;
+        this.marketPreviousClose = marketPreviousClose;
+    }
+
+    public void setAmountBetted(double amountBetted) {
+        this.amountBetted = amountBetted;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public double getAmountBetted() {
+        return amountBetted;
     }
 
     public void setSymbol(String sym) {

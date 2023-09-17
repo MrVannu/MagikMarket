@@ -12,7 +12,7 @@ public class Stock {
     private String name;
     private String description;
     private boolean available;
-    private double amountBetted=0.0;
+    private double amountBetted = 0.0;
     private boolean investedOn = false;
 
     public Stock(String symbol, String name, double regularMarketOpen, double regularMarketDayHigh, double regularMarketDayLow, double marketPreviousClose){

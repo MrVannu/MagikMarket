@@ -37,7 +37,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             double regularMarketChangePercent,
             double preMarketChange,
             String extractNameOfCompany,
-            double regularMarketOpen,
             double regularMarketDayHigh,
             double regularMarketDayLow,
             double regularMarketPreviousClose,
@@ -51,7 +50,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                 String.valueOf(regularMarketChangePercent) + ", " +
                 String.valueOf(preMarketChange) + ", " +
                 extractNameOfCompany + ", " +
-                String.valueOf(regularMarketOpen) + ", " +
                 String.valueOf(regularMarketDayHigh) + ", " +
                 String.valueOf(regularMarketDayLow) + ", " +
                 String.valueOf(regularMarketPreviousClose) + ", " +
@@ -100,9 +98,11 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             String[] nextLine;
 
             while ((nextLine = reader.readNext()) != null) {
+                System.out.println("entered while");
                 // Check whether the name is the wanted one
                 if (!nextLine[4].isEmpty() && nextLine[4].equals(nameToScanFor)) {  // "4" is the position of the name of  company into the db
                     if(!nextLine[5].isEmpty() && !nextLine[5].equals("101")) openRates.add(nextLine[5]); // Gets opening value
+                    System.out.println("line5 "+nextLine[5]+"line8"+nextLine[8]);
                     if(!nextLine[8].isEmpty() && !nextLine[8].equals("101")) closingRates.add(nextLine[8]); // Gets closing value
                     if(!nextLine[6].isEmpty() && !nextLine[6].equals("101")) highestRates.add(nextLine[6]); // Gets closing value
                     if(!nextLine[7].isEmpty() && !nextLine[7].equals("101")) lowestRates.add(nextLine[7]); // Gets closing value
@@ -133,7 +133,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                     counterClosingValues++;
                     counterHighestValues++;
                     counterLowestValues++;
-               }
+                }
                 else if(k > openRates.size()) --precisionRange;
             }
 
@@ -559,13 +559,13 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                 Random rnd = new Random();
                 final double PARTICLE= (rnd.nextDouble(21)+1)/10;
                 final ArrayList<Double>  MODIFIER = generateNextPrevision(stock.getName());
-                System.out.println("before MOD"+stock.getRegularMarketOpen()+stock.getMarketPreviousClose());
+                System.out.println(MODIFIER.toString());
                 //Algorithm to modify the stocks to be implemented
                 stock.setRegularMarketOpen(MODIFIER.get(0));
                 stock.setRegularMarketDayHigh(MODIFIER.get(1)*2.2);
                 stock.setRegularMarketDayLow(MODIFIER.get(2)*1.7);
                 stock.setMarketPreviousClose(MODIFIER.get(3));
-                System.out.println("after MOD"+stock.getRegularMarketOpen()+stock.getMarketPreviousClose());
+                //System.out.println("after MOD"+stock.getRegularMarketOpen()+stock.getMarketPreviousClose());
 
                 newSeries.getData().addAll(
                         //(testObj==null? nameOfCompany: testObj.extractNameOfCompany())

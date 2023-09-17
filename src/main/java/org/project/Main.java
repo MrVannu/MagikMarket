@@ -5,9 +5,7 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.application.Application;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.FontWeight;
 import org.mindrot.jbcrypt.BCrypt;
@@ -15,7 +13,6 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.geometry.Insets;
-import javafx.scene.text.Text;
 import javafx.scene.text.Font;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -260,7 +257,7 @@ public class Main extends Application implements Authentication {
             else {
                 // The user does not exist
                 System.out.println("Does not exist");
-                AlertField.showAlert("Authentication error", "User not found or incorrect credentials.");
+                AlertField.showErrorAlert("Authentication error", "User not found or incorrect credentials.");
                 AlertField.invalidField(usernameFieldLogin, passwordFieldLogin);
             }
 
@@ -340,17 +337,17 @@ public class Main extends Application implements Authentication {
                 // If the registration was not successful then it will follow one of the 3 cases below
                 System.out.println("globalValidator failed");
                 if(checkField[0]){ // If the username already exists then the field is red
-                    AlertField.showAlert("Username error","Username not inserted or use another username.");
+                    AlertField.showErrorAlert("Username error","Username not inserted or use another username.");
                     AlertField.invalidField(usernameFieldRegister);
                     checkField[0]=false; // Resetting the check to false
                 }
                 if(checkField[1]){// If the password is empty then the field is red
-                    AlertField.showAlert("Password error","The password you inserted is not allowed or the field is empty.");
+                    AlertField.showErrorAlert("Password error","The password you inserted is not allowed or the field is empty.");
                     AlertField.invalidField(passwordFieldRegister);
                     checkField[1]=false; // Resetting the check to false
                 }
                 if(checkField[2]){// If the email does not match the regex (so is not valid) then the field is red
-                    AlertField.showAlert("Email error","The email you inserted is not an email.");
+                    AlertField.showErrorAlert("Email error","The email you inserted is not an email.");
                     AlertField.invalidField(emailFieldRegister);
                     checkField[2]=false; // Resetting the check to false
                 }

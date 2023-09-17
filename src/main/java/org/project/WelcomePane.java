@@ -2,6 +2,9 @@ package org.project;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,10 +13,13 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
 import java.io.*;
 import java.util.*;
 
@@ -25,6 +31,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
     private static final int MAX_SELECTED_CHECKBOXES = 4;
     private final String pathUserDB = "src/main/resources/userDB.csv";  // Path to DB for users tracking
     private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";  // Path to DB for data history
+    private final String pathStocksDB = "src/main/resources/StocksInvestedIn.csv";
     private short dataToUpdateIndex = 0;
     private ArrayList<String> symbols = new ArrayList<String>();
 
@@ -152,15 +159,34 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         }
     }
 
-    @Override
-    public void saveStocks(String username, Stock... stock) {
 
+    public void saveStocks(String username, Stock... stocks) {
+        final String s = ", ";
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathStocksDB))) {
+            for (Stock obj : stocks) {
+                writer.write(username + s);
+                writer.write(obj.getName() + s);
+                writer.write(obj.getRegularMarketOpen() + s);
+                writer.write(obj.getRegularMarketDayHigh() + s);
+                writer.write(obj.getRegularMarketDayLow() + s);
+                writer.write(obj.getMarkerPreviousClose() + s);
+                writer.write(String.valueOf(obj.getAmountBetted()));
+                writer.newLine();
+            }
+            //System.out.println("Stocks' data successfully wrote on the csv");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    @Override
+
+
     public void getSavedStocks(String username) {
-
+        // To be implemented yet
     }
+
 
 
     public WelcomePane(Stage primaryStage, Scene LoginScene, User userRegistered){
@@ -224,22 +250,39 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         BarChart<String, Number> mainBarChart= createBarChart("");
 
         // Define layout for the left split pane
-        //Define leftPaneBox to be a VBox
-        VBox leftPaneBox = new VBox(10);
-        leftPaneBox.setAlignment(Pos.CENTER_LEFT);
-        leftPaneBox.setPadding(new Insets(10));
-        // Create a Box to contain the checkBoxes
-        VBox boxBox = new VBox(10);
-        // Create a Box to contain the bet button
-        VBox betButtonsBox = new VBox(13);
-        // Create a HBox to contain both VBoxes
-        HBox lowerLeftBox = new HBox(boxBox,betButtonsBox);
-        lowerLeftBox.setSpacing(20);
-        // Define imageView for the logo image and define its dimensions
-        ImageView logoImg = new ImageView(new Image("mk.png"));
-        logoImg.setFitHeight(100);
-        logoImg.setFitWidth(170);
+            //Define leftPaneBox to be a VBox
+            VBox leftPaneBox = new VBox(10);
+            leftPaneBox.setAlignment(Pos.CENTER_LEFT);
+            leftPaneBox.setPadding(new Insets(10));
 
+//                // Create a Box to contain the checkBoxes
+                VBox boxBox = new VBox(10);
+                // Create a Box to contain the bet button
+                VBox betButtonsBox = new VBox(13);
+                    // Create a HBox to contain both VBoxes
+    //                HBox lowerLeftBox = new HBox(boxBox,betButtonsBox);
+                    HBox lowerLeftBox = new HBox();
+                    lowerLeftBox.setSpacing(20);
+
+            // Define imageView for the logo image and define its dimensions
+            ImageView logoImg = new ImageView(new Image("mk.png"));
+            logoImg.setFitHeight(100);
+            logoImg.setFitWidth(170);
+
+
+        //Define PieChart for other datas
+        PieChart.Data[] pieChartData = {
+                /*new PieChart.Data("USD", 25000000),
+                new PieChart.Data("EUR", 18000000),
+                new PieChart.Data("JPY", 15000000),*/
+                // Aggiungi altre valute e i rispettivi volumi
+        };
+        // Create pie chart
+        PieChart pieChart = new PieChart();
+        pieChart.getData().addAll(pieChartData);
+
+        // Set title to pie chart
+        pieChart.setTitle("Distribution of Currency Volume");
         // Define a Box for the logo
         VBox logoBox = new VBox(logoImg);
         logoBox.setAlignment(Pos.CENTER);
@@ -261,6 +304,17 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         ArrayList<Stock> stocksCheckedOn = new ArrayList<>();
         Label listOfBetStock = new Label() ;
 
+        // Define a gridPane for the checkBox and bet button
+        GridPane gridPane = new GridPane();
+        gridPane.setPadding(new Insets(10));
+        gridPane.setHgap(10); // Spazio orizzontale tra le colonne
+        gridPane.setVgap(10); // Spazio verticale tra le righe
+
+        /*
+            Define row variable to be incremented forEach checkBox so to be inserted vertically into
+            the gridpane
+        */
+            int row=0;
     /*
        In this foreach the Stock CheckBoxes are defined. Next to the checkboxes a button is added that permits the
        user to invest an amount of money to a specific Stock.
@@ -438,6 +492,10 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                                 if(stock.getSymbol().equals(symbols))
                                     stock.setAmountBetted(stock.getAmountBetted()+Double.parseDouble(betField.getText()));
                             });
+
+                            // Add the bet amount to the Pie Chart
+                            PieChart.Data data = new PieChart.Data(symbol, Double.parseDouble(betField.getText()));
+                            pieChart.getData().add(data);
                             betField.clear();
                             betPopup.close();
                         /*if (stocksBetOn.stream().anyMatch(stock -> {
@@ -513,31 +571,43 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         content.getChildren().addAll(new Text(previsionString), arrowGuiImg);
         content.setAlignment(Pos.CENTER);
 
-        // Define the prevision button and its box
-        Button previsionButton = new Button();
-        previsionButton.setGraphic(content); // Insert img inside button
+            // Define the prevision button and its box
+            Button previsionButton = new Button();
+            previsionButton.setGraphic(content); // Insert img inside button
 
+            // Define animation
+            Text welcomeText = new Text("Welcome!");
+            welcomeText.setFont(Font.font(24));
+
+            // Define flashing animation
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.seconds(0.5), e -> welcomeText.setVisible(true)),
+                    new KeyFrame(Duration.seconds(1), e -> welcomeText.setVisible(false))
+            );
+            timeline.setCycleCount(Animation.INDEFINITE);
+            timeline.play();
 
         // Define box to insert prevision button and animation
-        HBox previsionBox = new HBox(previsionButton);
-        previsionBox.setAlignment(Pos.CENTER);
+            VBox previsionBox = new VBox( 10 );
+            previsionBox.getChildren().addAll(previsionButton, welcomeText);
+            previsionBox.setAlignment(Pos.CENTER);
 
-        // Handle prevision button action
-        previsionButton.setOnAction(e->{
+            // Handle prevision button action
+            previsionButton.setOnAction(e->{
 
             // Check if stock has been invested
 
 
             // Popup for new graph
-            Stage previsionStage = new Stage();
-            previsionStage.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
-            previsionStage.initOwner(primaryStage); // Set primaryStage as the parent of popup
-            previsionStage.setTitle("Bet Input");
-            previsionStage.setWidth(800);
-            previsionStage.setHeight(500);
+                Stage previsionStage = new Stage();
+                previsionStage.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
+                previsionStage.initOwner(primaryStage); // Set primaryStage as the parent of popup
+                previsionStage.setTitle("Bet Input");
+                previsionStage.setWidth(800);
+                previsionStage.setHeight(500);
 
-            // Define a line chart
-            LineChart<Number, Number> lineChartPrevision= createLineChart("Prevision");
+                // Define a line chart
+                LineChart<Number, Number> lineChartPrevision= createLineChart("Prevision");
 
             System.out.println("Stocks checked on: \n");
             stocksCheckedOn.forEach(stock -> {
@@ -548,14 +618,15 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
                 Random rnd = new Random();
                 final double PARTICLE= (rnd.nextDouble(21)+1)/10;
-                final ArrayList<Double>  MODIFIER = generateNextPrevision(stock.getName());
-                System.out.println("before MOD"+stock.getRegularMarketOpen()+stock.getMarketPreviousClose());
+                System.out.println();
+                final ArrayList<Double>  MODIFIER = generateNextPrevision(stock.getSymbol());
+                //System.out.println(MODIFIER.toString());
                 //Algorithm to modify the stocks to be implemented
-                stock.setRegularMarketOpen(MODIFIER.get(0));
-                stock.setRegularMarketDayHigh(MODIFIER.get(1)*2.2);
-                stock.setRegularMarketDayLow(MODIFIER.get(2)*1.7);
-                stock.setMarketPreviousClose(MODIFIER.get(3));
-                System.out.println("after MOD"+stock.getRegularMarketOpen()+stock.getMarketPreviousClose());
+                stock.setRegularMarketOpen(stock.getRegularMarketOpen());
+                stock.setRegularMarketDayHigh(stock.getRegularMarketDayHigh()*2.2);
+                stock.setRegularMarketDayLow(stock.getRegularMarketDayLow()*1.7);
+                stock.setMarketPreviousClose(stock.getMarketPreviousClose());
+                //System.out.println("after MOD"+stock.getRegularMarketOpen()+stock.getMarketPreviousClose());
 
                 newSeries.getData().addAll(
                         //(testObj==null? nameOfCompany: testObj.extractNameOfCompany())
@@ -572,6 +643,12 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                 System.out.println(stock.getName());
                 // Create UI elements for the custom popup
 
+                /*try {
+                    updateDataHistory(1, 1.0, 1.0, 1.0, "test", 1.0,1.0,1.0, "test", "test");
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }*/
+            });
                 Button closePrevisionPopup = new Button("Close");
                 HBox previsionPopupBox = new HBox(closePrevisionPopup);
                 previsionPopupBox.setSpacing(30);
@@ -596,12 +673,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
 
             });
-                /*try {
-                    updateDataHistory(1, 1.0, 1.0, 1.0, "test", 1.0,1.0,1.0, "test", "test");
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }*/
-        });
 
         // Let previsionBox occupy all the space inside the VBox it is inserted
         VBox.setVgrow(previsionBox, Priority.ALWAYS);
@@ -610,22 +681,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         leftPaneBox.getChildren().addAll(previsionBox);
         leftPaneBox.setSpacing(10); // Define space between the elements inside the box
 
-        //Define PieChart for other datas
-        PieChart.Data[] pieChartData = {
-                new PieChart.Data("USD", 25000000),
-                new PieChart.Data("EUR", 18000000),
-                new PieChart.Data("JPY", 15000000),
-                // Aggiungi altre valute e i rispettivi volumi
-        };
-
-        // Create pie chart
-        PieChart pieChart = new PieChart();
-        pieChart.getData().addAll(pieChartData);
-
-        // Set title to pie chart
-        pieChart.setTitle("Distribution of Currency Volume");
-
-        // Layout
+    // Layout
         // Define a box to insert all the charts
         VBox chartsBox = new VBox(10);
         chartsBox.getChildren().addAll(lineChart);
@@ -634,6 +690,10 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         SplitPane barAndPieSplitPane = new SplitPane();
         barAndPieSplitPane.getItems().addAll(mainBarChart,pieChart);
         barAndPieSplitPane.setDividerPositions(0.7);
+//        barAndPieSplitPane.getStyleClass().add("dividerCharts");
+
+//        // Add the data into the pieChart
+//        pieChart.getData().addAll(pieChartData);
 
         // Add the barChart to the chartsBox
         chartsBox.getChildren().addAll(barAndPieSplitPane);
@@ -647,124 +707,124 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             primaryStage.setScene(LoginScene);
         });
 
-        // Define the menu bar
+    // Define the menu bar
         // Define the menu bar in the top of the mainPain
         MenuBar menuBar = new MenuBar();// Create a menu bar
 
-        // Create a "Info" menu
-        Menu infoMenu = new Menu("Info");
-        // Create menu items for the "File" menu
-        MenuItem instructionsItem = new MenuItem("Instructions");
-        instructionsItem.setOnAction(e->{
-            AlertField.showSuccessAlert("Information","This is a simulation of an " +
-                    "application that can help you having a look at the real market. You can invest some " +
-                    "money in some Stocks. You can have a look at the Stocks by selecting from the " +
-                    "checkboxes the Stocks you are interested on. You can select maximum 4 Stocks" +
-                    "You have an amount of money that is, by default, 1,000 (you can modify it form the edit" +
-                    "menu). As much as you invest, the amount of money will decrease. There will be " +
-                    "a simulation that will show you if your prediction was correct or not.");
-        });
-        MenuItem exitItem = new MenuItem("Exit");
-        // Exit the application if you click the exit item
-        exitItem.setOnAction(e -> {
-            System.exit(0); // Exit the application
-        });
-        // Add menu items into the "Info" menu and use a separator before the last element
-        infoMenu.getItems().addAll(instructionsItem, new SeparatorMenuItem(), exitItem);
+            // Create a "Info" menu
+            Menu infoMenu = new Menu("Info");
+                    // Create menu items for the "File" menu
+                    MenuItem instructionsItem = new MenuItem("Instructions");
+                    instructionsItem.setOnAction(e->{
+                        AlertField.showSuccessAlert("Information","This is a simulation of an " +
+                                "application that can help you having a look at the real market. You can invest some " +
+                                "money in some Stocks. You can have a look at the Stocks by selecting from the " +
+                                "checkboxes the Stocks you are interested on. You can select maximum 4 Stocks" +
+                                "You have an amount of money that is, by default, 1,000 (you can modify it form the edit" +
+                                "menu). As much as you invest, the amount of money will decrease. There will be " +
+                                "a simulation that will show you if your prediction was correct or not.");
+                    });
+                    MenuItem exitItem = new MenuItem("Exit");
+                    // Exit the application if you click the exit item
+                    exitItem.setOnAction(e -> {
+                        System.exit(0); // Exit the application
+                    });
+            // Add menu items into the "Info" menu and use a separator before the last element
+            infoMenu.getItems().addAll(instructionsItem, new SeparatorMenuItem(), exitItem);
 
-        // Create an "Edit" menu
-        Menu editMenu = new Menu("Edit");
-        // Create menu item for the "Edit" menu
-        // Create amountItem where the user can change his amount
-        MenuItem amountItem = new MenuItem("Amount");
+            // Create an "Edit" menu
+            Menu editMenu = new Menu("Edit");
+            // Create menu item for the "Edit" menu
+                // Create amountItem where the user can change his amount
+                MenuItem amountItem = new MenuItem("Amount");
 
-        // Handle actions when the "Amount" menu item is clicked
-        amountItem.setOnAction(e -> {
-            // Create a custom popup using a Stage
-            Stage popup = new Stage();
-            popup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
-            popup.initOwner(primaryStage); // Set primaryStage as the parent of popup
-            popup.setTitle("Amount Input");
-            popup.setWidth(400);
-            popup.setHeight(200);
+                    // Handle actions when the "Amount" menu item is clicked
+                    amountItem.setOnAction(e -> {
+                        // Create a custom popup using a Stage
+                        Stage popup = new Stage();
+                        popup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
+                        popup.initOwner(primaryStage); // Set primaryStage as the parent of popup
+                        popup.setTitle("Amount Input");
+                        popup.setWidth(400);
+                        popup.setHeight(200);
 
-            // Create UI elements for the custom popup
-            Label instr = new Label("Set your new amount");
-            TextField newCredit = new TextField();
-            Button submitCredit = new Button("Submit");
-            Button closePopup = new Button("Close");
-            HBox inputBox = new HBox(submitCredit, closePopup);
-            inputBox.setSpacing(30);
+                        // Create UI elements for the custom popup
+                        Label instr = new Label("Set your new amount");
+                        TextField newCredit = new TextField();
+                        Button submitCredit = new Button("Submit");
+                        Button closePopup = new Button("Close");
+                        HBox inputBox = new HBox(submitCredit, closePopup);
+                        inputBox.setSpacing(30);
 
-            // Define Box with elements for the popup
-            VBox windowBox = new VBox(instr, newCredit, inputBox);
-            windowBox.setPadding(new Insets(10));
-            windowBox.setSpacing(10);
-            windowBox.setAlignment(Pos.CENTER);
+                        // Define Box with elements for the popup
+                        VBox windowBox = new VBox(instr, newCredit, inputBox);
+                        windowBox.setPadding(new Insets(10));
+                        windowBox.setSpacing(10);
+                        windowBox.setAlignment(Pos.CENTER);
 
-            // Handle actions when the "Submit" button is clicked
-            submitCredit.setOnAction(submitEvent -> {
-                String nativeData = newCredit.getText();
-                String regex = "^\\d+(\\.\\d{1,2})?$"; // Regex to check if user insert a number
+                        // Handle actions when the "Submit" button is clicked
+                        submitCredit.setOnAction(submitEvent -> {
+                            String nativeData = newCredit.getText();
+                            String regex = "^\\d+(\\.\\d{1,2})?$"; // Regex to check if user insert a number
 
-                if (nativeData.matches(regex)) {
-                    try {
-                        double newAmount = Double.parseDouble(nativeData);
-                        if (newAmount > 10000.0) {
-                            // If amount is too large
-                            AlertField.showErrorAlert("Big amount", "The amount is too large. Choose another amount");
-                            newCredit.setText("");
-                        } else {
-                            // New label value
-                            userRegistered.setUserCredit(newAmount);
-                            moneyLabel.setText(String.valueOf(newAmount));
-                            //System.out.println("User input: " + newAmount);
+                            if (nativeData.matches(regex)) {
+                                try {
+                                    double newAmount = Double.parseDouble(nativeData);
+                                    if (newAmount > 10000.0) {
+                                        // If amount is too large
+                                        AlertField.showErrorAlert("Big amount", "The amount is too large. Choose another amount");
+                                        newCredit.setText("");
+                                    } else {
+                                        // New label value
+                                        userRegistered.setUserCredit(newAmount);
+                                        moneyLabel.setText(String.valueOf(newAmount));
+                                        //System.out.println("User input: " + newAmount);
 
-                            // Close
+                                        // Close
+                                        popup.close();
+                                    }
+                                } catch (NumberFormatException k) {
+                                    //System.out.println("Input non valido: " + nativeData);
+                                    newCredit.setText(""); // Clean out
+                                }
+                            } else {
+                                System.out.println("ERR: No valid input");
+                                throw new AmountNotAllowed();
+                            }
+                        });
+
+
+                        // Handle actions when the "Close" button is clicked
+                        closePopup.setOnAction(closeEvent -> {
+                            // Close the custom popup without processing the input
                             popup.close();
-                        }
-                    } catch (NumberFormatException k) {
-                        //System.out.println("Input non valido: " + nativeData);
-                        newCredit.setText(""); // Clean out
-                    }
-                } else {
-                    System.out.println("ERR: No valid input");
-                    throw new AmountNotAllowed();
-                }
+                        });
+
+                        // Create a scene for the custom popup
+                        Scene popupScene = new Scene(windowBox);
+                        popup.setScene(popupScene);
+
+                        // Show the custom popup
+                        popup.showAndWait(); // Use showAndWait to wait for user interaction before continuing
+                    });
+
+            // Add menu items to the "Edit" menu
+            editMenu.getItems().addAll(amountItem);
+
+            // Create a "LogOut" menu
+            Menu options = new Menu("Options");
+            MenuItem logOutItem = new MenuItem("Log out");
+            logOutItem.setOnAction(e->{
+                primaryStage.setTitle("Start App");
+                primaryStage.setScene(LoginScene);
             });
-
-
-            // Handle actions when the "Close" button is clicked
-            closePopup.setOnAction(closeEvent -> {
-                // Close the custom popup without processing the input
-                popup.close();
-            });
-
-            // Create a scene for the custom popup
-            Scene popupScene = new Scene(windowBox);
-            popup.setScene(popupScene);
-
-            // Show the custom popup
-            popup.showAndWait(); // Use showAndWait to wait for user interaction before continuing
-        });
-
-        // Add menu items to the "Edit" menu
-        editMenu.getItems().addAll(amountItem);
-
-        // Create a "LogOut" menu
-        Menu options = new Menu("Options");
-        MenuItem logOutItem = new MenuItem("Log out");
-        logOutItem.setOnAction(e->{
-            primaryStage.setTitle("Start App");
-            primaryStage.setScene(LoginScene);
-        });
-        // Add menu items to the "LogOut" menu
-        options.getItems().addAll(logOutItem);
+            // Add menu items to the "LogOut" menu
+            options.getItems().addAll(logOutItem);
 
         // Add menus to the menu bar
         menuBar.getMenus().addAll(infoMenu, editMenu, options);
 
-        // Define the parent Scene and Panes
+    // Define the parent Scene and Panes
         // Define the main SplitPane that contains the left and right panes
         SplitPane splitPane = new SplitPane();
         splitPane.getItems().addAll(leftPaneBox, rightPaneBox);
@@ -778,7 +838,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         WelcomeScene = new Scene(mainPane, 1400, 900); // <---- Dimension of the WelcomePane
         WelcomeScene.getStylesheets().add("styles.css"); // Reference to the CSS file
 
-        // Define elements and HBox for the topRightPane
+    // Define elements and HBox for the topRightPane
         // Define username label to show username from the DB
         Label username = new Label(userRegistered.getUsername());
 

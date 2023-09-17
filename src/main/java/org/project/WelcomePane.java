@@ -22,6 +22,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
     Scene WelcomeScene;
     private static final int MAX_SELECTED_CHECKBOXES = 4;
     private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";  // Path to DB for data history
+    private final String pathStocksDB = "src/main/resources/StocksInvestedIn.csv";
     private short dataToUpdateIndex = 0;
     private ArrayList<String> symbols = new ArrayList<String>();
 
@@ -150,17 +151,32 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
     }
 
 
-    public void saveStocks(String username, Stock... stock) {
-        String toWrite = username + ", ";
+    public void saveStocks(String username, Stock... stocks) {
+        final String s = ", ";
 
-        for (Stock obj : stock) {
-            // Logic
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathStocksDB))) {
+            for (Stock obj : stocks) {
+                writer.write(username + s);
+                writer.write(obj.getName() + s);
+                writer.write(obj.getRegularMarketOpen() + s);
+                writer.write(obj.getRegularMarketDayHigh() + s);
+                writer.write(obj.getRegularMarketDayLow() + s);
+                writer.write(obj.getMarkerPreviousClose() + s);
+                writer.write(String.valueOf(obj.getAmountBetted()));
+                writer.newLine();
+            }
+            //System.out.println("Stocks' data successfully wrote on the csv");
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
 
-    public void getSavedStocks(String username) {
 
+
+    public void getSavedStocks(String username) {
+        // To be implemented yet
     }
 
     public WelcomePane(Stage primaryStage, Scene LoginScene, User userRegistered){

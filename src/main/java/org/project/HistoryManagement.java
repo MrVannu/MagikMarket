@@ -1,6 +1,7 @@
 package org.project;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public interface HistoryManagement {
 
@@ -10,6 +11,7 @@ public interface HistoryManagement {
             double regularMarketChangePercent,
             double preMarketChange,
             String extractNameOfCompany,
+            double regularMarketOpen,
             double regularMarketDayHigh,
             double regularMarketDayLow,
             double regularMarketPreviousClose,
@@ -17,7 +19,7 @@ public interface HistoryManagement {
             String extractCurrencySymbol
     ) throws IOException {}
 
-    double generateNextPrevision(String nameToScanFor);
+    ArrayList<Double> generateNextPrevision(String nameToScanFor);
 
 
 

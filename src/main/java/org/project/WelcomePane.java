@@ -37,6 +37,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             double regularMarketChangePercent,
             double preMarketChange,
             String extractNameOfCompany,
+            double regularMarketOpen,
             double regularMarketDayHigh,
             double regularMarketDayLow,
             double regularMarketPreviousClose,
@@ -50,6 +51,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                 String.valueOf(regularMarketChangePercent) + ", " +
                 String.valueOf(preMarketChange) + ", " +
                 extractNameOfCompany + ", " +
+                String.valueOf(regularMarketOpen) + ", " +
                 String.valueOf(regularMarketDayHigh) + ", " +
                 String.valueOf(regularMarketDayLow) + ", " +
                 String.valueOf(regularMarketPreviousClose) + ", " +
@@ -87,7 +89,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
 
     // This method is yet to be improved providing a switch structure for various type of data are needed
-    public double generateNextPrevision(String nameToScanFor){
+    public ArrayList<Double> generateNextPrevision(String nameToScanFor){
         List<String> openRates = new ArrayList<>();
         List<String> closingRates = new ArrayList<>();
         List<String> highestRates = new ArrayList<>();
@@ -100,8 +102,10 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             while ((nextLine = reader.readNext()) != null) {
                 // Check whether the name is the wanted one
                 if (!nextLine[4].isEmpty() && nextLine[4].equals(nameToScanFor)) {  // "4" is the position of the name of  company into the db
-                    OpenRates.add(nextLine[N]);
-                    ClosingRates.add(nextLine[N]);
+                    if(!nextLine[5].isEmpty() && !nextLine[5].equals("101")) openRates.add(nextLine[5]); // Gets opening value
+                    if(!nextLine[8].isEmpty() && !nextLine[8].equals("101")) closingRates.add(nextLine[8]); // Gets closing value
+                    if(!nextLine[8].isEmpty() && !nextLine[6].equals("101")) highestRates.add(nextLine[6]); // Gets closing value
+                    if(!nextLine[8].isEmpty() && !nextLine[7].equals("101")) lowestRates.add(nextLine[7]); // Gets closing value
                 }
             }
 
@@ -139,7 +143,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             returnValues.add(3, closeValuesAverage/counterClosingValues);
 
 
-            return prevision;
+            return returnValues;
 
         } catch (IOException | CsvValidationException e) {
             throw new RuntimeException(e);
@@ -309,7 +313,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                     // Placeholder data
                     try {
                         // Placeholders for testing
-                        updateDataHistory(1, 1.0, 1.0, 1.0, "", 1.0,1.0,1.0, "", "");
+                        updateDataHistory(1, 1.0, 1.0, 1.0, "", 1.0,1.0,1.0,1.0, "", "");
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -520,13 +524,15 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                 newSeries.setName(stock.getName());
                 //nameOfCompany= testObj.extractNameOfCompany();
 
-                final double  MODIFIER = 2;
+                Random rnd = new Random();
+                final double PARTICLE= (rnd.nextDouble(21)+1)/10;
+                final ArrayList<Double>  MODIFIER = generateNextPrevision(stock.getName());
                 System.out.println("before MOD"+stock.getRegularMarketOpen()+stock.getMarketPreviousClose());
                 //Algorithm to modify the stocks to be implemented
-                stock.setRegularMarketOpen(stock.getRegularMarketOpen() * MODIFIER);
-                stock.setRegularMarketDayHigh(stock.getRegularMarketDayHigh() * MODIFIER);
-                stock.setRegularMarketDayLow(stock.getRegularMarketDayLow() * MODIFIER);
-                stock.setMarketPreviousClose(stock.getMarkerPreviousClose() * MODIFIER);
+                stock.setRegularMarketOpen(MODIFIER.get(0));
+                stock.setRegularMarketDayHigh(MODIFIER.get(1)*2.2);
+                stock.setRegularMarketDayLow(MODIFIER.get(2)*1.7);
+                stock.setMarketPreviousClose(MODIFIER.get(3));
                 System.out.println("after MOD"+stock.getRegularMarketOpen()+stock.getMarketPreviousClose());
 
                 newSeries.getData().addAll(

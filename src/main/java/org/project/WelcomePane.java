@@ -441,12 +441,12 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                             catch(NumberFormatException er){
                                 // Parsing failed, the text is not a valid number
                                 // Handle the case where the input is not a number
-                                AlertField.showAlert("Invalid input", "Please enter a valid number.");
+                                AlertField.showErrorAlert("Invalid input", "Please enter a valid number.");
                                 System.out.println("Invalid input. Please enter a valid number.");
                             }
                         } else {
                             // The field is empty
-                            AlertField.showAlert("Invalid input", "Please enter a bet amount.");
+                            AlertField.showErrorAlert("Invalid input", "Please enter a bet amount.");
                             System.out.println("Field is empty. Please enter a bet amount.");
                         }
                     });
@@ -504,6 +504,9 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             // Define the prevision button and its box
             Button previsionButton = new Button();
             previsionButton.setGraphic(content); // Insert img inside button
+
+
+            // Define box to insert prevision button and animation
             HBox previsionBox = new HBox(previsionButton);
             previsionBox.setAlignment(Pos.CENTER);
 
@@ -595,51 +598,33 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         leftPaneBox.getChildren().addAll(previsionBox);
         leftPaneBox.setSpacing(10); // Define space between the elements inside the box
 
-//    //Define PieChart for other datas
-//        PieChart.Data[] pieChartData = {
-//                new PieChart.Data("USD", 25000000),
-//                new PieChart.Data("EUR", 18000000),
-//                new PieChart.Data("JPY", 15000000),
-//                // Aggiungi altre valute e i rispettivi volumi
-//        };
-//
-//        // Create pie chart
-//        PieChart pieChart = new PieChart();
-//        pieChart.getData().addAll(pieChartData);
-//
-//        // Set title to pie chart
-//        pieChart.setTitle("Distribution of Currency Volume");
+    //Define PieChart for other datas
+        PieChart.Data[] pieChartData = {
+                new PieChart.Data("USD", 25000000),
+                new PieChart.Data("EUR", 18000000),
+                new PieChart.Data("JPY", 15000000),
+                // Aggiungi altre valute e i rispettivi volumi
+        };
 
-        //Create a box to insert all the charts
+        // Create pie chart
+        PieChart pieChart = new PieChart();
+        pieChart.getData().addAll(pieChartData);
+
+        // Set title to pie chart
+        pieChart.setTitle("Distribution of Currency Volume");
+
+    // Layout
+        // Define a box to insert all the charts
         VBox chartsBox = new VBox(10);
         chartsBox.getChildren().addAll(lineChart);
 
-//        chartsBox.getChildren().addAll(lineChart, pieChart);
-
-//    // Define a BarChart for volume data
-//        // Define the graph axes
-//        final CategoryAxis xAxis = new CategoryAxis();
-//        final NumberAxis yAxis = new NumberAxis();
-//
-//        // Create the bar chart
-//        final BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
-//        barChart.setTitle("Bar chart");
-//
-//        // Crate a series of data
-//        XYChart.Series<String, Number> series = new XYChart.Series<>();
-//        series.setName("Data");
-//
-//        // Add the data to the series
-//        series.getData().add(new XYChart.Data<>("AMC", 10));
-//        series.getData().add(new XYChart.Data<>("Categoria 2", 20));
-//        series.getData().add(new XYChart.Data<>("Categoria 3", 15));
-//        series.getData().add(new XYChart.Data<>("Categoria 4", 5));
-//
-//        // Add the series to the chart
-//        barChart.getData().add(series);
+        // Define a SplitPane for inserting two charts
+        SplitPane barAndPieSplitPane = new SplitPane();
+        barAndPieSplitPane.getItems().addAll(mainBarChart,pieChart);
+        barAndPieSplitPane.setDividerPositions(0.7);
 
         // Add the barChart to the chartsBox
-        chartsBox.getChildren().addAll(mainBarChart);
+        chartsBox.getChildren().addAll(barAndPieSplitPane);
 
         // Add the line chart to the bottomRightPane
         bottomRightPane.getChildren().addAll(chartsBox);
@@ -715,7 +700,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                                     double newAmount = Double.parseDouble(nativeData);
                                     if (newAmount > 10000.0) {
                                         // If amount is too large
-                                        AlertField.showAlert("Big amount", "The amount is too large. Choose another amount");
+                                        AlertField.showErrorAlert("Big amount", "The amount is too large. Choose another amount");
                                         newCredit.setText("");
                                     } else {
                                         // New label value

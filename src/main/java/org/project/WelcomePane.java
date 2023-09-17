@@ -174,10 +174,11 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
 
 
-
     public void getSavedStocks(String username) {
         // To be implemented yet
     }
+
+
 
     public WelcomePane(Stage primaryStage, Scene LoginScene, User userRegistered){
         super();

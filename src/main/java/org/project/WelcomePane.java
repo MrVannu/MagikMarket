@@ -21,7 +21,6 @@ import java.util.*;
 public class WelcomePane extends APIData implements HistoryManagement { // To use data from api obj
     Scene WelcomeScene;
     private static final int MAX_SELECTED_CHECKBOXES = 4;
-    private final String pathUserDB = "src/main/resources/userDB.csv";  // Path to DB for users tracking
     private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";  // Path to DB for data history
     private short dataToUpdateIndex = 0;
     private ArrayList<String> symbols = new ArrayList<String>();
@@ -151,6 +150,19 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
     }
 
 
+    public void saveStocks(String username, Stock... stock) {
+        String toWrite = username + ", ";
+
+        for (Stock obj : stock) {
+            // Logic
+        }
+    }
+
+
+    public void getSavedStocks(String username) {
+
+    }
+
     public WelcomePane(Stage primaryStage, Scene LoginScene, User userRegistered){
         super();
 
@@ -186,9 +198,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
         // Add the internalVerticalSplitPane to the right pane (of the main splitPane)
         rightPaneBox.getChildren().add(rightVerticalSplitPane);
-
-//        // Tell the splitPane to occupy the whole space in the VBox
-//        VBox.setVgrow(rightVerticalSplitPane, Priority.ALWAYS);
 
         // Define logOut button
         Button logOut = new  Button();
@@ -306,8 +315,8 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                     }
 
                     // Initialize the stock and put the stock into the ArrayList
-                    //Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany(), testObj.regularMarketDayOpen(), testObj.regularMarketDayHigh(), testObj.regularMarketDayLow(), testObj.regularMarketPreviousClose());
-                    //stocksCheckedOn.add(stock);
+                    Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany(), testObj.regularMarketDayOpen(), testObj.regularMarketDayHigh(), testObj.regularMarketDayLow(), testObj.regularMarketPreviousClose());
+                    stocksCheckedOn.add(stock);
 
                     // Placeholder data
                     try {
@@ -333,10 +342,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                                 new XYChart.Data<>(5, (callMade? (testObj.regularMarketDayLow()*10 + testObj.regularMarketPreviousClose())/2.2: 50)),
                                 new XYChart.Data<>(6, (callMade? testObj.regularMarketPreviousClose(): 200))
                         );
-
-
-                    Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany(), testObj.regularMarketDayOpen(), testObj.regularMarketDayHigh(), testObj.regularMarketDayLow(), testObj.regularMarketPreviousClose());
-                    stocksCheckedOn.add(stock);
 
 
                         // Add the new series to the line chart

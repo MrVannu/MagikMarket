@@ -19,7 +19,12 @@ public interface HistoryManagement {
             String extractCurrencySymbol
     ) throws IOException {}
 
+
     ArrayList<Double> generateNextPrevision(String nameToScanFor);
+
+    void saveStocks (String username, Stock ... stock);
+
+    void getSavedStocks (String username);
 
 
 

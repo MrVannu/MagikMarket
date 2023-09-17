@@ -27,7 +27,7 @@ public class APIData{
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://yahoo-finance127.p.rapidapi.com/price/"+symbol))
                 .header("content-type", "application/octet-stream")
-                .header("X-RapidAPI-Key", "2478fea22fmsh73a2ac5221c9d74p11b02ejsne6a31b2c227c")
+                .header("X-RapidAPI-Key", "e86cb1c7fbmsh7a61f358185d6ddp1446a9jsnf400eaca1772")
                 .header("X-RapidAPI-Host", "yahoo-finance127.p.rapidapi.com")
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();

@@ -37,6 +37,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             double regularMarketChangePercent,
             double preMarketChange,
             String extractNameOfCompany,
+            double regularMarketOpen,
             double regularMarketDayHigh,
             double regularMarketDayLow,
             double regularMarketPreviousClose,
@@ -50,6 +51,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                 String.valueOf(regularMarketChangePercent) + ", " +
                 String.valueOf(preMarketChange) + ", " +
                 extractNameOfCompany + ", " +
+                String.valueOf(regularMarketOpen) + ", " +
                 String.valueOf(regularMarketDayHigh) + ", " +
                 String.valueOf(regularMarketDayLow) + ", " +
                 String.valueOf(regularMarketPreviousClose) + ", " +
@@ -98,15 +100,23 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             String[] nextLine;
 
             while ((nextLine = reader.readNext()) != null) {
-                System.out.println("entered while");
-                // Check whether the name is the wanted one
-                if (!nextLine[4].isEmpty() && nextLine[4].equals(nameToScanFor)) {  // "4" is the position of the name of  company into the db
-                    if(!nextLine[5].isEmpty() && !nextLine[5].equals("101")) openRates.add(nextLine[5]); // Gets opening value
-                    System.out.println("line5 "+nextLine[5]+"line8"+nextLine[8]);
-                    if(!nextLine[8].isEmpty() && !nextLine[8].equals("101")) closingRates.add(nextLine[8]); // Gets closing value
-                    if(!nextLine[6].isEmpty() && !nextLine[6].equals("101")) highestRates.add(nextLine[6]); // Gets closing value
-                    if(!nextLine[7].isEmpty() && !nextLine[7].equals("101")) lowestRates.add(nextLine[7]); // Gets closing value
-                }
+                //System.out.println(nextLine.toString());
+
+                try {
+                    System.out.println(nextLine[8] + "<-----Closing value    ");
+                    // Check whether the name is the wanted one
+                    if (!nextLine[4].isEmpty() && nextLine[4].toUpperCase().equals(" " + nameToScanFor.toUpperCase())) {  // "4" is the position of the name of  company into the db
+                        if (!nextLine[5].isEmpty() && !nextLine[5].equals("101"))
+                            openRates.add(nextLine[5]); // Gets opening value
+                        System.out.println("line5 " + nextLine[5] + "line8" + nextLine[8]);
+                        if (!nextLine[8].isEmpty() && !nextLine[8].equals("101"))
+                            closingRates.add(nextLine[8]); // Gets closing value
+                        if (!nextLine[6].isEmpty() && !nextLine[6].equals("101"))
+                            highestRates.add(nextLine[6]); // Gets closing value
+                        if (!nextLine[7].isEmpty() && !nextLine[7].equals("101"))
+                            lowestRates.add(nextLine[7]); // Gets closing value
+                    }
+                }catch (ArrayIndexOutOfBoundsException e){}
             }
 
             Random random = new Random();
@@ -336,12 +346,12 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                     stocksCheckedOn.add(stock);
 
                     // Placeholder data
-                    try {
+                    /*try {
                         // Placeholders for testing
                         updateDataHistory(1, 1.0, 1.0, 1.0, "", 1.0,1.0,1.0,1.0, "", "");
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
-                    }
+                    }*/
 
                     // Define the lineChart with all the data
                         // Create a new series for this checkBox
@@ -558,13 +568,14 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
                 Random rnd = new Random();
                 final double PARTICLE= (rnd.nextDouble(21)+1)/10;
-                final ArrayList<Double>  MODIFIER = generateNextPrevision(stock.getName());
-                System.out.println(MODIFIER.toString());
+                System.out.println();
+                final ArrayList<Double>  MODIFIER = generateNextPrevision(stock.getSymbol());
+                //System.out.println(MODIFIER.toString());
                 //Algorithm to modify the stocks to be implemented
-                stock.setRegularMarketOpen(MODIFIER.get(0));
-                stock.setRegularMarketDayHigh(MODIFIER.get(1)*2.2);
-                stock.setRegularMarketDayLow(MODIFIER.get(2)*1.7);
-                stock.setMarketPreviousClose(MODIFIER.get(3));
+                stock.setRegularMarketOpen(stock.getRegularMarketOpen());
+                stock.setRegularMarketDayHigh(stock.getRegularMarketDayHigh()*2.2);
+                stock.setRegularMarketDayLow(stock.getRegularMarketDayLow()*1.7);
+                stock.setMarketPreviousClose(stock.getMarketPreviousClose());
                 //System.out.println("after MOD"+stock.getRegularMarketOpen()+stock.getMarketPreviousClose());
 
                 newSeries.getData().addAll(
@@ -582,6 +593,12 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                 System.out.println(stock.getName());
                 // Create UI elements for the custom popup
 
+                /*try {
+                    updateDataHistory(1, 1.0, 1.0, 1.0, "test", 1.0,1.0,1.0, "test", "test");
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }*/
+            });
                 Button closePrevisionPopup = new Button("Close");
                 HBox previsionPopupBox = new HBox(closePrevisionPopup);
                 previsionPopupBox.setSpacing(30);
@@ -593,9 +610,9 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                 windowBetBox.setAlignment(Pos.CENTER);
 
                 // Handle close button inside the popup
-                            closePrevisionPopup.setOnAction(ex->{
-                                previsionStage.close();
-                            });
+                closePrevisionPopup.setOnAction(ex->{
+                    previsionStage.close();
+                });
 
                 // Create a scene for the custom popup
                 Scene previsionScene = new Scene(windowBetBox);
@@ -605,12 +622,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                 previsionStage.showAndWait(); // Use showAndWait to wait for user interaction before continuing
 
 
-                });
-                /*try {
-                    updateDataHistory(1, 1.0, 1.0, 1.0, "test", 1.0,1.0,1.0, "test", "test");
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }*/
             });
 
         // Let previsionBox occupy all the space inside the VBox it is inserted

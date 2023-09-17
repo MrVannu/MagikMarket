@@ -1,20 +1,20 @@
 /* styles.css */
 
 /* Style for checkboxes */
-    .checkbox {
-        -fx-font-size: 14px;
-        -fx-text-fill: black;
-        -fx-padding: 5px;
-    }
+.checkbox {
+    -fx-font-size: 14px;
+    -fx-text-fill: black;
+    -fx-padding: 5px;
+}
 
-    .checkbox:selected .box {
-        -fx-background-color: #007bff;
-        -fx-border-color: #007bff;
-    }
+.checkbox:selected .box {
+    -fx-background-color: #007bff;
+    -fx-border-color: #007bff;
+}
 
-    .checkbox:disabled .text {
-        -fx-fill: gray;
-    }
+.checkbox:disabled .text {
+    -fx-fill: gray;
+}
 
 /* Style for invalid input */
 .text-field:invalid {
@@ -72,9 +72,9 @@
     -fx-background-color: #e5d7ff;
 }
 
-/* Il selettore CSS per il tuo bottone */
+/* CSS selector for your button */
 .my-button:hover {
-    /* Stile dell'hover */
-    -fx-background-color: #5C3190; /* Cambia il colore di sfondo al passaggio del mouse */
-    -fx-text-fill: white; /* Cambia il colore del testo al passaggio del mouse */
+    /* Hover style */
+    -fx-background-color: #5C3190; /* Change background color on hover */
+    -fx-text-fill: white; /* Change text color on hover */
 }

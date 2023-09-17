@@ -2,6 +2,9 @@ package org.project;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,10 +13,13 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
 import java.io.*;
 import java.util.*;
 
@@ -252,13 +258,16 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             VBox leftPaneBox = new VBox(10);
             leftPaneBox.setAlignment(Pos.CENTER_LEFT);
             leftPaneBox.setPadding(new Insets(10));
-            // Create a Box to contain the checkBoxes
-            VBox boxBox = new VBox(10);
-            // Create a Box to contain the bet button
-            VBox betButtonsBox = new VBox(13);
-            // Create a HBox to contain both VBoxes
-            HBox lowerLeftBox = new HBox(boxBox,betButtonsBox);
-            lowerLeftBox.setSpacing(20);
+
+//                // Create a Box to contain the checkBoxes
+//                VBox boxBox = new VBox(10);
+//                // Create a Box to contain the bet button
+//                VBox betButtonsBox = new VBox(13);
+                    // Create a HBox to contain both VBoxes
+    //                HBox lowerLeftBox = new HBox(boxBox,betButtonsBox);
+                    HBox lowerLeftBox = new HBox();
+                    lowerLeftBox.setSpacing(20);
+
             // Define imageView for the logo image and define its dimensions
             ImageView logoImg = new ImageView(new Image("mk.png"));
             logoImg.setFitHeight(100);
@@ -278,6 +287,15 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         topBox.setHgap(10);
         topBox.setVgap(10);
 
+
+        //Define PieChart for other datas
+
+        // Create pie chart
+        PieChart pieChart = new PieChart();
+
+        // Set title to pie chart
+        pieChart.setTitle("Money invested on a stock");
+
         // Create a label for the amount of money
         Label moneyLabel = new Label(userRegistered.getUserCredit()); // Replace with the actual amount
         moneyLabel.getStyleClass().add("money-label"); // You can define a CSS class for styling
@@ -285,6 +303,17 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         ArrayList<Stock> stocksCheckedOn = new ArrayList<>();
         Label listOfBetStock = new Label() ;
 
+        // Define a gridPane for the checkBox and bet button
+        GridPane gridPane = new GridPane();
+        gridPane.setPadding(new Insets(10));
+        gridPane.setHgap(10); // Spazio orizzontale tra le colonne
+        gridPane.setVgap(10); // Spazio verticale tra le righe
+
+        /*
+            Define row variable to be incremented forEach checkBox so to be inserted vertically into
+            the gridpane
+        */
+            int row=0;
     /*
        In this foreach the Stock CheckBoxes are defined. Next to the checkboxes a button is added that permits the
        user to invest an amount of money to a specific Stock.
@@ -452,12 +481,18 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
                                 //Decreases the user's amount of money in the GUI label
                                 userRegistered.setUserCredit(Double.parseDouble(userRegistered.getUserCredit()) - Double.parseDouble(betField.getText()));
+
                                 //Update the money label
                                 moneyLabel.setText(String.valueOf(userRegistered.getUserCredit()));
+
+
                                 stocksCheckedOn.forEach(stock -> {
                                     if(stock.getSymbol().equals(symbols))
                                         stock.setAmountBetted(stock.getAmountBetted()+Double.parseDouble(betField.getText()));
+                                        pieChart.getData().add(new PieChart.Data(stock.getName(), stock.getAmountBetted()));
                                 });
+
+
                                 betField.clear();
                                 betPopup.close();
                         /*if (stocksBetOn.stream().anyMatch(stock -> {
@@ -495,26 +530,30 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                 // Show the custom popup
                 betPopup.showAndWait(); // Use showAndWait to wait for user interaction before continuing
             });
-
-            // Add the checkBoxes into the HBox
-            checkBoxInsideHBox.getChildren().addAll(checkBox);
-
             // Add the bet button into the ArrayList
             betButtonsArrayList.add(bet);
 
-            // Add the checkBox into the ArrayList
-            checkBoxesArrayList.add(checkBox);
+                /*
+                Developing gridPane structure for checkBox and bet so to obtain aligned elements.
+                 */
+//                    // Add the bet button into the betButtonsBox
+//                    betButtonsBox.getChildren().addAll(bet);
+//
+//                    // Add the checkBox into the ArrayList
+//                    checkBoxesArrayList.add(checkBox);
 
-            // Add the HBox into the VBox for vertical layout
-            boxBox.getChildren().addAll(checkBoxInsideHBox);// boxBox is previously added into lowerLeftBox
+                    // Insert bet into gridPane
+                    gridPane.add(checkBox, 0, row);
+                    gridPane.add(bet, 2, row);
 
-            // Add the bet button into the betButtonsBox
-            betButtonsBox.getChildren().addAll(bet);
+//            // Add the checkBox into the VBox for vertical layout
+//            lowerLeftBox.getChildren().addAll(gridPane);
 
+            row++; // Increment row for gridPane layout
         } // CLOSE FOREACH
 
             // Add the checkBox + betButton into the layout
-            leftPaneBox.getChildren().addAll(lowerLeftBox);
+            leftPaneBox.getChildren().addAll(gridPane);
             // Let previsionBox occupy all the space inside the VBox it is inserted
             VBox.setVgrow(lowerLeftBox, Priority.ALWAYS);
 
@@ -537,9 +576,21 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             Button previsionButton = new Button();
             previsionButton.setGraphic(content); // Insert img inside button
 
+            // Define animation
+            Text welcomeText = new Text("Welcome!");
+            welcomeText.setFont(Font.font(24));
 
-            // Define box to insert prevision button and animation
-            HBox previsionBox = new HBox(previsionButton);
+            // Define flashing animation
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.seconds(0.5), e -> welcomeText.setVisible(true)),
+                    new KeyFrame(Duration.seconds(1), e -> welcomeText.setVisible(false))
+            );
+            timeline.setCycleCount(Animation.INDEFINITE);
+            timeline.play();
+
+        // Define box to insert prevision button and animation
+            VBox previsionBox = new VBox( 10 );
+            previsionBox.getChildren().addAll(previsionButton, welcomeText);
             previsionBox.setAlignment(Pos.CENTER);
 
             // Handle prevision button action
@@ -631,21 +682,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         leftPaneBox.getChildren().addAll(previsionBox);
         leftPaneBox.setSpacing(10); // Define space between the elements inside the box
 
-    //Define PieChart for other datas
-        PieChart.Data[] pieChartData = {
-                new PieChart.Data("USD", 25000000),
-                new PieChart.Data("EUR", 18000000),
-                new PieChart.Data("JPY", 15000000),
-                // Aggiungi altre valute e i rispettivi volumi
-        };
-
-        // Create pie chart
-        PieChart pieChart = new PieChart();
-        pieChart.getData().addAll(pieChartData);
-
-        // Set title to pie chart
-        pieChart.setTitle("Distribution of Currency Volume");
-
     // Layout
         // Define a box to insert all the charts
         VBox chartsBox = new VBox(10);
@@ -655,6 +691,10 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         SplitPane barAndPieSplitPane = new SplitPane();
         barAndPieSplitPane.getItems().addAll(mainBarChart,pieChart);
         barAndPieSplitPane.setDividerPositions(0.7);
+//        barAndPieSplitPane.getStyleClass().add("dividerCharts");
+
+//        // Add the data into the pieChart
+//        pieChart.getData().addAll(pieChartData);
 
         // Add the barChart to the chartsBox
         chartsBox.getChildren().addAll(barAndPieSplitPane);

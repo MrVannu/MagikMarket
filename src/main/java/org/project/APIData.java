@@ -27,7 +27,7 @@ public class APIData{
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://yahoo-finance127.p.rapidapi.com/price/"+symbol))
                 .header("content-type", "application/octet-stream")
-                .header("X-RapidAPI-Key", "e86cb1c7fbmsh7a61f358185d6ddp1446a9jsnf400eaca1772")
+                .header("X-RapidAPI-Key", "1d42ba6144msh6f2e48b689d3770p10f476jsn4444c9191d86")
                 .header("X-RapidAPI-Host", "yahoo-finance127.p.rapidapi.com")
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
@@ -91,6 +91,9 @@ public class APIData{
         System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
+
+
+
 
 
     public double postMarketChangePercent() {
@@ -387,33 +390,18 @@ public class APIData{
         return defaultValue;
     }
 
-
     public double parseFormattedValue(String averageDailyVolumeFmt) {
         // Remove any commas or other non-numeric characters
         String cleanedValue = averageDailyVolumeFmt.replaceAll("[^0-9.]", "");
-        double returned = 0.0;
 
-        if (!averageDailyVolumeFmt.isEmpty()) {
-            try {
-                // Parse the cleaned string to a double
-                double numericValue = Double.parseDouble(cleanedValue);
+        // Parse the cleaned string to a double
+        double numericValue = Double.parseDouble(cleanedValue);
 
-                // Round the numeric value to two decimal places and return it
-                returned = Math.round(numericValue * 100.0) / 100.0;
-
-            } catch (NumberFormatException e) {
-                // Handle case when number can not be parsed to double
-                System.err.println("Non valid input: " + averageDailyVolumeFmt);
-
-            }
-        } else {
-            // Handle case when input is empty
-            System.err.println("Empty input");
-            returned = 0.0;
-        }
-
-        return returned;
+        // Round the numeric value to two decimal places and return it
+        return Math.round(numericValue * 100.0) / 100.0;
     }
+
+
 
 }
 

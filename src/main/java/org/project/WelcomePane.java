@@ -104,8 +104,8 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                 if (!nextLine[4].isEmpty() && nextLine[4].equals(nameToScanFor)) {  // "4" is the position of the name of  company into the db
                     if(!nextLine[5].isEmpty() && !nextLine[5].equals("101")) openRates.add(nextLine[5]); // Gets opening value
                     if(!nextLine[8].isEmpty() && !nextLine[8].equals("101")) closingRates.add(nextLine[8]); // Gets closing value
-                    if(!nextLine[8].isEmpty() && !nextLine[6].equals("101")) highestRates.add(nextLine[6]); // Gets closing value
-                    if(!nextLine[8].isEmpty() && !nextLine[7].equals("101")) lowestRates.add(nextLine[7]); // Gets closing value
+                    if(!nextLine[6].isEmpty() && !nextLine[6].equals("101")) highestRates.add(nextLine[6]); // Gets closing value
+                    if(!nextLine[7].isEmpty() && !nextLine[7].equals("101")) lowestRates.add(nextLine[7]); // Gets closing value
                 }
             }
 
@@ -123,7 +123,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             double lowestValuesAverage = 0.0;
 
             for (int k = 0; k <= precisionRange; k++) {
-                if (k <= openRates.size() && k <= closingRates.size() && k <= highestRates.size() && k <= lowestRates.size()) {
+                if (k < openRates.size() && k < closingRates.size() && k < highestRates.size() && k < lowestRates.size()) {
                     openValuesAverage += Double.parseDouble(openRates.get(k));
                     closeValuesAverage += Double.parseDouble(closingRates.get(k));
                     highestValuesAverage += Double.parseDouble(highestRates.get(k));

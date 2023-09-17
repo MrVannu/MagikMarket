@@ -93,9 +93,6 @@ public class APIData{
     }
 
 
-
-
-
     public double postMarketChangePercent() {
         double defaultValue = 101.0; // Default value
 
@@ -400,8 +397,6 @@ public class APIData{
         // Round the numeric value to two decimal places and return it
         return Math.round(numericValue * 100.0) / 100.0;
     }
-
-
 
 }
 

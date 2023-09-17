@@ -90,6 +90,9 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
     public double generateNextPrevision(String nameToScanFor){
         List<String> openRates = new ArrayList<>();
         List<String> closingRates = new ArrayList<>();
+        List<String> highestRates = new ArrayList<>();
+        List<String> lowestRates = new ArrayList<>();
+        List<Double> returnValues = new ArrayList<>();
 
         try (CSVReader reader = new CSVReader(new FileReader(pathDataHistoryDB))) {
             String[] nextLine;
@@ -103,23 +106,38 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             }
 
             Random random = new Random();
-            int precisionRange = (random.nextInt(11))+4; // Generates a random integer between 1 (inclusive) and 10 (inclusive)
+            int precisionRange = (random.nextInt(101))+4; // Generates a random integer
 
             short counterOpeningValues = 0;
             short counterClosingValues = 0;
+            short counterHighestValues = 0;
+            short counterLowestValues = 0;
+
             double openValuesAverage = 0.0;
             double closeValuesAverage = 0.0;
+            double highestValuesAverage = 0.0;
+            double lowestValuesAverage = 0.0;
 
             for (int k = 0; k <= precisionRange; k++) {
-                if (k <= openRates.size() && k <= closingRates.size()) {
+                if (k <= openRates.size() && k <= closingRates.size() && k <= highestRates.size() && k <= lowestRates.size()) {
                     openValuesAverage += Double.parseDouble(openRates.get(k));
                     closeValuesAverage += Double.parseDouble(closingRates.get(k));
+                    highestValuesAverage += Double.parseDouble(highestRates.get(k));
+                    lowestValuesAverage += Double.parseDouble(lowestRates.get(k));
+
                     counterOpeningValues++;
                     counterClosingValues++;
-
+                    counterHighestValues++;
+                    counterLowestValues++;
                }
                 else if(k > openRates.size()) --precisionRange;
             }
+
+            returnValues.add(0, openValuesAverage/counterOpeningValues);
+            returnValues.add(1, highestValuesAverage/counterHighestValues);
+            returnValues.add(2, lowestValuesAverage/counterLowestValues);
+            returnValues.add(3, closeValuesAverage/counterClosingValues);
+
 
             return prevision;
 

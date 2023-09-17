@@ -14,7 +14,7 @@ import java.net.http.HttpResponse;
 
 
 //Fetch the data + return a list
-public class APIData {
+public class APIData{
 
     private String symbol;
     private JSONObject data;

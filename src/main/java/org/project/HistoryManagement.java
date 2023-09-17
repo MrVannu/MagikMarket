@@ -17,7 +17,7 @@ public interface HistoryManagement {
             String extractCurrencySymbol
     ) throws IOException {}
 
-    double generateNextPrevision(String nameToScanFor, short precisionRange);
+    double generateNextPrevision(String nameToScanFor);
 
 
 

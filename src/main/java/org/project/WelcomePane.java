@@ -87,10 +87,9 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
 
     // This method is yet to be improved providing a switch structure for various type of data are needed
-    public double generateNextPrevision(String nameToScanFor, short precisionRange){
-        List<String> OpenRates = new ArrayList<>();
-        List<String> ClosingRates = new ArrayList<>();
-        double prevision;
+    public double generateNextPrevision(String nameToScanFor){
+        List<String> openRates = new ArrayList<>();
+        List<String> closingRates = new ArrayList<>();
 
         try (CSVReader reader = new CSVReader(new FileReader(pathDataHistoryDB))) {
             String[] nextLine;
@@ -104,14 +103,22 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             }
 
             Random random = new Random();
-            int randomInRange = (random.nextInt(11))+1; // Generates a random integer between 1 (inclusive) and 10 (inclusive)
+            int precisionRange = (random.nextInt(11))+4; // Generates a random integer between 1 (inclusive) and 10 (inclusive)
 
-            prevision = 0.0;
+            short counterOpeningValues = 0;
+            short counterClosingValues = 0;
+            double openValuesAverage = 0.0;
+            double closeValuesAverage = 0.0;
+
             for (int k = 0; k <= precisionRange; k++) {
-                if (k < OpenRates.size()) {
+                if (k <= openRates.size() && k <= closingRates.size()) {
+                    openValuesAverage += Double.parseDouble(openRates.get(k));
+                    closeValuesAverage += Double.parseDouble(closingRates.get(k));
+                    counterOpeningValues++;
+                    counterClosingValues++;
 
-                    prevision = Double.parseDouble(OpenRates.get(k));
-               } else break;
+               }
+                else if(k > openRates.size()) --precisionRange;
             }
 
             return prevision;

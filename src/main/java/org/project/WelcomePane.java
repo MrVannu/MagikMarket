@@ -18,6 +18,8 @@ import java.io.*;
 import java.util.*;
 
 
+
+
 public class WelcomePane extends APIData implements HistoryManagement { // To use data from api obj
     Scene WelcomeScene;
     private static final int MAX_SELECTED_CHECKBOXES = 4;

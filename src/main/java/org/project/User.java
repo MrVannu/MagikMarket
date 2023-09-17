@@ -1,4 +1,3 @@
-
 package org.project;
 
 import com.opencsv.CSVReader;
@@ -33,6 +32,7 @@ public class User {
     public String getUsername() {
         return username;
     }
+
 
     // Method to modify the userCredit value into the UserDB
     public String getUserCredit() {

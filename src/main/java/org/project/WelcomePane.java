@@ -87,8 +87,9 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
 
     // This method is yet to be improved providing a switch structure for various type of data are needed
-    public double generateNextPrevision(String nameToScanFor, String parameter, short precisionRange){
-        List<String[]> linesToSave = new ArrayList<>();
+    public double generateNextPrevision(String nameToScanFor, short precisionRange){
+        List<String> OpenRates = new ArrayList<>();
+        List<String> ClosingRates = new ArrayList<>();
         double prevision;
 
         try (CSVReader reader = new CSVReader(new FileReader(pathDataHistoryDB))) {
@@ -97,22 +98,23 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
             while ((nextLine = reader.readNext()) != null) {
                 // Check whether the name is the wanted one
                 if (!nextLine[4].isEmpty() && nextLine[4].equals(nameToScanFor)) {  // "4" is the position of the name of  company into the db
-                    linesToSave.add(nextLine);
+                    OpenRates.add(nextLine[N]);
+                    ClosingRates.add(nextLine[N]);
                 }
             }
 
             Random random = new Random();
             int randomInRange = (random.nextInt(11))+1; // Generates a random integer between 1 (inclusive) and 10 (inclusive)
 
-            prevision = 0;
-            for (int k = 0; k < precisionRange; k++) {
-                if (k < linesToSave.size()) {
-                    String[] currentLine = linesToSave.get(k);
-                    prevision += Double.parseDouble(currentLine[2]); // To sum the postMarketChangePercent
-                }
-            }
-            return prevision;
+            prevision = 0.0;
+            for (int k = 0; k <= precisionRange; k++) {
+                if (k < OpenRates.size()) {
 
+                    prevision = Double.parseDouble(OpenRates.get(k));
+               } else break;
+            }
+
+            return prevision;
 
         } catch (IOException | CsvValidationException e) {
             throw new RuntimeException(e);

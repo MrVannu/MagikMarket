@@ -387,15 +387,32 @@ public class APIData{
         return defaultValue;
     }
 
+
     public double parseFormattedValue(String averageDailyVolumeFmt) {
         // Remove any commas or other non-numeric characters
         String cleanedValue = averageDailyVolumeFmt.replaceAll("[^0-9.]", "");
+        double returned = 0.0;
 
-        // Parse the cleaned string to a double
-        double numericValue = Double.parseDouble(cleanedValue);
+        if (!averageDailyVolumeFmt.isEmpty()) {
+            try {
+                // Parse the cleaned string to a double
+                double numericValue = Double.parseDouble(cleanedValue);
 
-        // Round the numeric value to two decimal places and return it
-        return Math.round(numericValue * 100.0) / 100.0;
+                // Round the numeric value to two decimal places and return it
+                returned = Math.round(numericValue * 100.0) / 100.0;
+
+            } catch (NumberFormatException e) {
+                // Handle case when number can not be parsed to double
+                System.err.println("Non valid input: " + averageDailyVolumeFmt);
+
+            }
+        } else {
+            // Handle case when input is empty
+            System.err.println("Empty input");
+            returned = 0.0;
+        }
+
+        return returned;
     }
 
 }

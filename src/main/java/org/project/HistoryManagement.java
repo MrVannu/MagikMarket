@@ -20,7 +20,7 @@ public interface HistoryManagement {
     ) throws IOException {}
 
 
-    ArrayList<Double> generateNextPrevision(String nameToScanFor);
+    ArrayList<Double> generateNextPrevision(String nameToScanFor, LoginControl loginControl);
 
     void saveStocks (String username, Stock ... stock);
 

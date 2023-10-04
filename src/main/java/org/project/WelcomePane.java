@@ -19,7 +19,7 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 
-public class WelcomePane extends APIData implements HistoryManagement { // To use data from api obj
+public class WelcomePane extends APIData { // To use data from api obj
     Scene WelcomeScene;
     private static final int MAX_SELECTED_CHECKBOXES = 4;
     private final String pathUserDB = "src/main/resources/userDB.csv";  // Path to DB for users tracking
@@ -88,80 +88,6 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         //System.out.println(dataToUpdateIndex);
     }
 
-
-    // This method is yet to be improved providing a switch structure for various type of data are needed
-    public ArrayList<Double> generateNextPrevision(String nameToScanFor){
-        List<String> openRates = new ArrayList<>();
-        List<String> closingRates = new ArrayList<>();
-        List<String> highestRates = new ArrayList<>();
-        List<String> lowestRates = new ArrayList<>();
-        ArrayList<Double> returnValues = new ArrayList<>();
-
-        try (CSVReader reader = new CSVReader(new FileReader(pathDataHistoryDB))) {
-            String[] nextLine;
-
-            while ((nextLine = reader.readNext()) != null) {
-                // Check whether the name is the wanted one
-                if (!nextLine[4].isEmpty() && nextLine[4].equals(nameToScanFor)) {  // "4" is the position of the name of  company into the db
-                    if(!nextLine[5].isEmpty() && !nextLine[5].equals("101")) openRates.add(nextLine[5]); // Gets opening value
-                    if(!nextLine[8].isEmpty() && !nextLine[8].equals("101")) closingRates.add(nextLine[8]); // Gets closing value
-                    if(!nextLine[6].isEmpty() && !nextLine[6].equals("101")) highestRates.add(nextLine[6]); // Gets closing value
-                    if(!nextLine[7].isEmpty() && !nextLine[7].equals("101")) lowestRates.add(nextLine[7]); // Gets closing value
-                }
-            }
-
-            Random random = new Random();
-            int precisionRange = (random.nextInt(101))+4; // Generates a random integer
-
-            short counterOpeningValues = 0;
-            short counterClosingValues = 0;
-            short counterHighestValues = 0;
-            short counterLowestValues = 0;
-
-            double openValuesAverage = 0.0;
-            double closeValuesAverage = 0.0;
-            double highestValuesAverage = 0.0;
-            double lowestValuesAverage = 0.0;
-
-            for (int k = 0; k <= precisionRange; k++) {
-                if (k < openRates.size() && k < closingRates.size() && k < highestRates.size() && k < lowestRates.size()) {
-                    openValuesAverage += Double.parseDouble(openRates.get(k));
-                    closeValuesAverage += Double.parseDouble(closingRates.get(k));
-                    highestValuesAverage += Double.parseDouble(highestRates.get(k));
-                    lowestValuesAverage += Double.parseDouble(lowestRates.get(k));
-
-                    counterOpeningValues++;
-                    counterClosingValues++;
-                    counterHighestValues++;
-                    counterLowestValues++;
-                }
-                else if(k > openRates.size()) --precisionRange;
-            }
-
-            returnValues.add(0, openValuesAverage/counterOpeningValues);
-            returnValues.add(1, highestValuesAverage/counterHighestValues);
-            returnValues.add(2, lowestValuesAverage/counterLowestValues);
-            returnValues.add(3, closeValuesAverage/counterClosingValues);
-
-
-            return returnValues;
-
-        } catch (IOException | CsvValidationException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void saveStocks(String username, Stock... stock) {
-
-    }
-
-    @Override
-    public void getSavedStocks(String username) {
-
-    }
-
-
     public WelcomePane(Stage primaryStage, Scene LoginScene, User userRegistered){
         super();
 
@@ -217,7 +143,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         logOut.setGraphic(logoutImageView);
 
         // Create line chart
-        LineChart<Number, Number> lineChart= createLineChart("Choose a company");
+        LineChart<Number, Number> lineChart= LineChartGenerator.createLineChart("Choose a company");
 
         // Crate the bar chart
         BarChart<String, Number> mainBarChart= createBarChart("");
@@ -512,129 +438,13 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
         content.getChildren().addAll(new Text(previsionString), arrowGuiImg);
         content.setAlignment(Pos.CENTER);
 
-        // Define the prevision button and its box
-        Button previsionButton = new Button();
-        previsionButton.setGraphic(content); // Insert img inside button
-
-
-        // Define box to insert prevision button and animation
-        HBox previsionBox = new HBox(previsionButton);
-        previsionBox.setAlignment(Pos.CENTER);
-
-        // Handle prevision button action
-        previsionButton.setOnAction(e->{
-
-            // Check if stock has been invested
-
-
-            // Popup for new graph
-            Stage previsionStage = new Stage();
-            previsionStage.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
-            previsionStage.initOwner(primaryStage); // Set primaryStage as the parent of popup
-            previsionStage.setTitle("Bet Input");
-            previsionStage.setWidth(800);
-            previsionStage.setHeight(500);
-
-            // Define a line chart
-            LineChart<Number, Number> lineChartPrevision= createLineChart("Prevision");
-
-            System.out.println("Stocks checked on: \n");
-            stocksCheckedOn.forEach(stock -> {
-
-                XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
-                newSeries.setName(stock.getName());
-                //nameOfCompany= testObj.extractNameOfCompany();
-
-                Random rnd = new Random();
-                final double PARTICLE= (rnd.nextDouble(21)+1)/10;
-                //final ArrayList<Double>  MODIFIER2 = generateNextPrevision(stock.getName());
-                //final double MODIFIER = PARTICLE
-                System.out.println("before MOD"+stock.getRegularMarketOpen()+stock.getMarketPreviousClose());
-
-                //if(MODIFIER.get(3)<stock.getMarketPreviousClose())
-                //{
-
-                //}
-                double previousValue= stock.getMarkerPreviousClose();
-                //Algorithm to modify the stocks to be implemented
-                stock.setRegularMarketOpen(stock.getRegularMarketOpen()*PARTICLE);
-                stock.setRegularMarketDayHigh(stock.getRegularMarketDayHigh()*PARTICLE);
-                stock.setRegularMarketDayLow(stock.getRegularMarketDayLow()*PARTICLE);
-                stock.setMarketPreviousClose(stock.getMarketPreviousClose()*PARTICLE);
-                //System.out.println("after MOD"+stock.getRegularMarketOpen()+stock.getMarketPreviousClose());
-
-                DecimalFormat decimalFormat = new DecimalFormat("0.00");
-
-                double addedValue = (stock.getMarketPreviousClose()-previousValue)*10;
-                if(stock.getMarketPreviousClose()<previousValue){
-                    moneyLabel.setText(decimalFormat.format(Double.parseDouble(moneyLabel.getText())+addedValue));
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("YOU LOST!");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Your betting was wrong!" +" You lost "+decimalFormat.format(addedValue));
-                    alert.showAndWait();
-                } else if (stock.getMarketPreviousClose()>previousValue) {
-                    moneyLabel.setText(decimalFormat.format(Double.parseDouble(moneyLabel.getText())+addedValue));
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("YOU DID WELL!");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Your intuition was right!" +" You gained "+decimalFormat.format(addedValue));
-                    alert.showAndWait();
-                }else{}
-
-                newSeries.getData().addAll(
-                        //(testObj==null? nameOfCompany: testObj.extractNameOfCompany())
-                        new XYChart.Data<>(0, stock.getRegularMarketOpen()),
-                        new XYChart.Data<>(1,  (stock.getRegularMarketDayHigh()*10 + stock.getRegularMarketOpen())/1.8),
-                        new XYChart.Data<>(2,  stock.getRegularMarketDayHigh()*10),
-                        new XYChart.Data<>(3,  (stock.getRegularMarketDayHigh()*10 + stock.getRegularMarketDayLow())/2),
-                        new XYChart.Data<>(4,  stock.getRegularMarketDayLow()/10),
-                        new XYChart.Data<>(5,  (stock.getRegularMarketDayLow()*10 + stock.getMarketPreviousClose())/2.2),
-                        new XYChart.Data<>(6,  stock.getMarkerPreviousClose())
-                );
-
-
-                lineChartPrevision.getData().add(newSeries);
-                System.out.println(stock.getName());
-                // Create UI elements for the custom popup
-
-                 // Use showAndWait to wait for user interaction before continuing
-
-
-            });
-            Button closePrevisionPopup = new Button("Close");
-            HBox previsionPopupBox = new HBox(closePrevisionPopup);
-            previsionPopupBox.setSpacing(30);
-
-            // Define Box with elements for the popup
-            VBox windowBetBox = new VBox(lineChartPrevision, closePrevisionPopup);
-            windowBetBox.setPadding(new Insets(10));
-            windowBetBox.setSpacing(10);
-            windowBetBox.setAlignment(Pos.CENTER);
-
-            // Handle close button inside the popup
-            closePrevisionPopup.setOnAction(ex->{
-                previsionStage.close();
-            });
-
-            // Create a scene for the custom popup
-            Scene previsionScene = new Scene(windowBetBox);
-            previsionStage.setScene(previsionScene);
-
-            // Show the custom popup
-            previsionStage.showAndWait();
-                /*try {
-                    updateDataHistory(1, 1.0, 1.0, 1.0, "test", 1.0,1.0,1.0, "test", "test");
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }*/
-        });
+        PrevisionComponent previsionComponent= new PrevisionComponent(stocksCheckedOn, primaryStage, moneyLabel);
 
         // Let previsionBox occupy all the space inside the VBox it is inserted
-        VBox.setVgrow(previsionBox, Priority.ALWAYS);
+        VBox.setVgrow(previsionComponent.getPrevisionBox(), Priority.ALWAYS);
 
         // Add the Box with prevision button to the leftPaneBox (it is below the checkboxes)
-        leftPaneBox.getChildren().addAll(previsionBox);
+        leftPaneBox.getChildren().addAll(previsionComponent.getPrevisionBox());
         leftPaneBox.setSpacing(10); // Define space between the elements inside the box
 
         //Define PieChart for other datas
@@ -872,19 +682,7 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
 
 
     //Method to add Line Chart
-    private LineChart<Number, Number> createLineChart(String nameOfCompany) {
-        // Create X and Y axes for the line chart
-        NumberAxis xAxis = new NumberAxis();
-        NumberAxis yAxis = new NumberAxis();
 
-        // Create the line chart with axes
-        LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
-        lineChart.setTitle(nameOfCompany);
-
-        //lineChart.getData().addAll(checkBoxSeriesMap.values());
-
-        return lineChart;
-    }
 
     private BarChart<String, Number> createBarChart(String symbol) {
         // Create X and Y axes for the bar chart

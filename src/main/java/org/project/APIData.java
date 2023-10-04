@@ -42,7 +42,7 @@ public class APIData{
     //Requesting APIData (live)
     public void fetchData(String symbol) {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://yahoo-finance127.p.rapidapi.com/price/"+symbol))
+                .uri(URI.create("https://yahoo-finance127.p.rapidapi.com/price/" + symbol))
                 .header("content-type", "application/octet-stream")
                 .header("X-RapidAPI-Key", myKeys[keyID])
                 .header("X-RapidAPI-Host", "yahoo-finance127.p.rapidapi.com")
@@ -53,29 +53,27 @@ public class APIData{
 
         try {
             response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-            String responseString = String.valueOf(response);
-            //System.out.println("\\n\nRESULT OF THE CALL:"+response+"\n\n");
-            if(responseString.contains("(GET") && responseString.contains("429")){
-                System.out.println("\nWorks properly\n");
 
-                if(keyID<=4){  //Max ID = LastId-1 as condition is "<="
+            if (response.statusCode() == 429) {
+                System.out.println("\nERROR 429 DETECTED\n");
+
+                if (keyID < myKeys.length - 1) { // Check if there are more keys available
                     ++keyID;
-                    fetchData(symbol);
-                }
-                else{
+                    System.out.println("Switching to KeyID: " + keyID);
+                    fetchData(symbol); // Retry with the next key
+                } else {
                     System.out.println("NO MORE KEYS AVAILABLE ATM");
                 }
-
+            } else {
+                data = new JSONObject(response.body());
+                System.out.println("RESPONSE is: " + response.body());
+                nameOfCompany = extractNameOfCompany();
             }
-
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-
-        data = new JSONObject(response.body());
-        System.out.println("RESPONSE is: " + response.body());
-        nameOfCompany=this.extractNameOfCompany();
     }
+
 
 
     //EXAMPLE OF API RESPONSE:

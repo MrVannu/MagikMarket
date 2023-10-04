@@ -192,9 +192,7 @@ public class WelcomePane extends APIData { // To use data from api obj
        A custom popup appears where the amount of bet money is inserted
     */
         for (String symbol : symbols) {
-            HBox checkBoxInsideHBox = new HBox(10);
-            Button bet = new Button("Invest"); // Name of the bet buttons
-            bet.getStyleClass().add("my-button");
+
 
             CheckBox checkBox = new CheckBox(symbol);
             checkBox.getStyleClass().add("checkbox");
@@ -324,97 +322,18 @@ public class WelcomePane extends APIData { // To use data from api obj
 
             }); // Closing checkBox action
 
-            // Handle the "Bet" button action here
-            bet.setOnAction(event -> {
-                // Create a custom popup using a Stage
-                Stage betPopup = new Stage();
-                betPopup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
-                betPopup.initOwner(primaryStage); // Set primaryStage as the parent of popup
-                betPopup.setTitle("Bet Input");
-                betPopup.setWidth(400);
-                betPopup.setHeight(200);
-
-                // Create UI elements for the custom popup
-                Label instruction = new Label("Set the bet amount");
-                TextField betField = new TextField();
-                Button submitBetAmount = new Button("Submit");
-                Button closeBetPopup = new Button("Close");
-                HBox buttonsBetBox = new HBox(submitBetAmount, closeBetPopup);
-                buttonsBetBox.setSpacing(30);
-
-                // Define Box with elements for the popup
-                VBox windowBetBox = new VBox(instruction, betField, buttonsBetBox);
-                windowBetBox.setPadding(new Insets(10));
-                windowBetBox.setSpacing(10);
-                windowBetBox.setAlignment(Pos.CENTER);
-
-                //Handle submitBetAmount button
-                submitBetAmount.setOnAction(e->{
-                    if(!betField.getText().isEmpty()) { // If the field is not empty
-                        try{
-                            // Attempt to parse the text as a double. If parsing is successful, it's a valid number
-                            Double.parseDouble(betField.getText());
-
-                            //Decreases the user's amount of money in the GUI label
-                            userRegistered.setUserCredit(Double.parseDouble(userRegistered.getUserCredit()) - Double.parseDouble(betField.getText()));
-                            //Update the money label
-                            moneyLabel.setText(String.valueOf(userRegistered.getUserCredit()));
-                            stocksCheckedOn.forEach(stock -> {
-                                if(stock.getSymbol().equals(symbols))
-                                    stock.setAmountBetted(stock.getAmountBetted()+Double.parseDouble(betField.getText()));
-                            });
-                            betField.clear();
-                            betPopup.close();
-                        /*if (stocksBetOn.stream().anyMatch(stock -> {
-                            return stock.getName().equals(symbol);
-                        })) */
-                            //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
-                            topBox.getChildren().add(new Label(symbol));
-                            stocksCheckedOn.forEach(stock -> {
-                                if(stock.getName().equals(symbol))
-                                    stock.setInvestedOn(true);
-                            });
-                        }
-                        catch(NumberFormatException er){
-                            // Parsing failed, the text is not a valid number
-                            // Handle the case where the input is not a number
-                            AlertField.showErrorAlert("Invalid input", "Please enter a valid number.");
-                            System.out.println("Invalid input. Please enter a valid number.");
-                        }
-                    } else {
-                        // The field is empty
-                        AlertField.showErrorAlert("Invalid input", "Please enter a bet amount.");
-                        System.out.println("Field is empty. Please enter a bet amount.");
-                    }
-                });
-
-                // Handle closeBetPopup button
-                closeBetPopup.setOnAction(e->{
-                    betPopup.close();
-                });
-
-                // Create a scene for the custom popup
-                Scene betPopupScene = new Scene(windowBetBox);
-                betPopup.setScene(betPopupScene);
-
-                // Show the custom popup
-                betPopup.showAndWait(); // Use showAndWait to wait for user interaction before continuing
-            });
-
-            // Add the checkBoxes into the HBox
-            checkBoxInsideHBox.getChildren().addAll(checkBox);
-
+            SubmitControl submitControl = new SubmitControl(userRegistered, primaryStage, stocksCheckedOn, symbols, topBox, symbol, moneyLabel, checkBox);
             // Add the bet button into the ArrayList
-            betButtonsArrayList.add(bet);
+            betButtonsArrayList.add(submitControl.getBet());
 
             // Add the checkBox into the ArrayList
             checkBoxesArrayList.add(checkBox);
 
             // Add the HBox into the VBox for vertical layout
-            boxBox.getChildren().addAll(checkBoxInsideHBox);// boxBox is previously added into lowerLeftBox
+            boxBox.getChildren().addAll(submitControl.getCheckBoxInsideHBox());// boxBox is previously added into lowerLeftBox
 
             // Add the bet button into the betButtonsBox
-            betButtonsBox.getChildren().addAll(bet);
+            betButtonsBox.getChildren().addAll(submitControl.getBet());
 
         } // CLOSE FOREACH
 

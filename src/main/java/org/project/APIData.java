@@ -64,7 +64,7 @@ public class APIData{
                 } else {
                     System.out.println("NO MORE KEYS AVAILABLE ATM");
                 }
-            } else {
+            } else { // Eventually: grace period (depends on the API provider)
                 data = new JSONObject(response.body());
                 System.out.println("RESPONSE is: " + response.body());
                 nameOfCompany = extractNameOfCompany();
@@ -123,9 +123,6 @@ public class APIData{
     }
 
 
-
-
-
     public double postMarketChangePercent() {
         double defaultValue = 101.0; // Default value
 
@@ -176,8 +173,6 @@ public class APIData{
     }
 
 
-
-
     public double preMarketChange() {
         double defaultValue = 101.0; // Defined value
 
@@ -205,7 +200,6 @@ public class APIData{
     }
 
 
-
     public String extractNameOfCompany() {
         String value = "101"; // Initialize as empty string
 
@@ -228,8 +222,6 @@ public class APIData{
         System.out.println(value);
         return value;
     }
-
-
 
 
     public double regularMarketDayHigh() {
@@ -284,7 +276,6 @@ public class APIData{
         System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
-
 
 
     public double regularMarketDayLow() {
@@ -367,7 +358,6 @@ public class APIData{
     }
 
 
-
     public String extractCurrencySymbol() {
         String defaultValue = "101"; // Defined value
 
@@ -392,10 +382,7 @@ public class APIData{
         return defaultValue;
     }
 
-    /**
-     * Extracts the "fmt" value from the "averageDailyVolume3Month" field.
-     * @return The "fmt" value as a string, or a default message if not available or invalid.
-     */
+
     public String extractAverageDailyVolume3MonthFmt() {
         String defaultValue = "Value not available or invalid"; // Default value
 
@@ -420,6 +407,7 @@ public class APIData{
         return defaultValue;
     }
 
+
     public double parseFormattedValue(String averageDailyVolumeFmt) {
         // Remove any commas or other non-numeric characters
         String cleanedValue = averageDailyVolumeFmt.replaceAll("[^0-9.]", "");
@@ -431,10 +419,6 @@ public class APIData{
         return Math.round(numericValue * 100.0) / 100.0;
     }
 
-
-
 }
 
-
-
-//NAMING CONVENTION 101 = VALUE NOT FOUND
+//NAMING CONVENTION 101 = VALUE NOT FOUND / AVAILABLE

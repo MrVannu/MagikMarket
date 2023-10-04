@@ -15,6 +15,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.*;
 
 
@@ -562,19 +563,22 @@ public class WelcomePane extends APIData implements HistoryManagement { // To us
                 stock.setMarketPreviousClose(stock.getMarketPreviousClose()*PARTICLE);
                 //System.out.println("after MOD"+stock.getRegularMarketOpen()+stock.getMarketPreviousClose());
 
+                DecimalFormat decimalFormat = new DecimalFormat("0.00");
+
+                double addedValue = (stock.getMarketPreviousClose()-previousValue)*10;
                 if(stock.getMarketPreviousClose()<previousValue){
-                    moneyLabel.setText(String.valueOf(Double.parseDouble(moneyLabel.getText())+(stock.getMarketPreviousClose()-previousValue)*100));
+                    moneyLabel.setText(decimalFormat.format(Double.parseDouble(moneyLabel.getText())+addedValue));
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("YOU LOST!");
                     alert.setHeaderText(null);
-                    alert.setContentText("Your betting was wrong!" +" You lost "+(stock.getMarketPreviousClose()-previousValue));
+                    alert.setContentText("Your betting was wrong!" +" You lost "+decimalFormat.format(addedValue));
                     alert.showAndWait();
                 } else if (stock.getMarketPreviousClose()>previousValue) {
-                    moneyLabel.setText(String.valueOf(Double.parseDouble(moneyLabel.getText())+(stock.getMarketPreviousClose()-previousValue)*100));
+                    moneyLabel.setText(decimalFormat.format(Double.parseDouble(moneyLabel.getText())+addedValue));
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("YOU DID WELL!");
                     alert.setHeaderText(null);
-                    alert.setContentText("Your intuition was right!" +" You gained "+(stock.getMarketPreviousClose()-previousValue));
+                    alert.setContentText("Your intuition was right!" +" You gained "+decimalFormat.format(addedValue));
                     alert.showAndWait();
                 }else{}
 

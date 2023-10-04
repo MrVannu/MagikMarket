@@ -20,135 +20,14 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.*;
 
-public class Main extends Application implements Authentication {
-
-
-    // Paths to databases (CSV files)
-    private final String pathUserDB = "src/main/resources/userDB.csv";  // Path to DB for users tracking
-    private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";  // Path to DB for data history
-
-    private final double initialUserCredit = 1000;
-
-    // Index of row to be overwritten (most remote in the db)
-    private short dataToUpdateIndex = 0;
-
-    private User userRegistered = new User("", "", "", "", -101.0);;
-
-    private boolean[] checkField;
-
-
-
-    // Authentication functionalities
-    // Checks if username already exists
-    public boolean usernameExists(String usernameInserted, String pathToUse){
-        try (CSVReader reader = new CSVReader(new FileReader(pathToUse))) {
-            String[] nextLine;  // Stores what is contained in the row
-
-            while ((nextLine = reader.readNext()) != null) {  // Splits by comma
-                if (nextLine[0].equals(usernameInserted)) {
-                    return true; // If found
-                }
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (CsvValidationException e) {
-            throw new RuntimeException(e);
-        }
-        return false; // If not found
-
-    }
-
-    // Checks if password is correct
-    public boolean passwordCorresponds(String usernameInserted, String passwordInserted, String pathToUse){
-        try (CSVReader reader = new CSVReader(new FileReader(pathToUse))) {
-            String[] nextLine;  // Stores what is contained in the row
-
-            while ((nextLine = reader.readNext()) != null) {
-                // If username is related to the password inserted
-                if (nextLine[0].equals(usernameInserted) && BCrypt.checkpw(passwordInserted, nextLine[1])) {
-                    return true; // If it does correspond
-                }
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (CsvValidationException e) {
-            throw new RuntimeException(e);
-        }
-        return false; // If it does not correspond
-    }
-
-    // Creates a new account
-    public void registerNewUser(String pathToUse, String username, String hashedPassword, String email, Double credit) throws IOException {
-
-        if(usernameExists(username, pathToUse)) return;  // Check no user with alias exist
-
-        try (CSVReader reader = new CSVReader(new FileReader(pathToUse))) {
-            String[] nextLine;
-            while ((nextLine = reader.readNext()) != null) {
-                if (nextLine.length > 0) break;  // Breaks if the line is empty (end of file)
-            }
-        } catch (Exception e) {  // Exception occured while reading
-            System.out.println("Exception occurred");
-        }
-
-        try (CSVWriter writer = new CSVWriter(new FileWriter(pathToUse, true))) {
-            String[] toRecord = {username, hashedPassword, email, String.valueOf(credit)};  // Compose the string to be saved
-            writer.writeNext(toRecord);  // Writes the string composed
-        }
-    }
-
-
-
-    // Register process validation
-    // Regex validation
-    public boolean checkRegexMatch(String regex, String textToMatch) {
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(textToMatch);
-        return matcher.matches();
-    }
-
-    //Validator for username (no spaces allowed)
-    public boolean usernameValidator (String username){
-        return !username.contains(" ") && (!username.equals(""));
-    }
-
-    // Validator for email format (example@hello.world)
-    public boolean emailValidator (String email){
-        String regex = "^[A-Za-z0-9._-]+@[A-Za-z0-9-]+\\.[A-Za-z]+$";
-        return checkRegexMatch(regex, email);
-    }
-
-    // Validator for password (cannot be empty)
-    public boolean passwordValidator (String password){
-        return !password.isEmpty();
-    }
-
-    // Global validator
-    public boolean globalValidator (String username, String password, String hashedPassword, String email){
-        checkField = new boolean[3];
-        if(usernameValidator(username) && emailValidator(email) && passwordValidator(password)) return true;
-
-        else if (!usernameValidator(username)){
-            System.out.println("Username not allowed");
-            checkField[0]=true;
-
-        } else if (!passwordValidator(password)){
-            System.out.println("Password not allowed");
-            checkField[1]=true;
-
-        }else if (!emailValidator(email)){
-            System.out.println("Email not allowed");
-            checkField[2]=true;
-        }
-
-        return false;
-    }
-
+public class Main extends Application {
 
 
     @Override
     public void start(Stage primaryStage) {
         //User userRegistered = new User();
+        LoginControl loginControl= new LoginControl();
+
 
         // Defining the panes
         GridPane layoutLogin = new GridPane();
@@ -243,11 +122,11 @@ public class Main extends Application implements Authentication {
             String hashedPassword = BCrypt.hashpw(passwordFieldLogin.getText(), BCrypt.gensalt());  // Just to test
 
             // Validating credentials
-            if(usernameExists(username, pathUserDB) && usernameValidator(username) && passwordCorresponds(username, password, pathUserDB)) {
+            if(loginControl.usernameExists(username, loginControl.getPathUserDB()) && loginControl.usernameValidator(username) && loginControl.passwordCorresponds(username, password, loginControl.getPathUserDB())) {
                 // The user exists and the stage changes
 
-                userRegistered = new User (username, password, hashedPassword, "",-101.0);
-                WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, userRegistered);
+                loginControl.setUserRegistered( new User (username, password, hashedPassword, "",-101.0));
+                WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, loginControl.getUserRegistered());
 
                 primaryStage.setTitle("Start App");
                 primaryStage.setScene(welcomePane.getScene());
@@ -332,31 +211,31 @@ public class Main extends Application implements Authentication {
             String email = emailFieldRegister.getText();
 
             // Checking that the registration credential meet the requirements
-            if(!(globalValidator(username, password, hashedPassword, email))){
+            if(!(loginControl.globalValidator(username, password, hashedPassword, email))){
 
                 // If the registration was not successful then it will follow one of the 3 cases below
                 System.out.println("globalValidator failed");
-                if(checkField[0]){ // If the username already exists then the field is red
+                if(loginControl.getCheckField(0)){ // If the username already exists then the field is red
                     AlertField.showErrorAlert("Username error","Username not inserted or use another username.");
                     AlertField.invalidField(usernameFieldRegister);
-                    checkField[0]=false; // Resetting the check to false
+                    loginControl.setCheckField(false, 0); // Resetting the check to false
                 }
-                if(checkField[1]){// If the password is empty then the field is red
+                if(loginControl.getCheckField(1)){// If the password is empty then the field is red
                     AlertField.showErrorAlert("Password error","The password you inserted is not allowed or the field is empty.");
                     AlertField.invalidField(passwordFieldRegister);
-                    checkField[1]=false; // Resetting the check to false
+                    loginControl.setCheckField(false, 1); // Resetting the check to false
                 }
-                if(checkField[2]){// If the email does not match the regex (so is not valid) then the field is red
+                if(loginControl.getCheckField(2)){// If the email does not match the regex (so is not valid) then the field is red
                     AlertField.showErrorAlert("Email error","The email you inserted is not an email.");
                     AlertField.invalidField(emailFieldRegister);
-                    checkField[2]=false; // Resetting the check to false
+                    loginControl.setCheckField(false, 2); // Resetting the check to false
                 }
 
             } else {
                 // If the registration was successful
                 try {
 
-                    registerNewUser(pathUserDB, username, hashedPassword, email, initialUserCredit); // The credentials of the user are saved into the database
+                    loginControl.registerNewUser(loginControl.getPathUserDB(), username, hashedPassword, email, loginControl.getInitialUserCredit()); // The credentials of the user are saved into the database
                     AlertField.resetField(usernameFieldRegister,passwordFieldRegister,emailFieldRegister); // Resetting the fields
                     AlertField.showSuccessAlert("Registration successful","Your registration was successful!");
                     primaryStage.setScene(LoginScene); // Changing scene to LoginScene

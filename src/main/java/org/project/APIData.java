@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.springframework.ui.context.support.ResourceBundleThemeSource;
 
+import javax.naming.directory.InvalidAttributeIdentifierException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -20,14 +21,30 @@ public class APIData{
     private JSONObject data;
     private ObjectMapper mapper = new ObjectMapper();
     private String nameOfCompany;
+    private short keyID = 0;
+
+    /* This array is used for alternating the API calls to not reach the
+    daily rate (to keep this feature free)
+    */
+    private final String[] myKeys = {
+            "1d42ba6144msh6f2e48b689d3770p10f476jsn4444c9191d86",  // pos 0
+            "f1f087a0edmshe01f814ada01f62p139125jsnbbb280054789",  // pos 1
+            "27c048ae5fmshcd2ff733b837b73p1941ebjsnaa4f26e7bbcd",  // pos 2
+            "24fdb75248mshc59fb41bb36b935p198301jsn8d097a9c305b",  // pos 3
+            "9569609b31msh116e10029f476fbp18a940jsnf0a4ff5bfbd7",  // pos 4
+            "1d42ba6144msh6f2e48b689d3770p10f476jsn4444c9191d86"   // pos 5
+    }; // Max number of API calls per day => 35 (max) * 6(n of keys) = 210 (calls per day)
+
 
     public APIData() {this.symbol=symbol;}
+
+
     //Requesting APIData (live)
     public void fetchData(String symbol) {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://yahoo-finance127.p.rapidapi.com/price/"+symbol))
                 .header("content-type", "application/octet-stream")
-                .header("X-RapidAPI-Key", "1d42ba6144msh6f2e48b689d3770p10f476jsn4444c9191d86")
+                .header("X-RapidAPI-Key", myKeys[keyID])
                 .header("X-RapidAPI-Host", "yahoo-finance127.p.rapidapi.com")
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
@@ -36,6 +53,21 @@ public class APIData{
 
         try {
             response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+            String responseString = String.valueOf(response);
+            //System.out.println("\\n\nRESULT OF THE CALL:"+response+"\n\n");
+            if(responseString.contains("(GET") && responseString.contains("429")){
+                System.out.println("\nWorks properly\n");
+
+                if(keyID<=4){  //Max ID = LastId-1 as condition is "<="
+                    ++keyID;
+                    fetchData(symbol);
+                }
+                else{
+                    System.out.println("NO MORE KEYS AVAILABLE ATM");
+                }
+
+            }
+
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }

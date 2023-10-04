@@ -32,8 +32,7 @@ public class APIData{
             "27c048ae5fmshcd2ff733b837b73p1941ebjsnaa4f26e7bbcd",  // pos 2
             "24fdb75248mshc59fb41bb36b935p198301jsn8d097a9c305b",  // pos 3
             "9569609b31msh116e10029f476fbp18a940jsnf0a4ff5bfbd7",  // pos 4
-            "1d42ba6144msh6f2e48b689d3770p10f476jsn4444c9191d86"   // pos 5
-    }; // Max number of API calls per day => 35 (max) * 6(n of keys) = 210 (calls per day)
+    }; // Max number of API calls per day => 35 (max) * 5 (n of keys) = 175 (calls per day)
 
 
     public APIData() {this.symbol=symbol;}

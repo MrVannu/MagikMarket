@@ -25,9 +25,18 @@ public class Stock{
     private double amountBetted = 0.0;
     private boolean investedOn = false;
 
+
     public Stock(String symbol, String name, double regularMarketOpen, double regularMarketDayHigh, double regularMarketDayLow, double marketPreviousClose){
         this.symbol= symbol;
         this.name = name;
+        this.regularMarketOpen = regularMarketOpen;
+        this.regularMarketDayHigh = regularMarketDayHigh;
+        this.regularMarketDayLow= regularMarketDayLow;
+        this.marketPreviousClose = marketPreviousClose;
+    }
+
+    public Stock(String symbol, double regularMarketOpen, double regularMarketDayHigh, double regularMarketDayLow, double marketPreviousClose){
+        this.symbol= symbol;
         this.regularMarketOpen = regularMarketOpen;
         this.regularMarketDayHigh = regularMarketDayHigh;
         this.regularMarketDayLow= regularMarketDayLow;
@@ -106,9 +115,9 @@ public class Stock{
 
 
 
-    public void saveStocksIfNewBet(String username, String name, double regularMarketDayHigh, double regularMarketDayLow,
+    public void saveStocks(String username, String symbol, double regularMarketDayHigh, double regularMarketDayLow,
                                    double regularMarketOpen, double marketPreviousClose) {
-        String toWrite = username + "," + name + "," + regularMarketDayHigh + "," + regularMarketDayLow
+        String toWrite = username + "," + symbol + "," + regularMarketDayHigh + "," + regularMarketDayLow
                 + "," + regularMarketOpen + "," + marketPreviousClose;
 
         try (CSVReader reader = new CSVReader(new FileReader(stockDbPath))) {
@@ -141,25 +150,19 @@ public class Stock{
 
 
 
-
-
-    public List<Object> getSavedStocks(String username) {
-        List<Object> userStocks = new ArrayList<>();
+    public List<Stock> getSavedStocks(String username) {
+        List<Stock> userStocks = new ArrayList<>();
 
         try (CSVReader reader = new CSVReader(new FileReader(stockDbPath))) {
             List<String[]> allData = reader.readAll();
-
             for (String[] row : allData) {
-                if (row.length > 0 && row[0].equals(username)) {
-                    for (String column : row) {
-                        try {
-                            double value = Double.parseDouble(column);
-                            userStocks.add(value);
-                        } catch (NumberFormatException e) {
-                            userStocks.add(column);
-                        }
-                    }
-                }
+                if (row[0].equals(username)) {
+                    // symbol, regularMarketDayHigh, regularMarketDayLow, regularMarketOpen, marketPreviousClose
+                    Stock obj = new Stock(row[1], Double.parseDouble(row[2]), Double.parseDouble(row[3]),
+                            Double.parseDouble(row[4]),Double.parseDouble(row[5]));
+
+                    userStocks.add(obj);
+                } // else System.out.println("Row checked but no eligible value has been found");
             }
         } catch (IOException e) {
             System.out.println("Errore durante la lettura del database.");

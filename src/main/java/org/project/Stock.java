@@ -1,9 +1,19 @@
 package org.project;
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvException;
 import javafx.css.StyleableStringProperty;
 
-public class Stock {
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Stock{
     //private double price;
+    private final String stockDbPath = "src/main/resources/StocksDB.csv";
     private double regularMarketDayHigh;
     private double regularMarketDayLow;
     private double regularMarketOpen;
@@ -93,4 +103,77 @@ public class Stock {
     public boolean equals(Stock obj) {
         return this.getName().equals(obj.getName());
     }
+
+
+
+    public void saveStocksIfNewBet(String username, String name, double regularMarketDayHigh, double regularMarketDayLow,
+                                   double regularMarketOpen, double marketPreviousClose) {
+        String toWrite = username + "," + name + "," + regularMarketDayHigh + "," + regularMarketDayLow
+                + "," + regularMarketOpen + "," + marketPreviousClose;
+
+        try (CSVReader reader = new CSVReader(new FileReader(stockDbPath))) {
+            List<String[]> existingData = reader.readAll();
+
+            // Check if the string exists already
+            boolean isBetNew = true;
+            for (String[] row : existingData) {
+                String existingRecord = String.join(",", row);
+                if (existingRecord.equals(toWrite)) {
+                    System.out.println("The bet already exists in the database.");
+                    isBetNew = false;
+                    break;
+                }
+            }
+
+            if (isBetNew) {
+                try (CSVWriter writer = new CSVWriter(new FileWriter(stockDbPath, true))) {
+                    String[] data = toWrite.split(",");
+                    writer.writeNext(data);
+                    System.out.println("Bet added to the database.");
+                } catch (IOException e) {
+                    System.out.println("Error occurred while writing the bet.");
+                }
+            }
+        } catch (IOException | CsvException e) {
+            System.out.println("Error occurred while reading the database.");
+        }
+    }
+
+
+
+
+
+    public List<Object> getSavedStocks(String username) {
+        List<Object> userStocks = new ArrayList<>();
+
+        try (CSVReader reader = new CSVReader(new FileReader(stockDbPath))) {
+            List<String[]> allData = reader.readAll();
+
+            for (String[] row : allData) {
+                if (row.length > 0 && row[0].equals(username)) {
+                    for (String column : row) {
+                        try {
+                            double value = Double.parseDouble(column);
+                            userStocks.add(value);
+                        } catch (NumberFormatException e) {
+                            userStocks.add(column);
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Errore durante la lettura del database.");
+        } catch (CsvException e) {
+            throw new RuntimeException(e);
+        }
+
+        return userStocks;
+    }
+
+
+
+
+
+
+
 }

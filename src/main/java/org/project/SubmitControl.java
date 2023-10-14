@@ -12,7 +12,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import java.util.ArrayList;
 
 public class SubmitControl {
@@ -69,8 +68,13 @@ public class SubmitControl {
                         //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
                         topBox.getChildren().add(new Label(symbol));
                         stocksCheckedOn.forEach(stock -> {
-                            if(stock.getName().equals(symbol))
+                            if(stock.getName().equals(symbol)) {
                                 stock.setInvestedOn(true);
+                                stock.saveStocks(userRegistered.getUsername(), stock.getName(),
+                                        stock.getRegularMarketDayHigh(), stock.getRegularMarketDayLow(),
+                                        stock.getRegularMarketOpen(), stock.getMarkerPreviousClose());
+                            }
+
                         });
                     }
                     catch(NumberFormatException er){

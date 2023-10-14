@@ -9,7 +9,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.FontWeight;
 import org.mindrot.jbcrypt.BCrypt;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.geometry.Insets;
@@ -27,7 +26,6 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         //User userRegistered = new User();
         LoginControl loginControl= new LoginControl();
-
 
         // Defining the panes
         GridPane layoutLogin = new GridPane();

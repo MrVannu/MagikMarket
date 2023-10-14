@@ -53,17 +53,17 @@ public class APIData{
         try {
             response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
-            if (response.statusCode() == 429) {
+            if (response.statusCode() == 429) { // Means daily rate limit has been exceeded
                 System.out.println("\nERROR 429 DETECTED\n");
 
                 if (keyID < myKeys.length - 1) { // Check if there are more keys available
                     ++keyID;
-                    System.out.println("Switching to KeyID: " + keyID);
+                    System.out.println("Switching to API Key ID: " + keyID);
                     fetchData(symbol); // Retry with the next key
-                } else {
-                    System.out.println("NO MORE KEYS AVAILABLE ATM");
                 }
-            } else { // Eventually: grace period (depends on the API provider)
+                else System.out.println("NO MORE API KEYS AVAILABLE ATM");
+                // Eventually: grace period (depends on the API provider)
+            } else {
                 data = new JSONObject(response.body());
                 System.out.println("RESPONSE is: " + response.body());
                 nameOfCompany = extractNameOfCompany();
@@ -96,7 +96,7 @@ public class APIData{
     }
 
     public int maxAge() {
-        int defaultValue = 101; // Defined value
+        int defaultValue = 101; // Default value
 
         try {
             if (data != null) {
@@ -148,7 +148,7 @@ public class APIData{
 
 
     public double regularMarketChangePercent() {
-        double defaultValue = 101.0; // Defined value
+        double defaultValue = 101.0; // Default value
 
         try {
             if(data != null) {
@@ -173,21 +173,18 @@ public class APIData{
 
 
     public double preMarketChange() {
-        double defaultValue = 101.0; // Defined value
+        double defaultValue = 101.0; // Default value
 
         try {
             if(data != null) {
-                {
                     JsonNode toRead = mapper.readTree(data.toString());
                     JsonNode preMarketChangeNode = toRead.get("preMarketChange");
 
                     // Controlla se preMarketChangeNode non è null e può essere convertito in un double
                     if (preMarketChangeNode != null && preMarketChangeNode.isDouble()) {
                         return preMarketChangeNode.asDouble();
-                    } else {
-                        System.out.println("Value not available or invalid: preMarketChange");
                     }
-                }
+                    else System.out.println("Value not available or invalid: preMarketChange");
             }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

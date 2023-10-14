@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class PrevisionComponent implements HistoryManagement{
+public class PrevisionComponent{
     // Define the prevision button and its box
     public Button previsionButton = new Button();
 
@@ -229,16 +229,4 @@ public class PrevisionComponent implements HistoryManagement{
                 }*/
             });
         }
-
-
-
-    @Override
-    public void saveStocks(String username, Stock... stock) {
-
-    }
-
-    @Override
-    public void getSavedStocks(String username) {
-
-    }
 }

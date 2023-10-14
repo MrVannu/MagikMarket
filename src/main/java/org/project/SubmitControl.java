@@ -58,7 +58,7 @@ public class SubmitControl {
                         moneyLabel.setText(String.valueOf(userRegistered.getUserCredit()));
                         stocksCheckedOn.forEach(stock -> {
                             if(stock.getSymbol().equals(symbols))
-                                stock.setAmountBetted(stock.getAmountBetted()+Double.parseDouble(betField.getText()));
+                                stock.setAmountBet(stock.getAmountBet()+Double.parseDouble(betField.getText()));
                         });
                         betField.clear();
                         betPopup.close();
@@ -72,7 +72,8 @@ public class SubmitControl {
                                 stock.setInvestedOn(true);
                                 stock.saveStocks(userRegistered.getUsername(), stock.getName(),
                                         stock.getRegularMarketDayHigh(), stock.getRegularMarketDayLow(),
-                                        stock.getRegularMarketOpen(), stock.getMarkerPreviousClose());
+                                        stock.getRegularMarketOpen(), stock.getMarkerPreviousClose(),
+                                        stock.getAmountBet());
                             }
 
                         });

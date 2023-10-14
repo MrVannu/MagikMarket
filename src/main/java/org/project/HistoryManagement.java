@@ -22,7 +22,8 @@ public interface HistoryManagement {
 
     ArrayList<Double> generateNextPrevision(String nameToScanFor, LoginControl loginControl);
 
-    void saveStocks (String username, String name, double regularMarketDayHigh, double regularMarketDayLow, double regularMarketOpen, double markerPreviousClose);
+    void saveStocks (String username, String name, double regularMarketDayHigh, double regularMarketDayLow,
+                     double regularMarketOpen, double markerPreviousClose, double amountBet);
 
     void getSavedStocks (String username);
 

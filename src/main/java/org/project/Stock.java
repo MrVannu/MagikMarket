@@ -70,12 +70,18 @@ public class Stock{
         this.amountBet = amountBet;
     }
 
+
     public void setMarketPreviousClose(double marketPreviousClose) {
         this.marketPreviousClose = marketPreviousClose;
     }
 
     public void setRegularMarketOpen(double regularMarketOpen) {
         this.regularMarketOpen = regularMarketOpen;
+    }
+
+
+    public void setRegularMarketDayLow(double regularMarketDayLow) {
+        this.regularMarketDayLow = regularMarketDayLow;
     }
 
     public void setInvestedOn(boolean investedOn) {
@@ -169,5 +175,6 @@ public class Stock{
 
         return userStocks;
     }
+
 
 }

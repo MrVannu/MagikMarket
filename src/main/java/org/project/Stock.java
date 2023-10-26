@@ -15,20 +15,26 @@ public class Stock{
     private double regularMarketDayLow;
     private double regularMarketOpen;
     private double marketPreviousClose;
+
+    private double volume;
     private String symbol;
     private String name;
-    private double amountBet = 0.0;
+    private String description;
+    private boolean available;
+    private double amountBetted = 0.0;
     private boolean investedOn = false;
 
 
 
-    public Stock(String symbol, String name, double regularMarketOpen, double regularMarketDayHigh, double regularMarketDayLow, double marketPreviousClose){
+
+    public Stock(String symbol, String name, double regularMarketOpen, double regularMarketDayHigh, double regularMarketDayLow, double marketPreviousClose, String volume){
         this.symbol= symbol;
         this.name = name;
         this.regularMarketOpen = regularMarketOpen;
         this.regularMarketDayHigh = regularMarketDayHigh;
         this.regularMarketDayLow= regularMarketDayLow;
         this.marketPreviousClose = marketPreviousClose;
+        this.volume= Double.parseDouble(volume);
     }
 
     public Stock(String symbol, double regularMarketOpen, double regularMarketDayHigh, double regularMarketDayLow, double marketPreviousClose, double amountBet){
@@ -43,8 +49,8 @@ public class Stock{
         return symbol;
     }
 
-    public double getAmountBet() {
-        return amountBet;
+    public double getAmountBetted() {
+        return amountBetted;
     }
 
     public void setSymbol(String sym) {
@@ -67,7 +73,7 @@ public class Stock{
     }
 
     public void setAmountBet(double amountBet) {
-        this.amountBet = amountBet;
+        this.amountBetted= amountBet;
     }
 
     public void setMarketPreviousClose(double marketPreviousClose) {
@@ -85,17 +91,24 @@ public class Stock{
     public void setMarkerPreviousClose(double markerPreviousClose) {
         this.marketPreviousClose = markerPreviousClose;
     }
-
     public String getName() {
         return name;
     }
-
     public void setName(String id) {
         this.name = id;
     }
-
     public double getRegularMarketDayLow() {
         return regularMarketDayLow;
+    }
+    public void setRegularMarketDayLow(double description) {
+        this.regularMarketDayLow = regularMarketDayLow;
+    }
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public double getVolume() {
+        return volume;
     }
 
     public double getRegularMarketDayHigh(){return regularMarketDayHigh;}

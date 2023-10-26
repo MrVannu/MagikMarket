@@ -186,6 +186,17 @@ public class WelcomePane extends APIData { // To use data from api obj
         ArrayList<Stock> stocksCheckedOn = new ArrayList<>();
         Label listOfBetStock = new Label() ;
 
+        //Define PieChart for other datas
+        /*PieChart.Data[] pieChartData = {
+                new PieChart.Data("USD", 25000000),
+                new PieChart.Data("EUR", 18000000),
+                new PieChart.Data("JPY", 15000000),
+        };*/
+
+        // Create pie chart
+        PieChart pieChart = new PieChart();
+        //pieChart.getData().addAll(pieChartData);
+
     /*
        In this foreach the Stock CheckBoxes are defined. Next to the checkboxes a button is added that permits the
        user to invest an amount of money to a specific Stock.
@@ -210,6 +221,8 @@ public class WelcomePane extends APIData { // To use data from api obj
 
             //API CALL!!
             final APIData testObj  = new APIData();
+
+
 
             // Handle CheckBox action foreach checkBox
             checkBox.setOnAction(event -> {
@@ -252,26 +265,41 @@ public class WelcomePane extends APIData { // To use data from api obj
                         throw new RuntimeException(ex);
                     }
 
+
                     // Define the lineChart with all the data
                     // Create a new series for this checkBox
                     XYChart.Series<Number, Number> lineChartSeries = new XYChart.Series<>();
                     // Define caption; if testObj is null then placeHolderString as name, otherwise SymbolOfCompany as name of the serie
                     lineChartSeries.setName((testObj==null? nameOfCompany: testObj.extractSymbolOfCompany()));
 
+
+                    //Randomizes the random points
+                    List<Number> xs = new ArrayList<>();
+                    xs.add(1);xs.add(2);xs.add(3);xs.add(4);xs.add(5);
+                    Collections.shuffle(xs);
+
                     lineChartSeries.getData().addAll(
                             //(testObj==null? nameOfCompany: testObj.extractNameOfCompany())
                             new XYChart.Data<>(0, (callMade? testObj.regularMarketDayOpen(): 50)),
-                            new XYChart.Data<>(1, (callMade? (testObj.regularMarketDayHigh()*10 + testObj.regularMarketDayOpen())/1.8: 50)),
-                            new XYChart.Data<>(2, (callMade? testObj.regularMarketDayHigh()*10: 50)),
-                            new XYChart.Data<>(3, (callMade? (testObj.regularMarketDayHigh()*10 + testObj.regularMarketDayLow())/2: 50)),
-                            new XYChart.Data<>(4, (callMade? testObj.regularMarketDayLow()/10: 50)),
-                            new XYChart.Data<>(5, (callMade? (testObj.regularMarketDayLow()*10 + testObj.regularMarketPreviousClose())/2.2: 50)),
+                            new XYChart.Data<>(xs.get(0), (callMade? (testObj.regularMarketDayHigh()*10 + testObj.regularMarketDayOpen())/1.8: 50)),
+                            new XYChart.Data<>(xs.get(1), (callMade? testObj.regularMarketDayHigh()*10: 50)),
+                            new XYChart.Data<>(xs.get(2), (callMade? (testObj.regularMarketDayHigh()*10 + testObj.regularMarketDayLow())/2: 50)),
+                            new XYChart.Data<>(xs.get(3), (callMade? testObj.regularMarketDayLow()/10: 50)),
+                            new XYChart.Data<>(xs.get(4), (callMade? (testObj.regularMarketDayLow()*10 + testObj.regularMarketPreviousClose())/2.2: 50)),
                             new XYChart.Data<>(6, (callMade? testObj.regularMarketPreviousClose(): 200))
                     );
 
 
-                    Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany(), testObj.regularMarketDayOpen(), testObj.regularMarketDayHigh(), testObj.regularMarketDayLow(), testObj.regularMarketPreviousClose());
+                    Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany(), testObj.regularMarketDayOpen(), testObj.regularMarketDayHigh(), testObj.regularMarketDayLow(), testObj.regularMarketPreviousClose(), testObj.extractAverageDailyVolume3MonthFmt());
                     stocksCheckedOn.add(stock);
+
+                    // Create a new PieChart.Data object
+                    PieChart.Data newData = new PieChart.Data( symbol, stock.getVolume() );
+
+
+                    // Update the pie chart with the modified data
+                    pieChart.getData().add(newData);
+
 
 
                     // Add the new series to the line chart
@@ -301,7 +329,7 @@ public class WelcomePane extends APIData { // To use data from api obj
 
                     // Define the bar chart and enter the manipulated data
                     barChartSeries.getData().add(
-                            new XYChart.Data<>(stringSymbol, callMade? 12.00 :  averageDailyVolume)
+                            new XYChart.Data<>(stringSymbol, averageDailyVolume)
                     );
                     // Define chart title
                     mainBarChart.setTitle(testObj==null ? nameOfCompany : testObj.extractNameOfCompany());
@@ -318,11 +346,14 @@ public class WelcomePane extends APIData { // To use data from api obj
                     lineChart.getData().removeIf(serieLine -> serieLine.getName().equals(temp));
                     //Revome the series of data with the same symbol of the checkBox
                     mainBarChart.getData().removeIf(serieBar -> serieBar.getName().equals(temp));
+                    //Revome the series of data with the same symbol of the checkBox
+                    pieChart.getData().removeIf(seriePie -> seriePie.getName().equals(temp));
+
                 }
 
             }); // Closing checkBox action
 
-            SubmitControl submitControl = new SubmitControl(userRegistered, primaryStage, stocksCheckedOn, symbols, topBox, symbol, moneyLabel, checkBox);
+            SubmitControl submitControl = new SubmitControl(userRegistered, primaryStage, stocksCheckedOn, symbols, topBox, symbol, moneyLabel, checkBox, pieChart);
             // Add the bet button into the ArrayList
             betButtonsArrayList.add(submitControl.getBet());
 
@@ -366,20 +397,12 @@ public class WelcomePane extends APIData { // To use data from api obj
         leftPaneBox.getChildren().addAll(previsionComponent.getPrevisionBox());
         leftPaneBox.setSpacing(10); // Define space between the elements inside the box
 
-        //Define PieChart for other datas
-        PieChart.Data[] pieChartData = {
-                new PieChart.Data("USD", 25000000),
-                new PieChart.Data("EUR", 18000000),
-                new PieChart.Data("JPY", 15000000),
-        };
 
 
-        // Create pie chart
-        PieChart pieChart = new PieChart();
-        pieChart.getData().addAll(pieChartData);
+
 
         // Set title to pie chart
-        pieChart.setTitle("Distribution of Currency Volume");
+        pieChart.setTitle("Avg. 3 Month Volume");
 
         // Layout
         // Define a box to insert all the charts

@@ -389,7 +389,14 @@ public class APIData{
 
                 // Check if averageDailyVolume3MonthNode is not null and contains the "fmt" key
                 if (averageDailyVolume3MonthNode != null && averageDailyVolume3MonthNode.has("fmt")) {
-                    return averageDailyVolume3MonthNode.get("fmt").asText();
+                    String value = averageDailyVolume3MonthNode.get("fmt").asText();
+
+                    // Remove the final 'M' character if it exists
+                    if (value.endsWith("M")) {
+                        value = value.substring(0, value.length() - 1);
+                    }
+
+                    return value;
                 } else {
                     System.out.println("Value not available or invalid: averageDailyVolume3Month");
                 }
@@ -402,6 +409,7 @@ public class APIData{
         System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
+
 
 
     public double parseFormattedValue(String averageDailyVolumeFmt) {

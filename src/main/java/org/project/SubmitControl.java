@@ -3,6 +3,7 @@ package org.project;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -19,7 +20,7 @@ public class SubmitControl {
     private HBox checkBoxInsideHBox = new HBox(10);
     private Button bet = new Button("Invest"); // Name of the bet buttons
 
-    public SubmitControl(User userRegistered, Stage primaryStage, ArrayList<Stock> stocksCheckedOn, ArrayList<String> symbols, FlowPane topBox, String symbol, Label moneyLabel, CheckBox checkBox) {
+    public SubmitControl(User userRegistered, Stage primaryStage, ArrayList<Stock> stocksCheckedOn, ArrayList<String> symbols, FlowPane topBox, String symbol, Label moneyLabel, CheckBox checkBox, PieChart pieChart) {
         bet.getStyleClass().add("my-button");
         // Handle the "Bet" button action here
         bet.setOnAction(event -> {
@@ -58,7 +59,7 @@ public class SubmitControl {
                         moneyLabel.setText(String.valueOf(userRegistered.getUserCredit()));
                         stocksCheckedOn.forEach(stock -> {
                             if(stock.getSymbol().equals(symbols))
-                                stock.setAmountBet(stock.getAmountBet()+Double.parseDouble(betField.getText()));
+                                stock.setAmountBet(stock.getAmountBetted()+Double.parseDouble(betField.getText()));
                         });
                         betField.clear();
                         betPopup.close();
@@ -73,9 +74,8 @@ public class SubmitControl {
                                 stock.saveStocks(userRegistered.getUsername(), stock.getName(),
                                         stock.getRegularMarketDayHigh(), stock.getRegularMarketDayLow(),
                                         stock.getRegularMarketOpen(), stock.getMarkerPreviousClose(),
-                                        stock.getAmountBet());
+                                        stock.getAmountBetted());
                             }
-
                         });
                     }
                     catch(NumberFormatException er){

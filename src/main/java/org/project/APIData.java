@@ -53,7 +53,7 @@ public class APIData{
         try {
             response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
-            if (response.statusCode() == 429) { // Means daily rate limit has been exceeded
+            if (response.statusCode() == 429 || response.body().contains("{message")) { // Means daily rate limit has been exceeded
                 System.out.println("\nERROR 429 DETECTED\n");
 
                 if (keyID < myKeys.length - 1) { // Check if there are more keys available

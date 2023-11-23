@@ -3,6 +3,7 @@ package org.project;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
+
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -179,7 +180,7 @@ public class Stock{
                 } // else System.out.println("Row checked but no eligible value has been found");
             }
         } catch (IOException e) {
-            System.out.println("Errore durante la lettura del database.");
+            System.out.println("Error while reading the database.");
         } catch (CsvException e) {
             throw new RuntimeException(e);
         }

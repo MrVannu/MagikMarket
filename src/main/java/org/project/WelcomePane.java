@@ -615,6 +615,8 @@ public class WelcomePane extends APIData { // To use data from api obj
         listOfBetStock = new Label(stringOfBetStocks);
 
         Label amountLabel = new Label("Your amount: ");
+        amountLabel.setStyle("-fx-font-style: italic;");
+
         // Layout to visualize the money
         HBox moneyBox = new HBox(amountLabel, moneyLabel);
         moneyBox.setAlignment(Pos.CENTER);

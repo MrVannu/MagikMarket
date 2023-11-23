@@ -125,7 +125,6 @@ public class PrevisionComponent{
 
                 // Check if stock has been invested
 
-
                 // Popup for new graph
                 Stage previsionStage = new Stage();
                 previsionStage.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows

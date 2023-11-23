@@ -106,9 +106,7 @@ public class Stock{
     public double getRegularMarketDayLow() {
         return regularMarketDayLow;
     }
-    public void setRegularMarketDayLow(double description) {
-        this.regularMarketDayLow = regularMarketDayLow;
-    }
+
     public boolean isAvailable() {
         return available;
     }

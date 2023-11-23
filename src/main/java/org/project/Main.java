@@ -20,8 +20,7 @@ import javafx.stage.Stage;
 import java.io.*;
 
 public class Main extends Application {
-
-
+        
     @Override
     public void start(Stage primaryStage) {
         //User userRegistered = new User();

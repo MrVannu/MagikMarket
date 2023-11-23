@@ -2,14 +2,14 @@
 
 /* Style for checkboxes */
 .checkbox {
-    -fx-font-size: 14px;
-    -fx-text-fill: black;
-    -fx-padding: 5px;
+    -fx-text-fill: #800080; /* Text color purple */
+    -fx-border-width: 2px; /* Border width */
+    -fx-border-radius: 5px; /* Rounded corners for the border */
+    -fx-padding: 5px 7px; /* Inner spacing */
 }
 
 .checkbox:selected .box {
-    -fx-background-color: #007bff;
-    -fx-border-color: #007bff;
+    -fx-border-color: #800080;
 }
 
 .checkbox:disabled .text {
@@ -49,6 +49,25 @@
 .test-button {
     -fx-font-size: 14px;
 }
+
+/* Style for the "Buy" button */
+.button-buy {
+    -fx-background-color: #4CAF50; /* Background color green */
+    -fx-text-fill: white; /* Text color white */
+    -fx-font-size: 14px; /* Font size */
+    -fx-padding: 5px 7px; /* Inner spacing */
+    -fx-border-radius: 5px; /* Rounded corners */
+}
+
+/* Style for the "Sell" button */
+.button-sell {
+    -fx-background-color: #FF6347; /* Background color red */
+    -fx-text-fill: white; /* Text color white */
+    -fx-font-size: 14px; /* Font size */
+    -fx-padding: 5px 7px; /* Inner spacing */
+    -fx-border-radius: 5px; /* Rounded corners */
+}
+
 
 /* Style for the line chart */
 .chart-view {

@@ -3,6 +3,7 @@ package org.project;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
@@ -106,7 +107,6 @@ public class WelcomePane extends APIData { // To use data from api obj
         symbols.add("googl");
         symbols.add("ENL.BE");
 
-        //checkBoxSeriesMap = new HashMap<>();
 
         // Define VBox for the right pane of the main SplitPane
         VBox rightPaneBox = new VBox();
@@ -139,7 +139,6 @@ public class WelcomePane extends APIData { // To use data from api obj
         ImageView logoutImageView = new ImageView(logoutImage);
         logoutImageView.setFitWidth(24); // Set the desired width
         logoutImageView.setFitHeight(24); // Set the desired height
-
         logOut.setGraphic(logoutImageView);
 
         // Create line chart
@@ -149,22 +148,28 @@ public class WelcomePane extends APIData { // To use data from api obj
         BarChart<String, Number> mainBarChart= createBarChart("");
 
         // Define layout for the left split pane
-        //Define leftPaneBox to be a VBox
+        // Define leftPaneBox to be a VBox
         VBox leftPaneBox = new VBox(10);
-        leftPaneBox.setAlignment(Pos.CENTER_LEFT);
+        leftPaneBox.setAlignment(Pos.CENTER);
         leftPaneBox.setPadding(new Insets(10));
-        // Create a Box to contain the checkBoxes
-        VBox boxBox = new VBox(10);
-        // Create a Box to contain the bet button
-        VBox betButtonsBox = new VBox(13);
+
+        // Create GridPane to substitute boxBox and betButtonsBox for layout of the checkboxes and the bet buttons
+        GridPane checkAndBetGpane = new GridPane();
+        checkAndBetGpane.setHgap(10);
+        checkAndBetGpane.setVgap(10);
+        checkAndBetGpane.setPadding(new Insets(10));
+        // Define counter used in the foreach
+        int numOfBoxes = 0;
+
         // Create a HBox to contain both VBoxes
-        HBox lowerLeftBox = new HBox(boxBox,betButtonsBox);
+        HBox lowerLeftBox = new HBox(checkAndBetGpane);
+        lowerLeftBox.setAlignment(Pos.CENTER);
         lowerLeftBox.setSpacing(20);
+
         // Define imageView for the logo image and define its dimensions
         ImageView logoImg = new ImageView(new Image("mk.png"));
         logoImg.setFitHeight(100);
         logoImg.setFitWidth(170);
-
         // Define a Box for the logo
         VBox logoBox = new VBox(logoImg);
         logoBox.setAlignment(Pos.CENTER);
@@ -348,23 +353,27 @@ public class WelcomePane extends APIData { // To use data from api obj
                     mainBarChart.getData().removeIf(serieBar -> serieBar.getName().equals(temp));
                     //Revome the series of data with the same symbol of the checkBox
                     pieChart.getData().removeIf(seriePie -> seriePie.getName().equals(temp));
+                    lineChart.setTitle("");
+                    mainBarChart.setTitle("");
 
                 }
 
             }); // Closing checkBox action
 
+            // Define instance of SubmitControl
             SubmitControl submitControl = new SubmitControl(userRegistered, primaryStage, stocksCheckedOn, symbols, topBox, symbol, moneyLabel, checkBox, pieChart);
+
             // Add the bet button into the ArrayList
             betButtonsArrayList.add(submitControl.getBet());
 
             // Add the checkBox into the ArrayList
             checkBoxesArrayList.add(checkBox);
 
-            // Add the HBox into the VBox for vertical layout
-            boxBox.getChildren().addAll(submitControl.getCheckBoxInsideHBox());// boxBox is previously added into lowerLeftBox
 
-            // Add the bet button into the betButtonsBox
-            betButtonsBox.getChildren().addAll(submitControl.getBet());
+            //Using the foreach to increment the counter to insert the checkboxes and buttons
+            checkAndBetGpane.add(submitControl.getCheckBoxInsideHBox(), 0, numOfBoxes);
+            checkAndBetGpane.add(submitControl.getBuyAndSell(), 1, numOfBoxes);
+            numOfBoxes++;
 
         } // CLOSE FOREACH
 
@@ -396,10 +405,6 @@ public class WelcomePane extends APIData { // To use data from api obj
         // Add the Box with prevision button to the leftPaneBox (it is below the checkboxes)
         leftPaneBox.getChildren().addAll(previsionComponent.getPrevisionBox());
         leftPaneBox.setSpacing(10); // Define space between the elements inside the box
-
-
-
-
 
         // Set title to pie chart
         pieChart.setTitle("Avg. 3 Month Volume");
@@ -609,8 +614,23 @@ public class WelcomePane extends APIData { // To use data from api obj
         // Label with the list of Stock the user bet
         listOfBetStock = new Label(stringOfBetStocks);
 
+        Label amountLabel = new Label("Your amount: ");
+        // Layout to visualize the money
+        HBox moneyBox = new HBox(amountLabel, moneyLabel);
+        moneyBox.setAlignment(Pos.CENTER);
+
+        Separator separator1 = new Separator();
+        separator1.setOrientation(Orientation.VERTICAL);
+        separator1.setPrefHeight(20);
+            Separator separator2 = new Separator();
+            separator2.setOrientation(Orientation.VERTICAL);
+            separator2.setPrefHeight(20);
+                Separator separator3 = new Separator();
+                separator3.setOrientation(Orientation.VERTICAL);
+                separator3.setPrefHeight(20);
+
         // Add all the elements into the tobBox
-        topBox.getChildren().addAll(profilePic, username, moneyLabel, listOfBetStock);
+        topBox.getChildren().addAll(profilePic, separator1, username, separator2, moneyBox, separator3, listOfBetStock);
 
         // Add the topBot into the StackPane
         topRightPane.getChildren().addAll(topBox);

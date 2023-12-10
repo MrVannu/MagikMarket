@@ -447,7 +447,7 @@ public class WelcomePane extends APIData { // To use data from api obj
                     "You have an amount of money that is, by default, 1,000 (you can modify it form the edit" +
                     "menu). As much as you invest, the amount of money will decrease. There will be " +
                     "a simulation that will show you if your prediction was correct or not." +
-                    "When clicking the Prevision button some randomic data change the chart. This is a way" +
+                    "When clicking the Prevision button some random data change the chart. This is a way" +
                     "to simulate some kind of changes. When the chart has decreased you loose money. When the" +
                     "chart has increased you win money." +
                     "The bar chart will help you having a look at the market volume of a selected Stock. This data " +

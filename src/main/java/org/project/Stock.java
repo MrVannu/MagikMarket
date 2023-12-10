@@ -3,12 +3,15 @@ package org.project;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
-
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Stock{
     private final String stockDbPath = "src/main/resources/StocksDB.csv";
@@ -44,6 +47,10 @@ public class Stock{
         this.regularMarketDayHigh = regularMarketDayHigh;
         this.regularMarketDayLow= regularMarketDayLow;
         this.marketPreviousClose = marketPreviousClose;
+    }
+
+    public Stock() {
+
     }
 
     public String getSymbol() {
@@ -128,11 +135,23 @@ public class Stock{
 
 
 
-    // Save the stocks which the user invested in
+    public static String getTime() {
+        ZoneId zoneId = ZoneId.of("Europe/Rome");
+        ZonedDateTime currentTime = ZonedDateTime.now(zoneId);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy-HH:mm");
+        return currentTime.format(formatter);
+    }
+
+
+    // Save the stocks which the user invested in including parameters, and the time of the investment
     public void saveStocks(String username, String symbol, double regularMarketDayHigh, double regularMarketDayLow,
                                    double regularMarketOpen, double marketPreviousClose, double amountBet) {
-        String toWrite = username + "," + symbol + "," + regularMarketDayHigh + "," + regularMarketDayLow
-                + "," + regularMarketOpen + "," + marketPreviousClose + "," + amountBet;
+
+        String toWrite = String.format("%s,%s,%.2f,%.2f,%.2f,%.2f,%.2f,%s",
+                username, symbol, regularMarketDayHigh, regularMarketDayLow,
+                regularMarketOpen, marketPreviousClose, amountBet, getTime());
+
 
         try (CSVReader reader = new CSVReader(new FileReader(stockDbPath))) {
             List<String[]> existingData = reader.readAll();
@@ -164,24 +183,24 @@ public class Stock{
 
 
 
-    // Retrieve the saved stocks which the user invested in
-    public List<Stock> getSavedStocks(String username) {
-        List<Stock> userStocks = new ArrayList<>();
+    // Retrieve the saved stocks which the user invested in + details
+    public List<List<String>> getSavedStocks(String username) {
+        List<List<String>> userStocks = new ArrayList<>();
 
         try (CSVReader reader = new CSVReader(new FileReader(stockDbPath))) {
             List<String[]> allData = reader.readAll();
             for (String[] row : allData) {
                 if (row[0].equals(username)) {
-                    // symbol, regularMarketDayHigh, regularMarketDayLow, regularMarketOpen, marketPreviousClose
-                    Stock obj = new Stock(row[1], Double.parseDouble(row[2]), Double.parseDouble(row[3]),
-                            Double.parseDouble(row[4]),Double.parseDouble(row[5]), Double.parseDouble(row[6]));
-
-                    userStocks.add(obj);
-                } // else System.out.println("Row checked but no eligible value has been found");
+                    List<String> rowData = new ArrayList<>();
+                    for (String value : row) {
+                        rowData.add(value);
+                    }
+                    userStocks.add(rowData);
+                }
             }
         } catch (IOException e) {
             System.out.println("Error while reading the database.");
-        } catch (CsvException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 

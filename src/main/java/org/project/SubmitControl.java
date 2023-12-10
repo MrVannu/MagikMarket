@@ -15,7 +15,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 
-public class SubmitControl { //Invest button + method to invest
+public class SubmitControl extends Stock{ //Invest button + method to invest
 
     private HBox checkBoxInsideHBox = new HBox(10);
     private Button bet = new Button("Invest"); // Define bet button
@@ -23,6 +23,7 @@ public class SubmitControl { //Invest button + method to invest
     private Button sell = new Button("Sell"); // Define sell button
 
     public SubmitControl(User userRegistered, Stage primaryStage, ArrayList<Stock> stocksCheckedOn, ArrayList<String> symbols, FlowPane topBox, String symbol, Label moneyLabel, CheckBox checkBox, PieChart pieChart) {
+        super();
         bet.getStyleClass().add("my-button");
         buy.getStyleClass().add("button-buy");
         sell.getStyleClass().add("button-sell");
@@ -55,7 +56,7 @@ public class SubmitControl { //Invest button + method to invest
             submitBetAmount.setOnAction(e->{
                 if(!betField.getText().isEmpty()) { // If the field is not empty
                     try{
-                        // Attempt to parse the text as a double. If parsing is successful, it's a valid number
+                      // Attempt to parse the text as a double. If parsing is successful, it's a valid number
                         Double.parseDouble(betField.getText());
 
                         //Decreases the user's amount of money in the GUI label

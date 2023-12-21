@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
     private Button buy = new Button("Buy"); // Define buy button
     private Button sell = new Button("Sell"); // Define sell button
 
-    public SubmitControl(User userRegistered, Stage primaryStage, ArrayList<Stock> stocksCheckedOn, ArrayList<String> symbols, FlowPane topBox, String symbol, Label moneyLabel, CheckBox checkBox, PieChart pieChart) {
+    public SubmitControl(User userRegistered, Stage primaryStage, ArrayList<Stock> stocksCheckedOn, ArrayList<String> symbols, HBox list, String symbol, Label moneyLabel, CheckBox checkBox, PieChart pieChart) {
         super();
         bet.getStyleClass().add("my-button");
         buy.getStyleClass().add("button-buy");
@@ -52,6 +53,10 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
             windowBetBox.setSpacing(10);
             windowBetBox.setAlignment(Pos.CENTER);
 
+            // Define mini Box where to show the stock invested on
+            HBox miniBox = new HBox();
+            miniBox.setAlignment(Pos.CENTER);
+
             //Handle submitBetAmount button
             submitBetAmount.setOnAction(e->{
                 if(!betField.getText().isEmpty()) { // If the field is not empty
@@ -73,7 +78,15 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                             return stock.getName().equals(symbol);
                         })) */
                         //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
-                        topBox.getChildren().add(new Label(symbol));
+
+
+                        miniBox.getChildren().add(new Label());
+                        miniBox.getChildren().add(new Label());
+
+
+                        list.getChildren().add(new Label(symbol+" amount bet on"+", "+betField.getText()));
+
+
                         stocksCheckedOn.forEach(stock -> {
                             if(stock.getName().equals(symbol)) {
                                 stock.setInvestedOn(true);
@@ -152,13 +165,21 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                                 if(stock.getSymbol().equals(symbols))
                                     stock.setAmountBet(stock.getAmountBetted()+Double.parseDouble(buyField.getText()));
                             });
-                            buyField.clear();
-                            buyPopup.close();
+
                             /*if (stocksBetOn.stream().anyMatch(stock -> {
                                 return stock.getName().equals(symbol);
                             })) */
+
                             //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
-                            topBox.getChildren().add(new Label(symbol));
+                            Label upArrowLabel = new Label("\u2191");
+                            upArrowLabel.setFont(Font.font(48));
+//                            upArrowLabel.setFill(javafx.scene.paint.Color.GREEN);
+
+                            list.getChildren().add(new Label(symbol +" "+upArrowLabel+" "+ buyField.getText()));
+
+                            buyField.clear();
+                            buyPopup.close();
+
                             stocksCheckedOn.forEach(stock -> {
                                 if(stock.getName().equals(symbol)) {
                                     stock.setInvestedOn(true);
@@ -241,7 +262,7 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                                         return stock.getName().equals(symbol);
                                     })) */
                                 //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
-                                topBox.getChildren().add(new Label(symbol));
+                                list.getChildren().remove(new Label(symbol));
                                 stocksCheckedOn.forEach(stock -> {
                                     if(stock.getName().equals(symbol)) {
                                         stock.setInvestedOn(true);

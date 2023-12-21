@@ -139,8 +139,10 @@ public class PrevisionComponent{
                 System.out.println("Stocks checked on: \n");
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setHeaderText(null);
+                alert.setHeight(500);
+                alert.setWidth(500);
                 String alertString="";
-                stocksCheckedOn.forEach(stock -> {
+                for (Stock stock:stocksCheckedOn) {
 
                     XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
                     newSeries.setName(stock.getName());
@@ -167,16 +169,17 @@ public class PrevisionComponent{
                         //moneyLabel.setText(decimalFormat.format(Double.parseDouble(moneyLabel.getText())+addedValue));
                         //alert.setTitle("YOU LOST!");
                        // alert.setHeaderText(null);
-                        //alertString += "Your betting was wrong!" +" You could lose ";
-                        //decimalFormat.format(addedValue)+"by betting on "+stock.getName());
-                        alert.showAndWait();
+                        alertString += "Your betting was wrong!" +" You could lose "
+                            +decimalFormat.format(addedValue)+" by betting on "+stock.getName()+"\n";
+                        //alert.showAndWait();
                     } else if (stock.getMarketPreviousClose()>previousValue) {
                        //moneyLabel.setText(decimalFormat.format(Double.parseDouble(moneyLabel.getText())+addedValue));
                         //Alert alert = new Alert(Alert.AlertType.WARNING);
                         alert.setTitle("YOU DID WELL!");
                         alert.setHeaderText(null);
-                        alert.setContentText("Your intuition was right!" +" You could gain "+decimalFormat.format(addedValue)+"by betting on "+stock.getName());
-                        alert.showAndWait();
+                        alertString += ("Your intuition was right!" +" You could gain "+
+                                decimalFormat.format(addedValue)+"by betting on "+stock.getName()+"\n");
+
                     }else{}
 
                     newSeries.getData().addAll(
@@ -198,7 +201,9 @@ public class PrevisionComponent{
                     // Use showAndWait to wait for user interaction before continuing
 
 
-                });
+                };
+                alert.setContentText(alertString);
+                alert.showAndWait();
                 Button closePrevisionPopup = new Button("Close");
                 HBox previsionPopupBox = new HBox(closePrevisionPopup);
                 previsionPopupBox.setSpacing(30);

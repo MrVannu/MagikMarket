@@ -152,8 +152,6 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                 windowBuyBox.setSpacing(10);
                 windowBuyBox.setAlignment(Pos.CENTER);
 
-
-
                 //Handle submitBuyAmount button
                 submitBuyAmount.setOnAction(e->{
                     if(!buyField.getText().isEmpty()) { // If the field is not empty
@@ -188,11 +186,10 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
 //
 //                                list.getChildren().add(new Label(symbol +" "+upArrowLabel+" "+ buyField.getText()));
 
-
                             List<List<String>> theList = getSavedStocks(userRegistered.getUsername());
-
                             GridPane gridPane = new GridPane();
                             gridPane.setHgap(10); // Horizontal space between columns
+                            list.getChildren().clear();
 
                             int rowIndex = 0;
                             for (List<String> outEl : theList) {
@@ -207,7 +204,6 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                             }
 
                             list.getChildren().add(gridPane);
-
 
                             buyField.clear();
                             buyPopup.close();

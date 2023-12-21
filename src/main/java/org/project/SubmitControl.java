@@ -9,12 +9,15 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SubmitControl extends Stock{ //Invest button + method to invest
 
@@ -23,7 +26,7 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
     private Button buy = new Button("Buy"); // Define buy button
     private Button sell = new Button("Sell"); // Define sell button
 
-    public SubmitControl(User userRegistered, Stage primaryStage, ArrayList<Stock> stocksCheckedOn, ArrayList<String> symbols, FlowPane list, String symbol, Label moneyLabel, CheckBox checkBox, PieChart pieChart) {
+    public SubmitControl(User userRegistered, Stage primaryStage, ArrayList<Stock> stocksCheckedOn, ArrayList<String> symbols, HBox list, String symbol, Label moneyLabel, CheckBox checkBox, PieChart pieChart) {
         super();
         bet.getStyleClass().add("my-button");
         buy.getStyleClass().add("button-buy");
@@ -93,7 +96,7 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                                 stock.saveStocks(userRegistered.getUsername(), stock.getName(),
                                         stock.getRegularMarketDayHigh(), stock.getRegularMarketDayLow(),
                                         stock.getRegularMarketOpen(), stock.getMarkerPreviousClose(),
-                                        stock.getAmountBetted());
+                                        stock.getAmountBetted(), stock.getRegularMarketPrice());
                             }
                         });
                     }
@@ -125,7 +128,6 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
         });// Close bet button handle code segment
 
 
-
             // Handle the "Buy" button action here
             buy.setOnAction(event -> {
                 // Create a custom popup using a Stage (invest button)
@@ -150,6 +152,8 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                 windowBuyBox.setSpacing(10);
                 windowBuyBox.setAlignment(Pos.CENTER);
 
+
+
                 //Handle submitBuyAmount button
                 submitBuyAmount.setOnAction(e->{
                     if(!buyField.getText().isEmpty()) { // If the field is not empty
@@ -161,21 +165,49 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                             userRegistered.setUserCredit(Double.parseDouble(userRegistered.getUserCredit()) - Double.parseDouble(buyField.getText()));
                             //Update the money label
                             moneyLabel.setText(String.valueOf(userRegistered.getUserCredit()));
-                            stocksCheckedOn.forEach(stock -> {
-                                if(stock.getSymbol().equals(symbols))
-                                    stock.setAmountBet(stock.getAmountBetted()+Double.parseDouble(buyField.getText()));
-                            });
+
+//                            // Save the invested amount into the variable AmountBet in the stock class through the setter method
+//                            stocksCheckedOn.forEach(stock -> {
+//                                if(stock.getSymbol().equals(symbols))
+//                                    stock.setAmountBet(stock.getAmountBetted()+Double.parseDouble(buyField.getText()));
+//                            });
+//
+                            APIData apiResponseObj = new APIData();
+                            apiResponseObj.fetchData(symbol);
+                            saveStocks(userRegistered.getUsername(),symbol,apiResponseObj.regularMarketDayHigh(),apiResponseObj.regularMarketDayLow(),apiResponseObj.regularMarketDayOpen(),apiResponseObj.regularMarketPreviousClose(),Double.parseDouble(buyField.getText()),apiResponseObj.regularMarketPrice());
 
                             /*if (stocksBetOn.stream().anyMatch(stock -> {
                                 return stock.getName().equals(symbol);
                             })) */
 
-                            //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
-                            Label upArrowLabel = new Label("\u2191");
-                            upArrowLabel.setFont(Font.font(48));
-//                            upArrowLabel.setFill(javafx.scene.paint.Color.GREEN);
+//                                //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
+//                                Label upArrowLabel = new Label("\u2191");
+//                                upArrowLabel.setFont(Font.font(48));
+//    //                            upArrowLabel.setFill(javafx.scene.paint.Color.GREEN);
+//
+//
+//                                list.getChildren().add(new Label(symbol +" "+upArrowLabel+" "+ buyField.getText()));
 
-                            list.getChildren().add(new Label(symbol +" "+upArrowLabel+" "+ buyField.getText()));
+
+                            List<List<String>> theList = getSavedStocks(userRegistered.getUsername());
+
+                            GridPane gridPane = new GridPane();
+                            gridPane.setHgap(10); // Horizontal space between columns
+
+                            int rowIndex = 0;
+                            for (List<String> outEl : theList) {
+                                int columnIndex = 0;
+                                outEl.set(0,"");
+                                for (String innerEl : outEl) {
+                                    Text text = new Text(innerEl);
+                                    gridPane.add(text, columnIndex, rowIndex);
+                                    columnIndex++;
+                                }
+                                rowIndex++;
+                            }
+
+                            list.getChildren().add(gridPane);
+
 
                             buyField.clear();
                             buyPopup.close();
@@ -186,7 +218,7 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                                     stock.saveStocks(userRegistered.getUsername(), stock.getName(),
                                             stock.getRegularMarketDayHigh(), stock.getRegularMarketDayLow(),
                                             stock.getRegularMarketOpen(), stock.getMarkerPreviousClose(),
-                                            stock.getAmountBetted());
+                                            stock.getAmountBetted(),stock.getRegularMarketPrice());
                                 }
                             });
                         }
@@ -269,7 +301,7 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                                         stock.saveStocks(userRegistered.getUsername(), stock.getName(),
                                                 stock.getRegularMarketDayHigh(), stock.getRegularMarketDayLow(),
                                                 stock.getRegularMarketOpen(), stock.getMarkerPreviousClose(),
-                                                stock.getAmountBetted());
+                                                stock.getAmountBetted(),stock.getRegularMarketPrice());
                                     }
                                 });
                             }
@@ -303,8 +335,6 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
 
         // Add the checkBoxes into the HBox
         checkBoxInsideHBox.getChildren().addAll(checkBox);
-
-
 
     }
 

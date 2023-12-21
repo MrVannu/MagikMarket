@@ -20,6 +20,8 @@ public class Stock{
     private double regularMarketOpen;
     private double marketPreviousClose;
 
+    private double regularMarketPrice;
+
     private double volume;
     private String symbol;
     private String name;
@@ -31,7 +33,7 @@ public class Stock{
 
 
 
-    public Stock(String symbol, String name, double regularMarketOpen, double regularMarketDayHigh, double regularMarketDayLow, double marketPreviousClose, String volume){
+    public Stock(String symbol, String name, double regularMarketOpen, double regularMarketDayHigh, double regularMarketDayLow, double marketPreviousClose, String volume, double regularMarketPrice){
         this.symbol= symbol;
         this.name = name;
         this.regularMarketOpen = regularMarketOpen;
@@ -39,6 +41,7 @@ public class Stock{
         this.regularMarketDayLow= regularMarketDayLow;
         this.marketPreviousClose = marketPreviousClose;
         this.volume= Double.parseDouble(volume);
+        this.regularMarketPrice = regularMarketPrice;
     }
 
     public Stock(String symbol, double regularMarketOpen, double regularMarketDayHigh, double regularMarketDayLow, double marketPreviousClose, double amountBet){
@@ -76,6 +79,8 @@ public class Stock{
     public double getRegularMarketOpen() {
         return regularMarketOpen;
     }
+
+    public double getRegularMarketPrice(){ return regularMarketPrice;}
     public boolean isInvestedOn() {
         return investedOn;
     }
@@ -125,9 +130,12 @@ public class Stock{
 
     public double getRegularMarketDayHigh(){return regularMarketDayHigh;}
 
+//    public double getRegularMarketPrice(){return regularMarketPrice}
+
     public void setRegularMarketDayHigh(double regularMarketDayHigh) {
         this.regularMarketDayHigh = regularMarketDayHigh;
     }
+
 
     public boolean isEquals(Stock obj) {
         return this.getName().equals(obj.getName());

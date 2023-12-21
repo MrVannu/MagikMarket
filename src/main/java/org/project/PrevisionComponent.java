@@ -142,6 +142,7 @@ public class PrevisionComponent{
                 alert.setHeight(500);
                 alert.setWidth(500);
                 String alertString="";
+                String particleString="";
                 for (Stock stock:stocksCheckedOn) {
 
                     XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
@@ -149,7 +150,11 @@ public class PrevisionComponent{
                     //nameOfCompany= testObj.extractNameOfCompany();
 
                     Random rnd = new Random();
+                    DecimalFormat decimalFormat = new DecimalFormat("0.00");
                     final double PARTICLE= (rnd.nextDouble(21)+1)/10;
+                    particleString+= stock.getName()+" --->  "+ decimalFormat.format(PARTICLE)+"% \n";
+
+
 
                     System.out.println("before MOD"+stock.getRegularMarketOpen()+stock.getMarketPreviousClose());
 
@@ -161,24 +166,20 @@ public class PrevisionComponent{
                     stock.setMarketPreviousClose(stock.getMarketPreviousClose()*PARTICLE);
                     //System.out.println("after MOD"+stock.getRegularMarketOpen()+stock.getMarketPreviousClose());
 
-                    DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
                     double addedValue = (stock.getMarketPreviousClose()-previousValue)*10;
                     if(stock.getMarketPreviousClose()<previousValue){
                         //To change money amount
                         //moneyLabel.setText(decimalFormat.format(Double.parseDouble(moneyLabel.getText())+addedValue));
-                        //alert.setTitle("YOU LOST!");
-                       // alert.setHeaderText(null);
+
                         alertString += "Your betting was wrong!" +" You could lose "
                             +decimalFormat.format(addedValue)+" by betting on "+stock.getName()+"\n";
                         //alert.showAndWait();
                     } else if (stock.getMarketPreviousClose()>previousValue) {
-                       //moneyLabel.setText(decimalFormat.format(Double.parseDouble(moneyLabel.getText())+addedValue));
-                        //Alert alert = new Alert(Alert.AlertType.WARNING);
                         alert.setTitle("YOU DID WELL!");
                         alert.setHeaderText(null);
                         alertString += ("Your intuition was right!" +" You could gain "+
-                                decimalFormat.format(addedValue)+"by betting on "+stock.getName()+"\n");
+                                decimalFormat.format(addedValue)+" by betting on "+stock.getName()+"\n");
 
                     }else{}
 
@@ -202,8 +203,9 @@ public class PrevisionComponent{
 
 
                 };
-                alert.setContentText(alertString);
+                alert.setContentText(alertString+"\t \n\n "+particleString);
                 alert.showAndWait();
+                alert.setContentText("");
                 Button closePrevisionPopup = new Button("Close");
                 HBox previsionPopupBox = new HBox(closePrevisionPopup);
                 previsionPopupBox.setSpacing(30);

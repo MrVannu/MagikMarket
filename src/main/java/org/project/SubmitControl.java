@@ -202,8 +202,12 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                                 }
                                 rowIndex++;
                             }
+                            // LIST.REVERT to be implemented by luca :)
+
 
                             list.getChildren().add(gridPane);
+
+
 
                             buyField.clear();
                             buyPopup.close();

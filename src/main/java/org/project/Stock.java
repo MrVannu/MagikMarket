@@ -219,20 +219,20 @@ public class Stock{
 
 
 
-    public List<String> getSumAndPieces(String symbol) {
-        List<String> result = new ArrayList<>();
-
-        long counter = 0;
-
-        for (String element : result) {
-            if ("symbol".equals(element.get(0))) {
-                counter++;
-            }
-        }
-
-
-        return result;
-    }
+//    public List<String> getSumAndPieces(String symbol) {
+//        List<String> result = new ArrayList<>();
+//
+//        long counter = 0;
+//
+//        for (String element : result) {
+////            if ("symbol".equals(element.get(0))) {
+//                counter++;
+//            }
+//        }
+//
+//
+//        return result;
+//    }
 
 
 

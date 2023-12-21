@@ -146,11 +146,13 @@ public class Stock{
 
     // Save the stocks which the user invested in including parameters, and the time of the investment
     public void saveStocks(String username, String symbol, double regularMarketDayHigh, double regularMarketDayLow,
-                                   double regularMarketOpen, double marketPreviousClose, double amountBet) {
+                                   double regularMarketOpen, double marketPreviousClose, double amountBet, double regularMarketPrice) {
 
-        String toWrite = String.format("%s,%s,%.2f,%.2f,%.2f,%.2f,%.2f,%s",
+        String numberOfPieces = String.valueOf(amountBet / regularMarketPrice);
+
+        String toWrite = String.format("%s,%s,%.2f,%.2f,%.2f,%.2f,%.2f,%s,%s",
                 username, symbol, regularMarketDayHigh, regularMarketDayLow,
-                regularMarketOpen, marketPreviousClose, amountBet, getTime());
+                regularMarketOpen, marketPreviousClose, amountBet, getTime(), numberOfPieces);
 
 
         try (CSVReader reader = new CSVReader(new FileReader(stockDbPath))) {
@@ -206,6 +208,24 @@ public class Stock{
 
         return userStocks;
     }
+
+
+
+    public List<String> getSumAndPieces(String symbol) {
+        List<String> result = new ArrayList<>();
+
+        long counter = 0;
+
+        for (String element : result) {
+            if ("symbol".equals(element.get(0))) {
+                counter++;
+            }
+        }
+
+
+        return result;
+    }
+
 
 
 }

@@ -137,6 +137,9 @@ public class PrevisionComponent{
                 LineChart<Number, Number> lineChartPrevision= LineChartGenerator.createLineChart("Prevision");
 
                 System.out.println("Stocks checked on: \n");
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setHeaderText(null);
+                String alertString="";
                 stocksCheckedOn.forEach(stock -> {
 
                     XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
@@ -145,14 +148,9 @@ public class PrevisionComponent{
 
                     Random rnd = new Random();
                     final double PARTICLE= (rnd.nextDouble(21)+1)/10;
-                    //final ArrayList<Double>  MODIFIER2 = generateNextPrevision(stock.getName());
-                    //final double MODIFIER = PARTICLE
+
                     System.out.println("before MOD"+stock.getRegularMarketOpen()+stock.getMarketPreviousClose());
 
-                    //if(MODIFIER.get(3)<stock.getMarketPreviousClose())
-                    //{
-
-                    //}
                     double previousValue= stock.getMarkerPreviousClose();
                     //Algorithm to modify the stocks to be implemented
                     stock.setRegularMarketOpen(stock.getRegularMarketOpen()*PARTICLE);
@@ -165,18 +163,19 @@ public class PrevisionComponent{
 
                     double addedValue = (stock.getMarketPreviousClose()-previousValue)*10;
                     if(stock.getMarketPreviousClose()<previousValue){
-                        moneyLabel.setText(decimalFormat.format(Double.parseDouble(moneyLabel.getText())+addedValue));
-                        Alert alert = new Alert(Alert.AlertType.WARNING);
-                        alert.setTitle("YOU LOST!");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Your betting was wrong!" +" You lost "+decimalFormat.format(addedValue));
+                        //To change money amount
+                        //moneyLabel.setText(decimalFormat.format(Double.parseDouble(moneyLabel.getText())+addedValue));
+                        //alert.setTitle("YOU LOST!");
+                       // alert.setHeaderText(null);
+                        //alertString += "Your betting was wrong!" +" You could lose ";
+                        //decimalFormat.format(addedValue)+"by betting on "+stock.getName());
                         alert.showAndWait();
                     } else if (stock.getMarketPreviousClose()>previousValue) {
-                        moneyLabel.setText(decimalFormat.format(Double.parseDouble(moneyLabel.getText())+addedValue));
-                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                       //moneyLabel.setText(decimalFormat.format(Double.parseDouble(moneyLabel.getText())+addedValue));
+                        //Alert alert = new Alert(Alert.AlertType.WARNING);
                         alert.setTitle("YOU DID WELL!");
                         alert.setHeaderText(null);
-                        alert.setContentText("Your intuition was right!" +" You gained "+decimalFormat.format(addedValue));
+                        alert.setContentText("Your intuition was right!" +" You could gain "+decimalFormat.format(addedValue)+"by betting on "+stock.getName());
                         alert.showAndWait();
                     }else{}
 

@@ -304,7 +304,7 @@ public class APIData{
         double defaultValue = 101.0; // Defined value
 
         try {
-            if(data != null) {
+            if (data != null) {
                 JsonNode toRead = mapper.readTree(data.toString());
                 JsonNode regularMarketOpenNode = toRead.get("regularMarketPreviousClose");
 
@@ -321,28 +321,29 @@ public class APIData{
             throw new RuntimeException(e);
         }
 
+        return defaultValue;
+    }
 
+    public double regularMarketPrice() {
+        double defaultValue = 101.0; // Defined value
 
-        public double regularMarketPrice() {
-            double defaultValue = 101.0; // Defined value
+        try {
+            if(data != null) {
+                JsonNode toRead = mapper.readTree(data.toString());
+                JsonNode regularMarketOpenNode = toRead.get("regularMarketPrice");
 
-            try {
-                if(data != null) {
-                    JsonNode toRead = mapper.readTree(data.toString());
-                    JsonNode regularMarketOpenNode = toRead.get("regularMarketPrice");
-
-                    // Check if regularMarketOpenNode is not null
-                    if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
-                        double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
-                        System.out.println("Value in fmt format: " + fmtValue);
-                        return fmtValue;
-                    } else {
-                        System.out.println("Value not available or invalid: regularMarketPrice");
-                    }
+                // Check if regularMarketOpenNode is not null
+                if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
+                    double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
+                    System.out.println("Value in fmt format: " + fmtValue);
+                    return fmtValue;
+                } else {
+                    System.out.println("Value not available or invalid: regularMarketPrice");
                 }
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
             }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
         // If it wasn't possible to obtain a value, return the default value
         System.out.println("Using default value: " + defaultValue);

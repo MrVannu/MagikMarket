@@ -47,7 +47,7 @@ public class WelcomePane extends APIData { // To use data from api obj
             String extractCurrencySymbol
     ) throws IOException
     {
-        // Building the String to be written on DB
+        // Build the String to be written on DB
         String toWrite = String.valueOf(maxAge) + ", " +
                 String.valueOf(postMarketChangePercent) + ", " +
                 String.valueOf(regularMarketChangePercent) + ", " +
@@ -144,9 +144,6 @@ public class WelcomePane extends APIData { // To use data from api obj
         // Create line chart
         LineChart<Number, Number> lineChart= LineChartGenerator.createLineChart("Choose a company");
 
-        // Crate the bar chart
-        BarChart<String, Number> mainBarChart= createBarChart("");
-
         // Define layout for the left split pane
         // Define leftPaneBox to be a VBox
         VBox leftPaneBox = new VBox(10);
@@ -190,6 +187,18 @@ public class WelcomePane extends APIData { // To use data from api obj
 
         ArrayList<Stock> stocksCheckedOn = new ArrayList<>();
         Label listOfBetStock = new Label() ;
+
+        // Define investmentBox for showing the investements
+        HBox investmentBox = new HBox();
+        investmentBox.setAlignment(Pos.CENTER);
+
+        // Define arrayList of strings for containing the stocks in which the user invested
+        List<String> listStockInvestedOn = new ArrayList<>();
+
+        // Define HBox for list of stocks
+        HBox list = new HBox();
+        list.setAlignment(Pos.CENTER);
+
 
         //Define PieChart for other datas
         /*PieChart.Data[] pieChartData = {
@@ -336,12 +345,9 @@ public class WelcomePane extends APIData { // To use data from api obj
                     barChartSeries.getData().add(
                             new XYChart.Data<>(stringSymbol, averageDailyVolume)
                     );
-                    // Define chart title
-                    mainBarChart.setTitle(testObj==null ? nameOfCompany : testObj.extractNameOfCompany());
-                    // Add the data to the barChart
-                    mainBarChart.getData().add(barChartSeries);
 
-                } // Close if
+
+                    } // Close if
 
                 // If checkbox is not selected then remove the line from the chart
                 if (!checkBox.isSelected() ) {
@@ -349,12 +355,10 @@ public class WelcomePane extends APIData { // To use data from api obj
                     final String temp = (testObj == null ? nameOfCompany : checkBox.getText()).toUpperCase();
                     // Remove the series of data with the same symbol of the checkBox
                     lineChart.getData().removeIf(serieLine -> serieLine.getName().equals(temp));
-                    //Revome the series of data with the same symbol of the checkBox
-                    mainBarChart.getData().removeIf(serieBar -> serieBar.getName().equals(temp));
+
                     //Revome the series of data with the same symbol of the checkBox
                     pieChart.getData().removeIf(seriePie -> seriePie.getName().equals(temp));
                     lineChart.setTitle("");
-                    mainBarChart.setTitle("");
 
                 }
 
@@ -414,16 +418,18 @@ public class WelcomePane extends APIData { // To use data from api obj
         VBox chartsBox = new VBox(10);
         chartsBox.getChildren().addAll(lineChart);
 
-        // Define a SplitPane for inserting two charts
-        SplitPane barAndPieSplitPane = new SplitPane();
-        barAndPieSplitPane.getItems().addAll(mainBarChart,pieChart);
-        barAndPieSplitPane.setDividerPositions(0.7);
+        // Define a SplitPane for inserting PieChart and InvestmentBox
+        SplitPane investmentAndPieSplitPane = new SplitPane();
+        investmentAndPieSplitPane.getItems().addAll(investmentBox,pieChart); //investmentBox,
+        investmentAndPieSplitPane.setDividerPositions(0.7);
 
-        // Add the barChart to the chartsBox
-        chartsBox.getChildren().addAll(barAndPieSplitPane);
+        rightVerticalSplitPane.getItems().addAll(chartsBox);
+
+            // Add the barChart to the chartsBox
+            chartsBox.getChildren().addAll();
 
         // Add the line chart to the bottomRightPane
-        bottomRightPane.getChildren().addAll(chartsBox);
+        bottomRightPane.getChildren().addAll(investmentAndPieSplitPane);
 
         // Define the action of the logOut button
         logOut.setOnAction(e ->{
@@ -624,12 +630,12 @@ public class WelcomePane extends APIData { // To use data from api obj
         Separator separator1 = new Separator();
         separator1.setOrientation(Orientation.VERTICAL);
         separator1.setPrefHeight(20);
-        Separator separator2 = new Separator();
-        separator2.setOrientation(Orientation.VERTICAL);
-        separator2.setPrefHeight(20);
-        Separator separator3 = new Separator();
-        separator3.setOrientation(Orientation.VERTICAL);
-        separator3.setPrefHeight(20);
+            Separator separator2 = new Separator();
+            separator2.setOrientation(Orientation.VERTICAL);
+            separator2.setPrefHeight(20);
+                Separator separator3 = new Separator();
+                separator3.setOrientation(Orientation.VERTICAL);
+                separator3.setPrefHeight(20);
 
         // Add all the elements into the tobBox
         topBox.getChildren().addAll(profilePic, separator1, username, separator2, moneyBox, separator3, listOfBetStock);

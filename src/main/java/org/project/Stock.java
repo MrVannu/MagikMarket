@@ -219,21 +219,17 @@ public class Stock{
 
 
 
-//    public List<String> getSumAndPieces(String symbol) {
-//        List<String> result = new ArrayList<>();
-//
-//        long counter = 0;
-//
-//        for (String element : result) {
-////            if ("symbol".equals(element.get(0))) {
-//                counter++;
-//            }
-//        }
-//
-//
-//        return result;
-//    }
+    public int getSumAndPieces(String username, String symbol) {
+        List<List<String>> result = getSavedStocks(username);
+        int sumOfPieces = 0;
 
+        for (List<String> row : result) {
+            sumOfPieces+=Double.parseDouble(row.get(8));
+        }
 
+        return sumOfPieces;
+    }
+
+// IL COMANDO DI VENDITA DEVE AGGIORANRE IL DB TRAMITE SAVESTOCKS
 
 }

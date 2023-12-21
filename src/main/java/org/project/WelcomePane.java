@@ -16,7 +16,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.*;
-import java.sql.Array;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -48,7 +47,7 @@ public class WelcomePane extends APIData { // To use data from api obj
             String extractCurrencySymbol
     ) throws IOException
     {
-        // Build the String to be written on DB
+        // Building the String to be written on DB
         String toWrite = String.valueOf(maxAge) + ", " +
                 String.valueOf(postMarketChangePercent) + ", " +
                 String.valueOf(regularMarketChangePercent) + ", " +
@@ -145,6 +144,9 @@ public class WelcomePane extends APIData { // To use data from api obj
         // Create line chart
         LineChart<Number, Number> lineChart= LineChartGenerator.createLineChart("Choose a company");
 
+        // Crate the bar chart
+        BarChart<String, Number> mainBarChart= createBarChart("");
+
         // Define layout for the left split pane
         // Define leftPaneBox to be a VBox
         VBox leftPaneBox = new VBox(10);
@@ -189,18 +191,6 @@ public class WelcomePane extends APIData { // To use data from api obj
         ArrayList<Stock> stocksCheckedOn = new ArrayList<>();
         Label listOfBetStock = new Label() ;
 
-        // Define investmentBox for showing the investements
-        HBox investmentBox = new HBox();
-        investmentBox.setAlignment(Pos.CENTER);
-
-        // Define arrayList of strings for containing the stocks in which the user invested
-        List<String> listStockInvestedOn = new ArrayList<>();
-
-        // Define HBox for list of stocks
-        HBox list = new HBox();
-        list.setAlignment(Pos.CENTER);
-
-
         //Define PieChart for other datas
         /*PieChart.Data[] pieChartData = {
                 new PieChart.Data("USD", 25000000),
@@ -212,152 +202,180 @@ public class WelcomePane extends APIData { // To use data from api obj
         PieChart pieChart = new PieChart();
         //pieChart.getData().addAll(pieChartData);
 
-        //
-
-
     /*
        In this foreach the Stock CheckBoxes are defined. Next to the checkboxes a button is added that permits the
        user to invest an amount of money to a specific Stock.
        A custom popup appears where the amount of bet money is inserted
     */
-            for (String symbol : symbols) {
-
-                CheckBox checkBox = new CheckBox(symbol);
-                checkBox.getStyleClass().add("checkbox");
-
-                // Checkbox creating a new series for each checkbox
-                XYChart.Series<Number, Number> series = new XYChart.Series<>();
-                series.setName(symbol); // Set the name of the serie
-
-                // Save the series into the map associated with the checkbox
-                //checkBoxSeriesMap.put(checkBox, series);
-
-                // Placeholders values in case something goes wrong with API call
-                String sym = "phSymbol";
-                String nameOfCompany = "phNameOfCompany";
-
-                //API CALL!!
-                final APIData testObj  = new APIData();
+        for (String symbol : symbols) {
 
 
-                // Handle CheckBox action foreach checkBox
-                checkBox.setOnAction(event -> {
-                    //For limiting of the selection of max checkboxes
-                    int selectedCount = (int) checkBoxesArrayList.stream().filter(CheckBox::isSelected).count();
-                    //Add a limit of selection of "MAX_SELECTED_CHECKBOXES" (for instance  max 4 check boxes)
-                    if (selectedCount > MAX_SELECTED_CHECKBOXES) {
-                        checkBox.setSelected(false);
+            CheckBox checkBox = new CheckBox(symbol);
+            checkBox.getStyleClass().add("checkbox");
 
-                        //Disable the not selected checkboxes when limit is reached
-                        for (CheckBox cb : checkBoxesArrayList) {
-                            if (!cb.isSelected()) {
-                                cb.setDisable(true);
-                            }
+            // Checkbox creating a new series for each checkbox
+            XYChart.Series<Number, Number> series = new XYChart.Series<>();
+            series.setName(symbol); // Set the name of the serie
+
+            // Save the series into the map associated with the checkbox
+            //checkBoxSeriesMap.put(checkBox, series);
+
+            // Placeholders values in case something goes wrong with API call
+            String sym = "phSymbol";
+            String nameOfCompany = "phNameOfCompany";
+
+            //API CALL!!
+            final APIData testObj  = new APIData();
+
+
+
+            // Handle CheckBox action foreach checkBox
+            checkBox.setOnAction(event -> {
+                //For limiting of the selection of max checkboxes
+                int selectedCount = (int) checkBoxesArrayList.stream().filter(CheckBox::isSelected).count();
+                //Add a limit of selection of "MAX_SELECTED_CHECKBOXES" (for instance  max 4 check boxes)
+                if (selectedCount > MAX_SELECTED_CHECKBOXES) {
+                    checkBox.setSelected(false);
+
+                    //Disable the not selected checkboxes when limit is reached
+                    for (CheckBox cb : checkBoxesArrayList) {
+                        if (!cb.isSelected()) {
+                            cb.setDisable(true);
                         }
-                    } else {
-                        checkBoxesArrayList.forEach(cb -> cb.setDisable(false));
+                    }
+                } else {
+                    checkBoxesArrayList.forEach(cb -> cb.setDisable(false));
+                }
+
+                //For adding new line
+                if (checkBox.isSelected()) {
+                    boolean callMade = true; // Activate/deactivate api call
+
+                    for (CheckBox cb : checkBoxesArrayList) {
+                        if (cb.isSelected()) {
+                            // assert false;  //Not to be used
+                            testObj.fetchData(cb.getText()); // !WARNING: this line requires API usage
+                        }
                     }
 
-                    //For adding new line
-                    if (checkBox.isSelected()) {
-                        boolean callMade = true; // Activate/deactivate api call
+                    // Initialize the stock and put the stock into the ArrayList
+                    //Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany(), testObj.regularMarketDayOpen(), testObj.regularMarketDayHigh(), testObj.regularMarketDayLow(), testObj.regularMarketPreviousClose());
+                    //stocksCheckedOn.add(stock);
 
-                        for (CheckBox cb : checkBoxesArrayList) {
-                            if (cb.isSelected()) {
-                                // assert false;  //Not to be used
-                                testObj.fetchData(cb.getText()); // !WARNING: this line requires API usage
-                            }
-                        }
-
-                        try {
-                            // Call method to add the data
-                            updateDataHistory(1, 3.0, 8.0, 11.0, "name", 1.8,21.0,17.5,1.0, "name1", "name2");
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
-                        }
-
-
-//                                        // Define the lineChart with all the data
-//                                        // Create a new series for this checkBox
-//                                        XYChart.Series<Number, Number> lineChartSeries = new XYChart.Series<>();
-//                                        // Define caption; if testObj is null then placeHolderString as name, otherwise SymbolOfCompany as name of the serie
-//                                        lineChartSeries.setName((testObj==null? nameOfCompany: testObj.extractSymbolOfCompany()));
-//
-//                                        //Randomizes the random points
-//                                        List<Number> xs = new ArrayList<>();
-//                                        xs.add(1);xs.add(2);xs.add(3);xs.add(4);xs.add(5);
-//                                        Collections.shuffle(xs);
-//
-//                                        lineChartSeries.getData().addAll(
-//                                                //(testObj==null? nameOfCompany: testObj.extractNameOfCompany())
-//                                                new XYChart.Data<>(0, (callMade? testObj.regularMarketDayOpen(): 50)),
-//                                                new XYChart.Data<>(xs.get(0), (callMade? (testObj.regularMarketDayHigh()*10 + testObj.regularMarketDayOpen())/1.8: 50)),
-//                                                new XYChart.Data<>(xs.get(1), (callMade? testObj.regularMarketDayHigh()*10: 50)),
-//                                                new XYChart.Data<>(xs.get(2), (callMade? (testObj.regularMarketDayHigh()*10 + testObj.regularMarketDayLow())/2: 50)),
-//                                                new XYChart.Data<>(xs.get(3), (callMade? testObj.regularMarketDayLow()/10: 50)),
-//                                                new XYChart.Data<>(xs.get(4), (callMade? (testObj.regularMarketDayLow()*10 + testObj.regularMarketPreviousClose())/2.2: 50)),
-//                                                new XYChart.Data<>(6, (callMade? testObj.regularMarketPreviousClose(): 200))
-//                                        );
-
-
-                        Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany(), testObj.regularMarketDayOpen(), testObj.regularMarketDayHigh(), testObj.regularMarketDayLow(), testObj.regularMarketPreviousClose(), testObj.extractAverageDailyVolume3MonthFmt());
-                        stocksCheckedOn.add(stock);
-
-                        // Create a new PieChart.Data object
-                        PieChart.Data newData = new PieChart.Data( symbol, stock.getVolume() );
-
-                        // Update the pie chart with the modified data
-                        pieChart.getData().add(newData);
-
-                        // Insert stock symbol into the list
-                        listStockInvestedOn.add(stock.getSymbol());
-
-                        // Loop to output the stock invested on while clicking
-//                        for (String l : listStockInvestedOn) {
-//                            Label label = new Label(" "+l+" ");
-//                            list.getChildren().add(label);
-//                        }
-
-//                        // Define lineChart title
-//                        //lineChart.setTitle((testObj.extractNameOfCompany()));
-//                        lineChart.setTitle("Line Chart");
-//
-//                        // Add the data (points) to the line chart
-//                        lineChart.getData().add(lineChartSeries);
-
-                    } // Close if
-
-                    // If checkbox is not selected then remove the line from the chart
-                    if (!checkBox.isSelected() ) {
-                        // Take the symbol of the deselected checkBox
-                        final String temp = (checkBox.getText()).toUpperCase();
-                        // Remove the series of data with the same symbol of the checkBox
-                        //lineChart.getData().removeIf(serieLine -> serieLine.getName().equals(temp));
-                        //lineChart.setTitle("");
-
-                        //Revome the series of data with the same symbol of the checkBox
-                        pieChart.getData().removeIf(seriePie -> seriePie.getName().equals(temp));
-
-
+                    // Placeholder data
+                    try {
+                        // Placeholders for testing
+                        updateDataHistory(1, 3.0, 8.0, 11.0, "name", 1.8,21.0,17.5,1.0, "name1", "name2");
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
                     }
 
-                }); // Closing checkBox action
 
-                // Define instance of SubmitControl
-                SubmitControl submitControl = new SubmitControl(userRegistered, primaryStage, stocksCheckedOn, symbols, list, symbol, moneyLabel, checkBox, pieChart);
+                    // Define the lineChart with all the data
+                    // Create a new series for this checkBox
+                    XYChart.Series<Number, Number> lineChartSeries = new XYChart.Series<>();
+                    // Define caption; if testObj is null then placeHolderString as name, otherwise SymbolOfCompany as name of the serie
+                    lineChartSeries.setName((testObj==null? nameOfCompany: testObj.extractSymbolOfCompany()));
 
-                // Add the bet button into the ArrayList
-                betButtonsArrayList.add(submitControl.getBet());
 
-                // Add the checkBox into the ArrayList
-                checkBoxesArrayList.add(checkBox);
+                    //Randomizes the random points
+                    List<Number> xs = new ArrayList<>();
+                    xs.add(1);xs.add(2);xs.add(3);xs.add(4);xs.add(5);
+                    Collections.shuffle(xs);
 
-                //Using the foreach to increment the counter to insert the checkboxes and buttons
-                checkAndBetGpane.add(submitControl.getCheckBoxInsideHBox(), 0, numOfBoxes);
-                checkAndBetGpane.add(submitControl.getBuyAndSell(), 1, numOfBoxes);
-                numOfBoxes++;
+                    lineChartSeries.getData().addAll(
+                            //(testObj==null? nameOfCompany: testObj.extractNameOfCompany())
+                            new XYChart.Data<>(0, (callMade? testObj.regularMarketDayOpen(): 50)),
+                            new XYChart.Data<>(xs.get(0), (callMade? (testObj.regularMarketDayHigh()*10 + testObj.regularMarketDayOpen())/1.8: 50)),
+                            new XYChart.Data<>(xs.get(1), (callMade? testObj.regularMarketDayHigh()*10: 50)),
+                            new XYChart.Data<>(xs.get(2), (callMade? (testObj.regularMarketDayHigh()*10 + testObj.regularMarketDayLow())/2: 50)),
+                            new XYChart.Data<>(xs.get(3), (callMade? testObj.regularMarketDayLow()/10: 50)),
+                            new XYChart.Data<>(xs.get(4), (callMade? (testObj.regularMarketDayLow()*10 + testObj.regularMarketPreviousClose())/2.2: 50)),
+                            new XYChart.Data<>(6, (callMade? testObj.regularMarketPreviousClose(): 200))
+                    );
 
-            } // CLOSE FOREACH
+
+                    Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany(), testObj.regularMarketDayOpen(), testObj.regularMarketDayHigh(), testObj.regularMarketDayLow(), testObj.regularMarketPreviousClose(), testObj.extractAverageDailyVolume3MonthFmt());
+                    stocksCheckedOn.add(stock);
+
+                    // Create a new PieChart.Data object
+                    PieChart.Data newData = new PieChart.Data( symbol, stock.getVolume() );
+
+
+                    // Update the pie chart with the modified data
+                    pieChart.getData().add(newData);
+
+
+
+                    // Add the new series to the line chart
+                    lineChart.setTitle((testObj==null? nameOfCompany: testObj.extractNameOfCompany()));
+                    // Define chart title; if object is null then name placeholder name, otherwise nameOfCompany
+                    lineChart.setTitle((testObj==null ? nameOfCompany : testObj.extractNameOfCompany()));
+
+                    // Add the data (points) to the line chart
+                    lineChart.getData().add(lineChartSeries);
+
+                    // Define the barChart with all the data
+                    //Create a new series for this checkBox
+                    XYChart.Series<String, Number> barChartSeries = new XYChart.Series<>();
+                    // Set the title
+                    barChartSeries.setName((testObj==null? nameOfCompany: testObj.extractSymbolOfCompany()));
+
+                    // Data management for barChart
+                    // Extract symbol and average daily volume (formatted) from JSON response
+                    String stringSymbol = testObj.extractSymbolOfCompany();
+                    String averageDailyVolumeFmt = testObj.extractAverageDailyVolume3MonthFmt();
+                    // Output data to console
+                    System.out.println("DATA:"+averageDailyVolumeFmt);
+                    // If string value is not empty then parse with the right format
+                    double averageDailyVolume = 0.0;
+                    if(!averageDailyVolumeFmt.equals("")) averageDailyVolume = testObj.parseFormattedValue(averageDailyVolumeFmt);
+                    else System.out.println("Empty averageDailyVolumeFmt!");
+
+                    // Define the bar chart and enter the manipulated data
+                    barChartSeries.getData().add(
+                            new XYChart.Data<>(stringSymbol, averageDailyVolume)
+                    );
+                    // Define chart title
+                    mainBarChart.setTitle(testObj==null ? nameOfCompany : testObj.extractNameOfCompany());
+                    // Add the data to the barChart
+                    mainBarChart.getData().add(barChartSeries);
+
+                } // Close if
+
+                // If checkbox is not selected then remove the line from the chart
+                if (!checkBox.isSelected() ) {
+                    // Take the symbol of the deselected checkBox
+                    final String temp = (testObj == null ? nameOfCompany : checkBox.getText()).toUpperCase();
+                    // Remove the series of data with the same symbol of the checkBox
+                    lineChart.getData().removeIf(serieLine -> serieLine.getName().equals(temp));
+                    //Revome the series of data with the same symbol of the checkBox
+                    mainBarChart.getData().removeIf(serieBar -> serieBar.getName().equals(temp));
+                    //Revome the series of data with the same symbol of the checkBox
+                    pieChart.getData().removeIf(seriePie -> seriePie.getName().equals(temp));
+                    lineChart.setTitle("");
+                    mainBarChart.setTitle("");
+
+                }
+
+            }); // Closing checkBox action
+
+            // Define instance of SubmitControl
+            SubmitControl submitControl = new SubmitControl(userRegistered, primaryStage, stocksCheckedOn, symbols, topBox, symbol, moneyLabel, checkBox, pieChart);
+
+            // Add the bet button into the ArrayList
+            betButtonsArrayList.add(submitControl.getBet());
+
+            // Add the checkBox into the ArrayList
+            checkBoxesArrayList.add(checkBox);
+
+
+            //Using the foreach to increment the counter to insert the checkboxes and buttons
+            checkAndBetGpane.add(submitControl.getCheckBoxInsideHBox(), 0, numOfBoxes);
+            checkAndBetGpane.add(submitControl.getBuyAndSell(), 1, numOfBoxes);
+            numOfBoxes++;
+
+        } // CLOSE FOREACH
 
         // Add the checkBox + betButton into the layout
         leftPaneBox.getChildren().addAll(lowerLeftBox);
@@ -396,16 +414,16 @@ public class WelcomePane extends APIData { // To use data from api obj
         VBox chartsBox = new VBox(10);
         chartsBox.getChildren().addAll(lineChart);
 
-        // Define a SplitPane for inserting PieChart and InvestmentBox
-        SplitPane investmentAndPieSplitPane = new SplitPane();
-        investmentAndPieSplitPane.getItems().addAll(investmentBox,pieChart); //investmentBox,
-        investmentAndPieSplitPane.setDividerPositions(0.7);
+        // Define a SplitPane for inserting two charts
+        SplitPane barAndPieSplitPane = new SplitPane();
+        barAndPieSplitPane.getItems().addAll(mainBarChart,pieChart);
+        barAndPieSplitPane.setDividerPositions(0.7);
 
-            // Add the barChart to the chartsBox
-            chartsBox.getChildren().addAll();
+        // Add the barChart to the chartsBox
+        chartsBox.getChildren().addAll(barAndPieSplitPane);
 
         // Add the line chart to the bottomRightPane
-        bottomRightPane.getChildren().addAll(investmentAndPieSplitPane);
+        bottomRightPane.getChildren().addAll(chartsBox);
 
         // Define the action of the logOut button
         logOut.setOnAction(e ->{
@@ -593,15 +611,8 @@ public class WelcomePane extends APIData { // To use data from api obj
         // Label for the stocks bet on
         String stringOfBetStocks = " Stocks bet on:\n";
 
-
-
-                // Label with the list of Stock the user bet
-                listOfBetStock = new Label(stringOfBetStocks);
-
-                investmentBox.getChildren().add(list);
-
-
-
+        // Label with the list of Stock the user bet
+        listOfBetStock = new Label(stringOfBetStocks);
 
         Label amountLabel = new Label("Your amount: ");
         amountLabel.setStyle("-fx-font-style: italic;");
@@ -613,12 +624,12 @@ public class WelcomePane extends APIData { // To use data from api obj
         Separator separator1 = new Separator();
         separator1.setOrientation(Orientation.VERTICAL);
         separator1.setPrefHeight(20);
-            Separator separator2 = new Separator();
-            separator2.setOrientation(Orientation.VERTICAL);
-            separator2.setPrefHeight(20);
-                Separator separator3 = new Separator();
-                separator3.setOrientation(Orientation.VERTICAL);
-                separator3.setPrefHeight(20);
+        Separator separator2 = new Separator();
+        separator2.setOrientation(Orientation.VERTICAL);
+        separator2.setPrefHeight(20);
+        Separator separator3 = new Separator();
+        separator3.setOrientation(Orientation.VERTICAL);
+        separator3.setPrefHeight(20);
 
         // Add all the elements into the tobBox
         topBox.getChildren().addAll(profilePic, separator1, username, separator2, moneyBox, separator3, listOfBetStock);

@@ -23,7 +23,7 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
     private Button buy = new Button("Buy"); // Define buy button
     private Button sell = new Button("Sell"); // Define sell button
 
-    public SubmitControl(User userRegistered, Stage primaryStage, ArrayList<Stock> stocksCheckedOn, ArrayList<String> symbols, HBox list, String symbol, Label moneyLabel, CheckBox checkBox, PieChart pieChart) {
+    public SubmitControl(User userRegistered, Stage primaryStage, ArrayList<Stock> stocksCheckedOn, ArrayList<String> symbols, FlowPane list, String symbol, Label moneyLabel, CheckBox checkBox, PieChart pieChart) {
         super();
         bet.getStyleClass().add("my-button");
         buy.getStyleClass().add("button-buy");

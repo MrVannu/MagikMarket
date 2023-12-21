@@ -289,7 +289,7 @@ public class WelcomePane extends APIData { // To use data from api obj
 
                     //Randomizes the random points
                     List<Number> xs = new ArrayList<>();
-                    xs.add(1);xs.add(2);xs.add(3);xs.add(4);xs.add(5);
+                    xs.add(4);xs.add(8);xs.add(12);xs.add(16);xs.add(20);
                     Collections.shuffle(xs);
 
                     lineChartSeries.getData().addAll(
@@ -300,7 +300,7 @@ public class WelcomePane extends APIData { // To use data from api obj
                             new XYChart.Data<>(xs.get(2), (callMade? (testObj.regularMarketDayHigh()*10 + testObj.regularMarketDayLow())/2: 50)),
                             new XYChart.Data<>(xs.get(3), (callMade? testObj.regularMarketDayLow()/10: 50)),
                             new XYChart.Data<>(xs.get(4), (callMade? (testObj.regularMarketDayLow()*10 + testObj.regularMarketPreviousClose())/2.2: 50)),
-                            new XYChart.Data<>(6, (callMade? testObj.regularMarketPreviousClose(): 200))
+                            new XYChart.Data<>(24, (callMade? testObj.regularMarketPreviousClose(): 200))
                     );
 
 

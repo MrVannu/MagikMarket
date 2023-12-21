@@ -9,6 +9,9 @@ public  class LineChartGenerator {
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
 
+        //Customize the X-Axis
+        xAxis.setLabel("Market time");
+
         // Create the line chart with axes
         LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
         lineChart.setTitle(nameOfCompany);

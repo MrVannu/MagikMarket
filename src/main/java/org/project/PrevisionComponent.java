@@ -152,7 +152,7 @@ public class PrevisionComponent{
                     Random rnd = new Random();
                     DecimalFormat decimalFormat = new DecimalFormat("0.00");
                     final double PARTICLE= (rnd.nextDouble(21)+1)/10;
-                    particleString+= stock.getName()+" --->  "+ decimalFormat.format(PARTICLE)+"% \n";
+                    particleString+= stock.getName()+" --->  "+ decimalFormat.format(PARTICLE)+"%";
 
 
 
@@ -168,15 +168,17 @@ public class PrevisionComponent{
 
 
                     double addedValue = (stock.getMarketPreviousClose()-previousValue)*10;
+                    //Adding arrow depending if lose or gain
+                    particleString+= (addedValue>0? "↗\n": "↘\n");
                     if(stock.getMarketPreviousClose()<previousValue){
                         //To change money amount
                         //moneyLabel.setText(decimalFormat.format(Double.parseDouble(moneyLabel.getText())+addedValue));
 
-                        alertString += "Your betting was wrong!" +" You could lose "
+                        alertString += "The stock is going down!" +" You could lose "
                             +decimalFormat.format(addedValue)+" by betting on "+stock.getName()+"\n";
                         //alert.showAndWait();
                     } else if (stock.getMarketPreviousClose()>previousValue) {
-                        alert.setTitle("YOU DID WELL!");
+                        //alert.setTitle("YOU DID WELL!");
                         alert.setHeaderText(null);
                         alertString += ("Your intuition was right!" +" You could gain "+
                                 decimalFormat.format(addedValue)+" by betting on "+stock.getName()+"\n");
@@ -209,6 +211,7 @@ public class PrevisionComponent{
                 Button closePrevisionPopup = new Button("Close");
                 HBox previsionPopupBox = new HBox(closePrevisionPopup);
                 previsionPopupBox.setSpacing(30);
+                //HBox Strin
 
                 // Define Box with elements for the popup
                 VBox windowBetBox = new VBox(lineChartPrevision, closePrevisionPopup);

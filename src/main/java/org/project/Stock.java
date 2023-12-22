@@ -224,7 +224,8 @@ public class Stock{
         int sumOfPieces = 0;
 
         for (List<String> row : result) {
-            sumOfPieces+=Double.parseDouble(row.get(8));
+            if(row.get(1).equals(symbol))sumOfPieces+=Double.parseDouble(row.get(8));
+
         }
 
         return sumOfPieces;

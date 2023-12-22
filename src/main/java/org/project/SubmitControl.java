@@ -249,6 +249,10 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
 
             });// Close buy button handle code segment
 
+
+
+
+
                 // Handle the "Sell" button action here
                 sell.setOnAction(event -> {
                     // Create a custom popup using a Stage (invest button)

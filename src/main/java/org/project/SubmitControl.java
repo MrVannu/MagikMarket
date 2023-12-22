@@ -4,10 +4,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -263,16 +260,43 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                     sellPopup.setWidth(400);
                     sellPopup.setHeight(200);
 
-                    // Create UI elements for the custom popup (invest button)
-                    Label instruction = new Label("Amount you would like to sell");
-                    TextField sellField = new TextField();
-                    Button submitSellAmount = new Button("Submit");
-                    Button closeSellPopul = new Button("Close");
-                    HBox buttonsSellBox = new HBox(submitSellAmount, closeSellPopul);
-                    buttonsSellBox.setSpacing(30);
+                        // Create UI elements for the custom popup (invest button)
+                        Label instruction = new Label("Pieces you would like to sell");
+
+                        TextField sellField = new TextField();
+
+                        Button submitSellAmount = new Button("Submit");
+                        Button closeSellPopul = new Button("Close");
+                        HBox buttonsSellBox = new HBox(submitSellAmount, closeSellPopul);
+                        buttonsSellBox.setSpacing(30);
+
+                    // Define regularMarketPriceLabel
+                    Label regMarkPriceL = new Label();
+
+                        // Create radio buttons for percentage options
+                        RadioButton radio25 = new RadioButton("25%");
+                        RadioButton radio50 = new RadioButton("50%");
+                        RadioButton radio75 = new RadioButton("75%");
+                        RadioButton radio100 = new RadioButton("100%");
+
+                        // Create a ToggleGroup to ensure only one radio button is selected at a time
+                        ToggleGroup toggleGroup = new ToggleGroup();
+                        radio25.setToggleGroup(toggleGroup);
+                        radio50.setToggleGroup(toggleGroup);
+                        radio75.setToggleGroup(toggleGroup);
+                        radio100.setToggleGroup(toggleGroup);
+
+                        // Create a TextField for entering a specific value
+                        TextField specificValueField = new TextField();
+                        specificValueField.setPromptText("Enter nr of stocks you would like to sell");
+
+                        // Create the layout for the popup
+                        HBox radioButtonsBox = new HBox(10);
+                        radioButtonsBox.setPadding(new Insets(10));
+                        radioButtonsBox.getChildren().addAll(radio25, radio50, radio75, radio100);
 
                     // Define Box with elements for the popup (invest button)
-                    VBox windowSellBox = new VBox(instruction, sellField, buttonsSellBox);
+                    VBox windowSellBox = new VBox(regMarkPriceL, radioButtonsBox, specificValueField);
                     windowSellBox.setPadding(new Insets(10));
                     windowSellBox.setSpacing(10);
                     windowSellBox.setAlignment(Pos.CENTER);
@@ -281,8 +305,68 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                     submitSellAmount.setOnAction(e->{
                         if(!sellField.getText().isEmpty()) { // If the field is not empty
                             try{
-                                // Attempt to parse the text as a double. If parsing is successful, it's a valid number
-                                Double.parseDouble(sellField.getText());
+                                // API CALL to get the current regular market price to be shown in the output and to calculate how much the user gained or lost
+                                    APIData regPriceAPI = new APIData();
+                                    regPriceAPI.fetchData(symbol);
+                                    regMarkPriceL.setText(String.valueOf(regPriceAPI.regularMarketPrice()));
+
+                                // Define list of stock the user invested on, and remove all the data except symbol and nr of stock bought
+                                    List<List<String>> theList = getSavedStocks(userRegistered.getUsername());
+                                    for (List<String> row : theList) {
+                                        row.set(0,"");
+                                        row.set(2,"");
+                                        row.set(3,"");
+                                        row.set(4,"");
+                                        row.set(5,"");
+                                        row.set(6,"");
+                                        row.set(7,"");
+                                    }
+                                    double nrOfStock = 0.00;
+                                    // Fetch the data having those of just a specific symbol
+                                    for (List<String> row:theList) {
+                                        if(!row.get(1).equals(symbol)){
+                                            row.clear();
+                                        }
+                                        // Now the list should be fetched
+                                        nrOfStock +=Double.parseDouble(row.get(8));
+                                    }
+
+                                String selectedValue="";
+                                double selectedPercentage=0.00;
+                                boolean noRadio = false;
+
+                                // Retrieve the selected value
+                                if (radio25.isSelected()) {
+                                    selectedPercentage = 25.0;
+                                } else if (radio50.isSelected()) {
+                                    selectedPercentage = 50.0;
+                                } else if (radio75.isSelected()) {
+                                    selectedPercentage = 75.0;
+                                } else if (radio100.isSelected()) {
+                                    selectedPercentage = 100.0;
+                                } else {
+                                    // If no radio button is selected, check the specific value TextField
+                                    selectedValue = specificValueField.getText();
+                                    noRadio = true;
+
+                                    // If the nrOfStock value inserted is greater than the nr of stock that are possible to sell, then alert and close popup
+                                    if(Double.parseDouble(selectedValue)>nrOfStock){
+                                        AlertField.showErrorAlert("Invalid input", "The amount you inserted is greater than the amount of stock you have");
+                                        System.out.println("Invalid input. Please enter a valid number.");
+                                    }
+                                }
+
+                                // If such radio button was pressed then
+                                    if(!noRadio) {
+                                        double percentageOfStockToSell = (nrOfStock * (selectedPercentage / 100.0));
+                                        double newNrOfStock = nrOfStock - percentageOfStockToSell; //TO BE INSERTED TO THE DB AS A UPDATED VALUE
+                                    } else { // If such radio button was not pressed
+                                        // Attempt to parse the text as a double. If parsing is successful, it's a valid number
+                                        Double.parseDouble(selectedValue);
+                                    }
+
+                                // Calculate the price of the stock that you are going to sell
+//                                    Double price
 
                                 //Decreases the user's amount of money in the GUI label
                                 userRegistered.setUserCredit(Double.parseDouble(userRegistered.getUserCredit()) - Double.parseDouble(sellField.getText()));
@@ -292,6 +376,7 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                                     if(stock.getSymbol().equals(symbols))
                                         stock.setAmountBet(stock.getAmountBetted()+Double.parseDouble(sellField.getText()));
                                 });
+
                                 sellField.clear();
                                 sellPopup.close();
                                     /*if (stocksBetOn.stream().anyMatch(stock -> {

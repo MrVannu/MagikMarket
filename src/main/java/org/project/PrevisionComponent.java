@@ -1,4 +1,7 @@
 package org.project;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
@@ -17,7 +20,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
+import javafx.scene.paint.Color;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -132,16 +135,23 @@ public class PrevisionComponent{
                 previsionStage.setTitle("Bet Input");
                 previsionStage.setWidth(800);
                 previsionStage.setHeight(500);
+                LineChart<Number, Number> lineChartPrevision = null;
+                if(!stocksCheckedOn.isEmpty())
+                    lineChartPrevision= LineChartGenerator.createLineChart("Prevision");
+                else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setContentText("Select at least a stock in the left hand corner");
+                    alert.showAndWait();
+
+                }
 
                 // Define a line chart
-                LineChart<Number, Number> lineChartPrevision= LineChartGenerator.createLineChart("Prevision");
+
 
                 System.out.println("Stocks checked on: \n");
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setHeaderText(null);
-                alert.setHeight(500);
-                alert.setWidth(500);
-                String alertString="";
+                HBox particlesContainer = new HBox();
+
+
                 String particleString="";
                 for (Stock stock:stocksCheckedOn) {
 
@@ -170,21 +180,10 @@ public class PrevisionComponent{
                     double addedValue = (stock.getMarketPreviousClose()-previousValue)*10;
                     //Adding arrow depending if lose or gain
                     particleString+= (addedValue>0? "↗\n": "↘\n");
-                    if(stock.getMarketPreviousClose()<previousValue){
-                        //To change money amount
-                        //moneyLabel.setText(decimalFormat.format(Double.parseDouble(moneyLabel.getText())+addedValue));
+                    Text particleLabel= new Text(particleString);
 
-                        alertString += "The stock is going down!" +" You could lose "
-                            +decimalFormat.format(addedValue)+" by betting on "+stock.getName()+"\n";
-                        //alert.showAndWait();
-                    } else if (stock.getMarketPreviousClose()>previousValue) {
-                        //alert.setTitle("YOU DID WELL!");
-                        alert.setHeaderText(null);
-                        alertString += ("Your intuition was right!" +" You could gain "+
-                                decimalFormat.format(addedValue)+" by betting on "+stock.getName()+"\n");
-
-                    }else{}
-
+                    if(addedValue>0) particleLabel.setFill(Color.rgb(157, 255,30)); else particleLabel.setFill(Color.rgb(255, 30,30));
+                    particlesContainer.getChildren().add(particleLabel);
                     newSeries.getData().addAll(
                             //(testObj==null? nameOfCompany: testObj.extractNameOfCompany())
                             new XYChart.Data<>(0, stock.getRegularMarketOpen()),
@@ -205,19 +204,20 @@ public class PrevisionComponent{
 
 
                 };
-                alert.setContentText(alertString+"\t \n\n "+particleString);
-                alert.showAndWait();
-                alert.setContentText("");
+
                 Button closePrevisionPopup = new Button("Close");
                 HBox previsionPopupBox = new HBox(closePrevisionPopup);
                 previsionPopupBox.setSpacing(30);
-                //HBox Strin
+                VBox windowBetBox= new VBox();
+                boolean show = true;
+                try {
+                    // Define Box with elements for the popup
+                    windowBetBox = new VBox(particlesContainer, lineChartPrevision, closePrevisionPopup);
+                    windowBetBox.setPadding(new Insets(10));
+                    windowBetBox.setSpacing(10);
+                    windowBetBox.setAlignment(Pos.CENTER);
+                }catch (NullPointerException f){show=true;}
 
-                // Define Box with elements for the popup
-                VBox windowBetBox = new VBox(lineChartPrevision, closePrevisionPopup);
-                windowBetBox.setPadding(new Insets(10));
-                windowBetBox.setSpacing(10);
-                windowBetBox.setAlignment(Pos.CENTER);
 
                 // Handle close button inside the popup
                 closePrevisionPopup.setOnAction(ex->{
@@ -226,15 +226,14 @@ public class PrevisionComponent{
 
                 // Create a scene for the custom popup
                 Scene previsionScene = new Scene(windowBetBox);
+                //windowBetBox.setBackground(new Background(new BackgroundFill(Color.LIGHTCORAL, CornerRadii.EMPTY, Insets.EMPTY))); // Set the background color
+
                 previsionStage.setScene(previsionScene);
 
+
                 // Show the custom popup
-                previsionStage.showAndWait();
-                /*try {
-                    updateDataHistory(1, 1.0, 1.0, 1.0, "test", 1.0,1.0,1.0, "test", "test");
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }*/
+                if(show) previsionStage.showAndWait();
+
             });
         }
 }

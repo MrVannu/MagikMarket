@@ -389,7 +389,7 @@ public class WelcomePane extends APIData { // To use data from api obj
         VBox.setVgrow(lowerLeftBox, Priority.ALWAYS);
 
         // Define switch button
-        Button switchHistory = new Button("Switch to history");
+        Button switchHistory = new Button("Switch history");
 
 
 //        // Define HBox with button name and button image
@@ -403,6 +403,13 @@ public class WelcomePane extends APIData { // To use data from api obj
 //        VBox.setVgrow(previsionComponent.getPrevisionBox(), Priority.ALWAYS);
 
         VBox previsionAndSwitchButton = new VBox(previsionComponent.getPrevisionBox(), switchHistory);
+        previsionAndSwitchButton.setSpacing(10);
+        previsionAndSwitchButton.setAlignment(Pos.CENTER);
+        previsionAndSwitchButton.setPadding(new Insets(0, 0, 50,0)); // Padding to move the button higher
+
+        // To set both the buttons of the same width
+        switchHistory.setMaxWidth(85);
+
 //        previsionAndSwitchButton.setSpacing();
 
         // Add the Box with prevision button to the leftPaneBox (it is below the checkboxes)

@@ -149,10 +149,7 @@ public class WelcomePane extends APIData { // To use data from api obj
         LineChart<Number, Number> lineChart= LineChartGenerator.createLineChart("Choose a company");
 
         // Define layout for the left split pane
-        // Define leftPaneBox to be a VBox
-        VBox leftPaneBox = new VBox(10);
-        leftPaneBox.setAlignment(Pos.CENTER);
-        leftPaneBox.setPadding(new Insets(10));
+
 
         // Create GridPane to substitute boxBox and betButtonsBox for layout of the checkboxes and the bet buttons
         GridPane checkAndBetGpane = new GridPane();
@@ -176,8 +173,9 @@ public class WelcomePane extends APIData { // To use data from api obj
         logoBox.setAlignment(Pos.CENTER);
         VBox.setVgrow(logoBox, Priority.ALWAYS);
 
-        // Add the logoBox to the layout
-        leftPaneBox.getChildren().add(logoBox);
+        // Define leftPaneBox as VBox and define logoBox inside
+        VBox leftPaneBox = new VBox(10,logoBox);
+        leftPaneBox.setAlignment(Pos.CENTER);
 
         // Define a FlowPane to hold the elements inside the underGridPane(GridPane),see declaration below
         FlowPane topBox = new FlowPane(); // Use FlowPane to adjust the space as needed
@@ -390,29 +388,27 @@ public class WelcomePane extends APIData { // To use data from api obj
         // Let previsionBox occupy all the space inside the VBox it is inserted
         VBox.setVgrow(lowerLeftBox, Priority.ALWAYS);
 
-        // Define Prevision button and its layout
-        // Define image for the button
-        Image arrowGui = new Image("file:src/main/resources/frecciale.png");
-        ImageView arrowGuiImg = new ImageView(arrowGui);
-        arrowGuiImg.setFitHeight(10);
-        arrowGuiImg.setFitWidth(15);
+        // Define switch button
+        Button switchHistory = new Button("Switch to history");
 
-        // Define button name
-        String previsionString = "Prevision";
 
-        // Define HBox with button name and button image
-        HBox content = new HBox(3);
-        content.getChildren().addAll(new Text(previsionString), arrowGuiImg);
-        content.setAlignment(Pos.CENTER);
+//        // Define HBox with button name and button image
+//        HBox content = new HBox(3);
+//        content.getChildren().addAll();
+//        content.setAlignment(Pos.CENTER);
 
         PrevisionComponent previsionComponent= new PrevisionComponent(stocksCheckedOn, primaryStage, moneyLabel);
 
-        // Let previsionBox occupy all the space inside the VBox it is inserted
-        VBox.setVgrow(previsionComponent.getPrevisionBox(), Priority.ALWAYS);
+//        // Let previsionBox occupy all the space inside the VBox it is inserted
+//        VBox.setVgrow(previsionComponent.getPrevisionBox(), Priority.ALWAYS);
+
+        VBox previsionAndSwitchButton = new VBox(previsionComponent.getPrevisionBox(), switchHistory);
+//        previsionAndSwitchButton.setSpacing();
 
         // Add the Box with prevision button to the leftPaneBox (it is below the checkboxes)
-        leftPaneBox.getChildren().addAll(previsionComponent.getPrevisionBox());
-        leftPaneBox.setSpacing(10); // Define space between the elements inside the box
+        leftPaneBox.getChildren().addAll(previsionAndSwitchButton);
+        leftPaneBox.setSpacing(10);
+//        leftPaneBox.setSpacing(); // Define space between the elements inside the box
 
         // Set title to pie chart
         pieChart.setTitle("Avg. 3 Month Volume");

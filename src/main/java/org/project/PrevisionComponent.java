@@ -32,7 +32,7 @@ public class PrevisionComponent{
 
     // Define Prevision button and its layout
     // Define image for the button
-    private Image arrowGui = new Image("file:src/main/resources/frecciale.png");
+    private  Image arrowGui = new Image("file:src/main/resources/frecciale.png");
     private ImageView arrowGuiImg = new ImageView(arrowGui);
 
 

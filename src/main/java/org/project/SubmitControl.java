@@ -169,7 +169,7 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
 //
                             APIData apiResponseObj = new APIData();
                             apiResponseObj.fetchData(symbol);
-                            saveStocks(userRegistered.getUsername(),symbol,apiResponseObj.regularMarketDayHigh(),apiResponseObj.regularMarketDayLow(),apiResponseObj.regularMarketDayOpen(),apiResponseObj.regularMarketPreviousClose(),Double.parseDouble(buyField.getText()),apiResponseObj.regularMarketPrice());
+                            saveStocks(userRegistered.getUsername(),symbol,apiResponseObj.regularMarketDayHigh(),apiResponseObj.regularMarketDayLow(),apiResponseObj.regularMarketDayOpen(),apiResponseObj.regularMarketPreviousClose(),Double.parseDouble(buyField.getText())*(-1),apiResponseObj.regularMarketPrice()*(-1));
 
                             /*if (stocksBetOn.stream().anyMatch(stock -> {
                                 return stock.getName().equals(symbol);
@@ -261,17 +261,21 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                     sellPopup.setHeight(200);
 
                         // Create UI elements for the custom popup (invest button)
-                        Label instruction = new Label("Pieces you would like to sell");
-
-                        TextField sellField = new TextField();
-
                         Button submitSellAmount = new Button("Submit");
                         Button closeSellPopul = new Button("Close");
                         HBox buttonsSellBox = new HBox(submitSellAmount, closeSellPopul);
                         buttonsSellBox.setSpacing(30);
 
-                    // Define regularMarketPriceLabel
+
+
+                    // Define Label with text
+                    Label instructions = new Label("Select the percentage you would like to sell, or insert the amount of stock you would like to sell");
+                    // Define regularMarketPriceLabel and API CALL to insert the current data of the stock
                     Label regMarkPriceL = new Label();
+                    // API CALL to get the current regular market price to be shown in the output and to calculate how much the user gained or lost
+                    APIData regPriceAPI = new APIData();
+                    regPriceAPI.fetchData(symbol);
+                    regMarkPriceL.setText(String.valueOf(regPriceAPI.regularMarketPrice()));
 
                         // Create radio buttons for percentage options
                         RadioButton radio25 = new RadioButton("25%");
@@ -288,7 +292,7 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
 
                         // Create a TextField for entering a specific value
                         TextField specificValueField = new TextField();
-                        specificValueField.setPromptText("Enter nr of stocks you would like to sell");
+                        specificValueField.setPromptText("Enter value");
 
                         // Create the layout for the popup
                         HBox radioButtonsBox = new HBox(10);
@@ -296,40 +300,58 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                         radioButtonsBox.getChildren().addAll(radio25, radio50, radio75, radio100);
 
                     // Define Box with elements for the popup (invest button)
-                    VBox windowSellBox = new VBox(regMarkPriceL, radioButtonsBox, specificValueField);
+                    VBox windowSellBox = new VBox(instructions, regMarkPriceL, radioButtonsBox, specificValueField, buttonsSellBox);
                     windowSellBox.setPadding(new Insets(10));
                     windowSellBox.setSpacing(10);
                     windowSellBox.setAlignment(Pos.CENTER);
 
                     //Handle submitSellAmount button
                     submitSellAmount.setOnAction(e->{
-                        if(!sellField.getText().isEmpty()) { // If the field is not empty
-                            try{
-                                // API CALL to get the current regular market price to be shown in the output and to calculate how much the user gained or lost
-                                    APIData regPriceAPI = new APIData();
-                                    regPriceAPI.fetchData(symbol);
-                                    regMarkPriceL.setText(String.valueOf(regPriceAPI.regularMarketPrice()));
+//                            try{
 
-                                // Define list of stock the user invested on, and remove all the data except symbol and nr of stock bought
-                                    List<List<String>> theList = getSavedStocks(userRegistered.getUsername());
-                                    for (List<String> row : theList) {
-                                        row.set(0,"");
-                                        row.set(2,"");
-                                        row.set(3,"");
-                                        row.set(4,"");
-                                        row.set(5,"");
-                                        row.set(6,"");
-                                        row.set(7,"");
-                                    }
-                                    double nrOfStock = 0.00;
-                                    // Fetch the data having those of just a specific symbol
-                                    for (List<String> row:theList) {
-                                        if(!row.get(1).equals(symbol)){
-                                            row.clear();
-                                        }
-                                        // Now the list should be fetched
-                                        nrOfStock +=Double.parseDouble(row.get(8));
-                                    }
+//                                // Define list of stock the user invested on, and remove all the data except symbol and nr of stock bought
+//                                    List<List<String>> theList = getSavedStocks(userRegistered.getUsername());
+//                                    for (List<String> row : theList) {
+//                                        row.set(0,"x");
+//                                        row.set(2,"x");
+//                                        row.set(3,"x");
+//                                        row.set(4,"x");
+//                                        row.set(5,"x");
+//                                        row.set(6,"x");
+//                                        row.set(7,"x");
+//                                    }
+//
+//                                    double nrOfStock = 0.00;
+//                                    // Fetch the data having those of just a specific symbol
+//                                    for (List<String> row:theList) {
+//                                        if(!row.get(1).equals(symbol)){
+//                                            row.clear();
+//                                        }else{
+//                                            // Now the list should be fetched
+////                                            System.out.println("RICA 8888888888888888888:      "+row.get(8));
+//                                        nrOfStock += Double.parseDouble(row.get(8));
+//                                        }
+//
+//                                    }
+//                                    System.out.println("\n\n\n nr of stockckskskksks"+ nrOfStock);
+//
+//                                GridPane gridPane = new GridPane();
+//                                gridPane.setHgap(10); // Horizontal space between columns
+//                                list.getChildren().clear();
+//
+//                                int rowIndex = 0;
+//                                for (List<String> outEl : theList) {
+//                                    int columnIndex = 0;
+//                                    for (String innerEl : outEl) {
+//                                        Text text = new Text(innerEl);
+//                                        gridPane.add(text, columnIndex, rowIndex);
+//                                        columnIndex++;
+//                                    }
+//                                    rowIndex++;
+//                                }
+//                                list.getChildren().add(gridPane);
+
+                                double nrOfStock = getSumAndPieces(userRegistered.getUsername(),symbol);
 
                                 String selectedValue="";
                                 double selectedPercentage=0.00;
@@ -349,62 +371,56 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                                     selectedValue = specificValueField.getText();
                                     noRadio = true;
 
-                                    // If the nrOfStock value inserted is greater than the nr of stock that are possible to sell, then alert and close popup
-                                    if(Double.parseDouble(selectedValue)>nrOfStock){
-                                        AlertField.showErrorAlert("Invalid input", "The amount you inserted is greater than the amount of stock you have");
-                                        System.out.println("Invalid input. Please enter a valid number.");
-                                    }
+//                                    // If the nrOfStock value inserted is greater than the nr of stock that are possible to sell, then alert and close popup
+//                                    if(Double.parseDouble(selectedValue)>nrOfStock){
+//                                        AlertField.showErrorAlert("Invalid input", "The amount you inserted is greater than the amount of stock you have");
+//                                        System.out.println("Invalid input. Please enter a valid number.");
+//                                    }
                                 }
-
+                                double finalNumberOfStockToSell=0.00;
                                 // If such radio button was pressed then
                                     if(!noRadio) {
-                                        double percentageOfStockToSell = (nrOfStock * (selectedPercentage / 100.0));
-                                        double newNrOfStock = nrOfStock - percentageOfStockToSell; //TO BE INSERTED TO THE DB AS A UPDATED VALUE
+                                        finalNumberOfStockToSell = (nrOfStock * (selectedPercentage / 100.0));
+                                        double newNrOfStock = nrOfStock - finalNumberOfStockToSell; //TO BE INSERTED TO THE DB AS A UPDATED VALUE
                                     } else { // If such radio button was not pressed
                                         // Attempt to parse the text as a double. If parsing is successful, it's a valid number
-                                        Double.parseDouble(selectedValue);
+                                        finalNumberOfStockToSell = Double.parseDouble(selectedValue);
                                     }
 
                                 // Calculate the price of the stock that you are going to sell
-//                                    Double price
+                                    double priceSold = finalNumberOfStockToSell*Double.parseDouble(regMarkPriceL.getText());
 
-                                //Decreases the user's amount of money in the GUI label
-                                userRegistered.setUserCredit(Double.parseDouble(userRegistered.getUserCredit()) - Double.parseDouble(sellField.getText()));
+
+                                //Add the user's amount of money in the GUI label
+                                userRegistered.setUserCredit(Double.parseDouble(userRegistered.getUserCredit()) + priceSold);
                                 //Update the money label
                                 moneyLabel.setText(String.valueOf(userRegistered.getUserCredit()));
-                                stocksCheckedOn.forEach(stock -> {
-                                    if(stock.getSymbol().equals(symbols))
-                                        stock.setAmountBet(stock.getAmountBetted()+Double.parseDouble(sellField.getText()));
-                                });
 
-                                sellField.clear();
+                                specificValueField.clear();
                                 sellPopup.close();
+
+                                saveStocks(userRegistered.getUsername(),symbol,regPriceAPI.regularMarketDayHigh(),regPriceAPI.regularMarketDayLow(),regPriceAPI.regularMarketDayOpen(),regPriceAPI.regularMarketPreviousClose(),priceSold,regPriceAPI.regularMarketPrice());
+
                                     /*if (stocksBetOn.stream().anyMatch(stock -> {
                                         return stock.getName().equals(symbol);
                                     })) */
                                 //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
-                                list.getChildren().remove(new Label(symbol));
-                                stocksCheckedOn.forEach(stock -> {
-                                    if(stock.getName().equals(symbol)) {
-                                        stock.setInvestedOn(true);
-                                        stock.saveStocks(userRegistered.getUsername(), stock.getName(),
-                                                stock.getRegularMarketDayHigh(), stock.getRegularMarketDayLow(),
-                                                stock.getRegularMarketOpen(), stock.getMarkerPreviousClose(),
-                                                stock.getAmountBetted(),stock.getRegularMarketPrice());
-                                    }
-                                });
-                            }
-                            catch(NumberFormatException er){
-                                // Parsing failed, the text is not a valid number
-                                // Handle the case where the input is not a number
-                                AlertField.showErrorAlert("Invalid input", "Please enter a valid number.");
-                                System.out.println("Invalid input. Please enter a valid number.");
-                            }
-                        } else {
-                            // The field is empty
-                            AlertField.showErrorAlert("Invalid input", "Please enter a bet amount.");
-                            System.out.println("Field is empty. Please enter a bet amount.");
-                        }
+//                                stocksCheckedOn.forEach(stock -> {
+//                                    if(stock.getName().equals(symbol)) {
+//                                        stock.setInvestedOn(true);
+//                                        stock.saveStocks(userRegistered.getUsername(), stock.getName(),
+//                                                stock.getRegularMarketDayHigh(), stock.getRegularMarketDayLow(),
+//                                                stock.getRegularMarketOpen(), stock.getMarkerPreviousClose(),
+//                                                stock.getAmountBetted(),stock.getRegularMarketPrice());
+//                                    }
+//                                });
+//                            }//CLOSE TRY
+//                           catch(NumberFormatException er){
+//                                // Parsing failed, the text is not a valid number
+//                                // Handle the case where the input is not a number
+//                                AlertField.showErrorAlert("Invalid input", "Please enter a valid number.");
+//                                System.out.println("Invalid input. Please enter a valid number.");
+//                            }
                     });
 
                     // Handle closeBetPopup button

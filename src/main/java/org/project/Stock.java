@@ -219,9 +219,9 @@ public class Stock{
 
 
 
-    public int getSumAndPieces(String username, String symbol) {
+    public double getSumAndPieces(String username, String symbol) {
         List<List<String>> result = getSavedStocks(username);
-        int sumOfPieces = 0;
+        double sumOfPieces = 0;
 
         for (List<String> row : result) {
             if(row.get(1).equals(symbol))sumOfPieces+=Double.parseDouble(row.get(8));

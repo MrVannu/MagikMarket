@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -52,9 +51,7 @@ public class Stock{
         this.marketPreviousClose = marketPreviousClose;
     }
 
-    public Stock() {
-
-    }
+    public Stock() {}
 
     public String getSymbol() {
         return symbol;
@@ -106,7 +103,6 @@ public class Stock{
     public void setInvestedOn(boolean investedOn) {
         this.investedOn = investedOn;
     }
-
     public void setMarkerPreviousClose(double markerPreviousClose) {
         this.marketPreviousClose = markerPreviousClose;
     }
@@ -142,7 +138,6 @@ public class Stock{
     }
 
 
-
     public static String getTime() {
         ZoneId zoneId = ZoneId.of("Europe/Rome");
         ZonedDateTime currentTime = ZonedDateTime.now(zoneId);
@@ -150,6 +145,10 @@ public class Stock{
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy-HH:mm");
         return currentTime.format(formatter);
     }
+
+
+
+
 
 
     // Save the stocks which the user invested in including parameters, and the time of the investment
@@ -193,6 +192,8 @@ public class Stock{
 
 
 
+
+
     // Retrieve the saved stocks which the user invested in + details
     public List<List<String>> getSavedStocks(String username) {
         List<List<String>> userStocks = new ArrayList<>();
@@ -224,8 +225,7 @@ public class Stock{
         double sumOfPieces = 0;
 
         for (List<String> row : result) {
-            if(row.get(1).equals(symbol))sumOfPieces+=Double.parseDouble(row.get(8));
-
+            if(row.get(1).equals(symbol)) sumOfPieces += Double.parseDouble(row.get(8));
         }
 
         return sumOfPieces;

@@ -1,7 +1,5 @@
 package org.project;
 
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvValidationException;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -11,16 +9,10 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.apache.commons.collections.bag.SynchronizedSortedBag;
-
-import javax.sound.midi.Soundbank;
 import java.io.*;
-import java.sql.SQLOutput;
-import java.text.DecimalFormat;
 import java.util.*;
 
 

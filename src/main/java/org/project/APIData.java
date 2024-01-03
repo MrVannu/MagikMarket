@@ -1,17 +1,16 @@
 package org.project;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import java.net.http.HttpResponse;
+import java.net.http.HttpRequest;
+import java.net.http.HttpClient;
+import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.ui.context.support.ResourceBundleThemeSource;
-
-import javax.naming.directory.InvalidAttributeIdentifierException;
 import java.io.IOException;
 import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+
 
 
 //Fetch the data + return a list
@@ -19,11 +18,12 @@ public class APIData{
 
     private String symbol;
     private JSONObject data;
-    private ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
     private String nameOfCompany;
     private short keyID = 0;
 
-    /* This array is used for alternating the API calls to not reach the
+    /*
+    This array is used for alternating the API calls to not reach the
     daily rate (to keep this feature free)
     */
     private final String[] myKeys = {
@@ -53,13 +53,14 @@ public class APIData{
         try {
             response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
-            if (response.statusCode() == 429 || response.body().contains("{\"message\":\"Blocked User. Please contact your API provider.\"}")) { // Means daily rate limit has been exceeded
+            if (response.statusCode() == 429 ||
+                    response.body().contains("{\"message\":\"Blocked User. Please contact your API provider.\"}")) { // Means daily rate limit has been exceeded
                 System.out.println("\nERROR 429 DETECTED\n");
 
                 if (keyID < myKeys.length - 1) { // Check if there are more keys available
                     ++keyID;
-                    System.out.println("Switching to API Key ID: " + keyID);
                     fetchData(symbol); // Retry with the next key
+                    System.out.println("Switching to API Key ID: " + keyID);
                 }
                 else System.out.println("NO MORE API KEYS AVAILABLE ATM");
                 // Eventually: grace period (depends on the API provider)
@@ -68,7 +69,7 @@ public class APIData{
                 System.out.println("RESPONSE is: " + response.body());
                 nameOfCompany = extractNameOfCompany();
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException | InterruptedException | JSONException e) {
             throw new RuntimeException(e);
         }
     }
@@ -120,7 +121,6 @@ public class APIData{
         return defaultValue;
     }
 
-
     public double postMarketChangePercent() {
         double defaultValue = 101.0; // Default value
 
@@ -144,7 +144,6 @@ public class APIData{
         System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
-
 
     public double regularMarketChangePercent() {
         double defaultValue = 101.0; // Default value
@@ -170,7 +169,6 @@ public class APIData{
         return defaultValue;
     }
 
-
     public double preMarketChange() {
         double defaultValue = 101.0; // Default value
 
@@ -194,7 +192,6 @@ public class APIData{
         return defaultValue;
     }
 
-
     public String extractNameOfCompany() {
         String value = "101"; // Initialize as empty string
 
@@ -217,7 +214,6 @@ public class APIData{
         System.out.println(value);
         return value;
     }
-
 
     public double regularMarketDayHigh() {
         double defaultValue = 101.0; // Defined value
@@ -245,7 +241,6 @@ public class APIData{
         return defaultValue;
     }
 
-
     public double regularMarketDayOpen() {
         double defaultValue = 101.0; // Defined value
 
@@ -272,7 +267,6 @@ public class APIData{
         return defaultValue;
     }
 
-
     public double regularMarketDayLow() {
         double defaultValue = 101.0; // Define value
 
@@ -298,7 +292,6 @@ public class APIData{
         System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
-
 
     public double regularMarketPreviousClose() {
         double defaultValue = 101.0; // Defined value
@@ -350,7 +343,6 @@ public class APIData{
         return defaultValue;
     }
 
-
     public String extractSymbolOfCompany() {
         String defaultValue = "101"; // Defined value
 
@@ -376,7 +368,6 @@ public class APIData{
         return defaultValue;
     }
 
-
     public String extractCurrencySymbol() {
         String defaultValue = "101"; // Defined value
 
@@ -400,7 +391,6 @@ public class APIData{
         System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
-
 
     public String extractAverageDailyVolume3MonthFmt() {
         String defaultValue = "Value not available or invalid"; // Default value
@@ -433,8 +423,6 @@ public class APIData{
         return defaultValue;
     }
 
-
-
     public double parseFormattedValue(String averageDailyVolumeFmt) {
         // Remove any commas or other non-numeric characters
         String cleanedValue = averageDailyVolumeFmt.replaceAll("[^0-9.]", "");
@@ -445,6 +433,7 @@ public class APIData{
         // Round the numeric value to two decimal places and return it
         return Math.round(numericValue * 100.0) / 100.0;
     }
+
 
 }
 

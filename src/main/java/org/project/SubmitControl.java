@@ -18,10 +18,10 @@ import java.util.List;
 
 public class SubmitControl extends Stock{ //Invest button + method to invest
 
-    private HBox checkBoxInsideHBox = new HBox(10);
-    private Button bet = new Button("Invest"); // Define bet button
-    private Button buy = new Button("Buy"); // Define buy button
-    private Button sell = new Button("Sell"); // Define sell button
+    private final HBox checkBoxInsideHBox = new HBox(10);
+    private final Button bet = new Button("Invest"); // Define bet button
+    private final Button buy = new Button("Buy"); // Define buy button
+    private final Button sell = new Button("Sell"); // Define sell button
 
     public SubmitControl(User userRegistered, Stage primaryStage, ArrayList<Stock> stocksCheckedOn, ArrayList<String> symbols, HBox list, String symbol, Label moneyLabel, CheckBox checkBox, PieChart pieChart) {
         super();

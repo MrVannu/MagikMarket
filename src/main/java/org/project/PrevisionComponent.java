@@ -155,6 +155,7 @@ public class PrevisionComponent{
                 String particleString="";
                 for (Stock stock:stocksCheckedOn) {
 
+
                     XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
                     newSeries.setName(stock.getName());
                     //nameOfCompany= testObj.extractNameOfCompany();
@@ -163,12 +164,15 @@ public class PrevisionComponent{
                     DecimalFormat decimalFormat = new DecimalFormat("0.00");
                     final double PARTICLE= (rnd.nextDouble(21)+1)/10;
                     particleString+= stock.getName()+" --->  "+ decimalFormat.format(PARTICLE)+"%";
-
+                    double previousValue= stock.getMarkerPreviousClose();
+                    double addedValue = (stock.getMarketPreviousClose()-previousValue)*10;
+                    //Adding arrow depending if lose or gain
+                    particleString+= (addedValue>0? "↗\n": "↘\n");
+                    Text particleLabel= new Text(particleString);
 
 
                     System.out.println("before MOD"+stock.getRegularMarketOpen()+stock.getMarketPreviousClose());
 
-                    double previousValue= stock.getMarkerPreviousClose();
                     //Algorithm to modify the stocks to be implemented
                     stock.setRegularMarketOpen(stock.getRegularMarketOpen()*PARTICLE);
                     stock.setRegularMarketDayHigh(stock.getRegularMarketDayHigh()*PARTICLE);
@@ -177,12 +181,10 @@ public class PrevisionComponent{
                     //System.out.println("after MOD"+stock.getRegularMarketOpen()+stock.getMarketPreviousClose());
 
 
-                    double addedValue = (stock.getMarketPreviousClose()-previousValue)*10;
-                    //Adding arrow depending if lose or gain
-                    particleString+= (addedValue>0? "↗\n": "↘\n");
-                    Text particleLabel= new Text(particleString);
+                    if(addedValue>0) particleLabel.setFill(Color.rgb(107, 205,0)); else particleLabel.setFill(Color.rgb(205, 0,0));
 
-                    if(addedValue>0) particleLabel.setFill(Color.rgb(157, 255,30)); else particleLabel.setFill(Color.rgb(255, 30,30));
+                    //This is to ensure there are no repeated stocks
+                    particlesContainer.getChildren().remove(particleLabel);
                     particlesContainer.getChildren().add(particleLabel);
                     newSeries.getData().addAll(
                             //(testObj==null? nameOfCompany: testObj.extractNameOfCompany())
@@ -213,6 +215,7 @@ public class PrevisionComponent{
                 try {
                     // Define Box with elements for the popup
                     windowBetBox = new VBox(particlesContainer, lineChartPrevision, closePrevisionPopup);
+                    particlesContainer = null;
                     windowBetBox.setPadding(new Insets(10));
                     windowBetBox.setSpacing(10);
                     windowBetBox.setAlignment(Pos.CENTER);
@@ -220,7 +223,9 @@ public class PrevisionComponent{
 
 
                 // Handle close button inside the popup
+
                 closePrevisionPopup.setOnAction(ex->{
+                    //particleString="";
                     previsionStage.close();
                 });
 
@@ -235,5 +240,6 @@ public class PrevisionComponent{
                 if(show) previsionStage.showAndWait();
 
             });
+
         }
 }

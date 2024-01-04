@@ -282,9 +282,10 @@ public class WelcomePane extends APIData { // To use data from api obj
 
 
                     //Randomizes the random points
-                    List<Number> xs = new ArrayList<>();
+                    List<Integer> xs = new ArrayList<>();
                     xs.add(4);xs.add(8);xs.add(12);xs.add(16);xs.add(20);
                     Collections.shuffle(xs);
+
 
                     lineChartSeries.getData().addAll(
                             //(testObj==null? nameOfCompany: testObj.extractNameOfCompany())
@@ -298,7 +299,7 @@ public class WelcomePane extends APIData { // To use data from api obj
                     );
 
 
-                        Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany(), testObj.regularMarketDayOpen(), testObj.regularMarketDayHigh(), testObj.regularMarketDayLow(), testObj.regularMarketPreviousClose(), testObj.extractAverageDailyVolume3MonthFmt(), testObj.regularMarketPrice());
+                        Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany(), testObj.regularMarketDayOpen(), xs.get(0), xs.get(1), xs.get(2), testObj.extractAverageDailyVolume3MonthFmt(), testObj.regularMarketPrice());
                         stocksCheckedOn.add(stock);
 
                         // Create a new PieChart.Data object
@@ -361,6 +362,7 @@ public class WelcomePane extends APIData { // To use data from api obj
             // Define instance of SubmitControl
             SubmitControl submitControl = new SubmitControl(userRegistered, primaryStage, stocksCheckedOn, symbols, list, symbol, moneyLabel, checkBox, pieChart);
 
+            submitControl.showStocks(userRegistered, list);
             // Add the bet button into the ArrayList
             betButtonsArrayList.add(submitControl.getBet());
 
@@ -382,7 +384,7 @@ public class WelcomePane extends APIData { // To use data from api obj
 
         // Define switch button
         Button switchHistory = new Button("Switch history");
-        Button skipDays = new Button("Switch history");
+        Button skipDays = new Button("Skip Days");
 
 //        // Define HBox with button name and button image
 //        HBox content = new HBox(3);

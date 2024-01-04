@@ -23,7 +23,9 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
     private final Button buy = new Button("Buy"); // Define buy button
     private final Button sell = new Button("Sell"); // Define sell button
 
-    public SubmitControl(User userRegistered, Stage primaryStage, ArrayList<Stock> stocksCheckedOn, ArrayList<String> symbols, HBox list, String symbol, Label moneyLabel, CheckBox checkBox, PieChart pieChart) {
+    public SubmitControl(User userRegistered, Stage primaryStage, ArrayList<Stock> stocksCheckedOn,
+                         ArrayList<String> symbols, HBox list, String symbol, Label moneyLabel,
+                         CheckBox checkBox, PieChart pieChart) {
         super();
         bet.getStyleClass().add("my-button");
         buy.getStyleClass().add("button-buy");
@@ -74,10 +76,6 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                         });
                         betField.clear();
                         betPopup.close();
-                        /*if (stocksBetOn.stream().anyMatch(stock -> {
-                            return stock.getName().equals(symbol);
-                        })) */
-                        //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
 
 
                         miniBox.getChildren().add(new Label());
@@ -161,27 +159,9 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                             //Update the money label
                             moneyLabel.setText(String.valueOf(userRegistered.getUserCredit()));
 
-//                            // Save the invested amount into the variable AmountBet in the stock class through the setter method
-//                            stocksCheckedOn.forEach(stock -> {
-//                                if(stock.getSymbol().equals(symbols))
-//                                    stock.setAmountBet(stock.getAmountBetted()+Double.parseDouble(buyField.getText()));
-//                            });
-//
                             APIData apiResponseObj = new APIData();
                             apiResponseObj.fetchData(symbol);
                             saveStocks(userRegistered.getUsername(),symbol,apiResponseObj.regularMarketDayHigh(),apiResponseObj.regularMarketDayLow(),apiResponseObj.regularMarketDayOpen(),apiResponseObj.regularMarketPreviousClose(),Double.parseDouble(buyField.getText())*(-1),apiResponseObj.regularMarketPrice()*(-1));
-
-                            /*if (stocksBetOn.stream().anyMatch(stock -> {
-                                return stock.getName().equals(symbol);
-                            })) */
-
-//                                //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
-//                                Label upArrowLabel = new Label("\u2191");
-//                                upArrowLabel.setFont(Font.font(48));
-//    //                            upArrowLabel.setFill(javafx.scene.paint.Color.GREEN);
-//
-//
-//                                list.getChildren().add(new Label(symbol +" "+upArrowLabel+" "+ buyField.getText()));
 
                             List<List<String>> theList = getSavedStocks(userRegistered.getUsername());
                             GridPane gridPane = new GridPane();
@@ -203,8 +183,6 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
 
 
                             list.getChildren().add(gridPane);
-
-
 
                             buyField.clear();
                             buyPopup.close();
@@ -245,8 +223,6 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                 buyPopup.showAndWait(); // Use showAndWait to wait for user interaction before continuing
 
             });// Close buy button handle code segment
-
-
 
 
 
@@ -307,50 +283,6 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
 
                     //Handle submitSellAmount button
                     submitSellAmount.setOnAction(e->{
-//                            try{
-
-//                                // Define list of stock the user invested on, and remove all the data except symbol and nr of stock bought
-//                                    List<List<String>> theList = getSavedStocks(userRegistered.getUsername());
-//                                    for (List<String> row : theList) {
-//                                        row.set(0,"x");
-//                                        row.set(2,"x");
-//                                        row.set(3,"x");
-//                                        row.set(4,"x");
-//                                        row.set(5,"x");
-//                                        row.set(6,"x");
-//                                        row.set(7,"x");
-//                                    }
-//
-//                                    double nrOfStock = 0.00;
-//                                    // Fetch the data having those of just a specific symbol
-//                                    for (List<String> row:theList) {
-//                                        if(!row.get(1).equals(symbol)){
-//                                            row.clear();
-//                                        }else{
-//                                            // Now the list should be fetched
-////                                            System.out.println("RICA 8888888888888888888:      "+row.get(8));
-//                                        nrOfStock += Double.parseDouble(row.get(8));
-//                                        }
-//
-//                                    }
-//                                    System.out.println("\n\n\n nr of stockckskskksks"+ nrOfStock);
-//
-//                                GridPane gridPane = new GridPane();
-//                                gridPane.setHgap(10); // Horizontal space between columns
-//                                list.getChildren().clear();
-//
-//                                int rowIndex = 0;
-//                                for (List<String> outEl : theList) {
-//                                    int columnIndex = 0;
-//                                    for (String innerEl : outEl) {
-//                                        Text text = new Text(innerEl);
-//                                        gridPane.add(text, columnIndex, rowIndex);
-//                                        columnIndex++;
-//                                    }
-//                                    rowIndex++;
-//                                }
-//                                list.getChildren().add(gridPane);
-
                                 double nrOfStock = getSumAndPieces(userRegistered.getUsername(),symbol);
 
                                 String selectedValue="";

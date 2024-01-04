@@ -24,8 +24,6 @@ public class Stock{
     private double volume;
     private String symbol;
     private String name;
-    private String description;
-    private boolean available;
     private double amountBetted = 0.0;
     private boolean investedOn = false;
 
@@ -116,10 +114,6 @@ public class Stock{
         return regularMarketDayLow;
     }
 
-    public boolean isAvailable() {
-        return available;
-    }
-
     public double getVolume() {
         return volume;
     }
@@ -133,11 +127,6 @@ public class Stock{
     }
 
 
-    public boolean isEquals(Stock obj) {
-        return this.getName().equals(obj.getName());
-    }
-
-
     public static String getTime() {
         ZoneId zoneId = ZoneId.of("Europe/Rome");
         ZonedDateTime currentTime = ZonedDateTime.now(zoneId);
@@ -145,8 +134,6 @@ public class Stock{
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy-HH:mm");
         return currentTime.format(formatter);
     }
-
-
 
 
 

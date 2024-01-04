@@ -66,6 +66,8 @@ public class WelcomePane extends APIData { // To use data from api obj
             }
         }
 
+
+
         // Pad the list with empty lines up to 100 elements
         while (lines.size() < 200) {
             lines.add("");
@@ -385,6 +387,7 @@ public class WelcomePane extends APIData { // To use data from api obj
         // Define switch button
         Button switchHistory = new Button("Switch history");
         Button skipDays = new Button("Skip Days");
+        //Button skipDays = new Button("Skip days");
 
 //        // Define HBox with button name and button image
 //        HBox content = new HBox(3);

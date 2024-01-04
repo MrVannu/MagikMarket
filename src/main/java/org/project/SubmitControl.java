@@ -163,6 +163,27 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                             apiResponseObj.fetchData(symbol);
                             saveStocks(userRegistered.getUsername(),symbol,apiResponseObj.regularMarketDayHigh(),apiResponseObj.regularMarketDayLow(),apiResponseObj.regularMarketDayOpen(),apiResponseObj.regularMarketPreviousClose(),Double.parseDouble(buyField.getText())*(-1),apiResponseObj.regularMarketPrice()*(-1));
 
+                            List<List<String>> theList = getSavedStocks(userRegistered.getUsername());
+                            GridPane gridPane = new GridPane();
+                            gridPane.setHgap(10); // Horizontal space between columns
+                            list.getChildren().clear();
+
+                            int rowIndex = 0;
+                            for (List<String> outEl : theList) {
+                                int columnIndex = 0;
+                                outEl.set(0,"");
+                                for (String innerEl : outEl) {
+                                    Text text = new Text(innerEl);
+                                    gridPane.add(text, columnIndex, rowIndex);
+                                    columnIndex++;
+                                }
+                                rowIndex++;
+                            }
+                            // LIST.REVERT to be implemented by luca :)
+
+
+                            list.getChildren().add(gridPane);
+
                             buyField.clear();
                             buyPopup.close();
 
@@ -189,8 +210,6 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                     }
                 });
 
-
-                this.showStocks(userRegistered, list);
                 // Handle closeBetPopup button
                 closeBuyPopup.setOnAction(e->{
                     buyPopup.close();
@@ -201,14 +220,14 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                 buyPopup.setScene(betPopupScene);
 
                 // Show the custom popup
-                buyPopup.showAndWait(); // Use showAndWait to wait for user interaction before continuing
+                buyPopup.showAndWait();
 
             });// Close buy button handle code segment
 
 
 
-                // Handle the "Sell" button action here
-                sell.setOnAction(event -> {
+        // Handle the "Sell" button action here
+        sell.setOnAction(event -> {
                     // Create a custom popup using a Stage (invest button)
                     Stage sellPopup = new Stage();
                     sellPopup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
@@ -314,8 +333,26 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
 
                                 saveStocks(userRegistered.getUsername(),symbol,regPriceAPI.regularMarketDayHigh(),regPriceAPI.regularMarketDayLow(),regPriceAPI.regularMarketDayOpen(),regPriceAPI.regularMarketPreviousClose(),priceSold,regPriceAPI.regularMarketPrice());
 
-                                this.showStocks(userRegistered, list);
-
+                                    /*if (stocksBetOn.stream().anyMatch(stock -> {
+                                        return stock.getName().equals(symbol);
+                                    })) */
+                                //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
+//                                stocksCheckedOn.forEach(stock -> {
+//                                    if(stock.getName().equals(symbol)) {
+//                                        stock.setInvestedOn(true);
+//                                        stock.saveStocks(userRegistered.getUsername(), stock.getName(),
+//                                                stock.getRegularMarketDayHigh(), stock.getRegularMarketDayLow(),
+//                                                stock.getRegularMarketOpen(), stock.getMarkerPreviousClose(),
+//                                                stock.getAmountBetted(),stock.getRegularMarketPrice());
+//                                    }
+//                                });
+//                            }//CLOSE TRY
+//                           catch(NumberFormatException er){
+//                                // Parsing failed, the text is not a valid number
+//                                // Handle the case where the input is not a number
+//                                AlertField.showErrorAlert("Invalid input", "Please enter a valid number.");
+//                                System.out.println("Invalid input. Please enter a valid number.");
+//                            }
                     });
 
                     // Handle closeBetPopup button
@@ -330,8 +367,7 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                     // Show the custom popup
                     sellPopup.showAndWait(); // Use showAndWait to wait for user interaction before continuing
 
-                });// Close buy button handle code segment
-
+                });
 
         // Add the checkBoxes into the HBox
         checkBoxInsideHBox.getChildren().addAll(checkBox);

@@ -84,7 +84,6 @@ public class Stock{
         this.amountBetted= amountBet;
     }
 
-
     public void setMarketPreviousClose(double marketPreviousClose) {
         this.marketPreviousClose = marketPreviousClose;
     }
@@ -93,11 +92,9 @@ public class Stock{
         this.regularMarketOpen = regularMarketOpen;
     }
 
-
     public void setRegularMarketDayLow(double regularMarketDayLow) {
         this.regularMarketDayLow = regularMarketDayLow;
     }
-
     public void setInvestedOn(boolean investedOn) {
         this.investedOn = investedOn;
     }
@@ -113,19 +110,14 @@ public class Stock{
     public double getRegularMarketDayLow() {
         return regularMarketDayLow;
     }
-
     public double getVolume() {
         return volume;
     }
-
     public double getRegularMarketDayHigh(){return regularMarketDayHigh;}
-
-//    public double getRegularMarketPrice(){return regularMarketPrice}
 
     public void setRegularMarketDayHigh(double regularMarketDayHigh) {
         this.regularMarketDayHigh = regularMarketDayHigh;
     }
-
 
     public static String getTime() {
         ZoneId zoneId = ZoneId.of("Europe/Rome");
@@ -178,9 +170,6 @@ public class Stock{
     }
 
 
-
-
-
     // Retrieve the saved stocks which the user invested in + details
     public List<List<String>> getSavedStocks(String username) {
         List<List<String>> userStocks = new ArrayList<>();
@@ -218,6 +207,5 @@ public class Stock{
         return sumOfPieces;
     }
 
-// IL COMANDO DI VENDITA DEVE AGGIORANRE IL DB TRAMITE SAVESTOCKS
 
 }

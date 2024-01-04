@@ -303,11 +303,6 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                                     selectedValue = specificValueField.getText();
                                     noRadio = true;
 
-//                                    // If the nrOfStock value inserted is greater than the nr of stock that are possible to sell, then alert and close popup
-//                                    if(Double.parseDouble(selectedValue)>nrOfStock){
-//                                        AlertField.showErrorAlert("Invalid input", "The amount you inserted is greater than the amount of stock you have");
-//                                        System.out.println("Invalid input. Please enter a valid number.");
-//                                    }
                                 }
                                 double finalNumberOfStockToSell=0.00;
                                 // If such radio button was pressed then
@@ -320,7 +315,7 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                                     }
 
                                 // Calculate the price of the stock that you are going to sell
-                                    double priceSold = finalNumberOfStockToSell*Double.parseDouble(regMarkPriceL.getText());
+                                double priceSold = finalNumberOfStockToSell*Double.parseDouble(regMarkPriceL.getText());
 
 
                                 //Add the user's amount of money in the GUI label
@@ -380,29 +375,11 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
         buyAndSellBox.setSpacing(10);
         return buyAndSellBox;
     }
-    public void showStocks(User userRegistered, HBox list){
-        List<List<String>> theList = getSavedStocks(userRegistered.getUsername());
-        GridPane gridPane = new GridPane();
-        gridPane.setHgap(10); // Horizontal space between columns
+
+    public void showOtherView (User userRegistered, HBox list){
         list.getChildren().clear();
-
-        int rowIndex = 0;
-        for (List<String> outEl : theList) {
-            int columnIndex = 0;
-            outEl.set(0,"");
-            for (String innerEl : outEl) {
-                Text text = new Text(innerEl);
-                gridPane.add(text, columnIndex, rowIndex);
-                columnIndex++;
-            }
-            rowIndex++;
-        }
-        // LIST.REVERT to be implemented by luca :)
-
-
-        list.getChildren().add(gridPane);
-
-
+        Label test = new Label("Siukk");
+        list.getChildren().add(test);
     }
 
     public Button getBet() { return bet; }

@@ -24,10 +24,6 @@ public class WelcomePane extends APIData { // To use data from api obj
     private short dataToUpdateIndex = 0;
     private ArrayList<String> symbols = new ArrayList<String>();
 
-    // Index of row to be overwritten (most remote in the db)
-
-    private Map<CheckBox, XYChart.Series<Number, Number>> checkBoxSeriesMap;
-
     //DATA HISTORY MANAGEMENT
     public void updateDataHistory(
             int maxAge,
@@ -90,7 +86,7 @@ public class WelcomePane extends APIData { // To use data from api obj
     public WelcomePane(Stage primaryStage, Scene LoginScene, User userRegistered){
         super();
 
-        // Define a list of checkBoxes
+        // Define a hBoxList of checkBoxes
         List<CheckBox> checkBoxesArrayList = new ArrayList<>();
         List<Button> betButtonsArrayList = new ArrayList<>();
         symbols.add("amc");
@@ -191,9 +187,10 @@ public class WelcomePane extends APIData { // To use data from api obj
         // Define arrayList of strings for containing the stocks in which the user invested
         List<String> listStockInvestedOn = new ArrayList<>();
 
-        // Define HBox for list of stocks
-        HBox list = new HBox();
-        list.setAlignment(Pos.CENTER);
+        // Define HBox for hBoxList of stocks
+        HBox hBoxList = new HBox();
+        hBoxList.setAlignment(Pos.CENTER);
+
 
 
         //Define PieChart for other datas
@@ -221,9 +218,6 @@ public class WelcomePane extends APIData { // To use data from api obj
             // Checkbox creating a new series for each checkbox
             XYChart.Series<Number, Number> series = new XYChart.Series<>();
             series.setName(symbol); // Set the name of the serie
-
-            // Save the series into the map associated with the checkbox
-            //checkBoxSeriesMap.put(checkBox, series);
 
             // Placeholders values in case something goes wrong with API call
             String sym = "phSymbol";
@@ -362,9 +356,9 @@ public class WelcomePane extends APIData { // To use data from api obj
             }); // Closing checkBox action
 
             // Define instance of SubmitControl
-            SubmitControl submitControl = new SubmitControl(userRegistered, primaryStage, stocksCheckedOn, symbols, list, symbol, moneyLabel, checkBox, pieChart);
+            SubmitControl submitControl = new SubmitControl(userRegistered, primaryStage, stocksCheckedOn, symbols, hBoxList, symbol, moneyLabel, checkBox, pieChart);
 
-            submitControl.showStocks(userRegistered, list);
+
             // Add the bet button into the ArrayList
             betButtonsArrayList.add(submitControl.getBet());
 
@@ -384,30 +378,33 @@ public class WelcomePane extends APIData { // To use data from api obj
         // Let previsionBox occupy all the space inside the VBox it is inserted
         VBox.setVgrow(lowerLeftBox, Priority.ALWAYS);
 
-        // Define switch button
-        Button switchHistory = new Button("Switch history");
-        Button skipDays = new Button("Skip Days");
-        //Button skipDays = new Button("Skip days");
-
-//        // Define HBox with button name and button image
-//        HBox content = new HBox(3);
-//        content.getChildren().addAll();
-//        content.setAlignment(Pos.CENTER);
-
         PrevisionComponent previsionComponent= new PrevisionComponent(stocksCheckedOn, primaryStage, moneyLabel);
 
-//        // Let previsionBox occupy all the space inside the VBox it is inserted
-//        VBox.setVgrow(previsionComponent.getPrevisionBox(), Priority.ALWAYS);
+
+        SwitchPane switchPane = new SwitchPane(hBoxList);
+        // Define switch button
+        Button switchHistory = new Button("Switch history");
+        switchHistory.setOnAction(e->{
+            if(switchPane.toggle)
+                switchPane.showStocks(userRegistered, hBoxList);
+            else
+                switchPane.showOtherView(userRegistered, hBoxList);
+        });
+        Button skipDays = new Button("Skip Days");
+        skipDays.setOnAction(e->{
+
+        });
+
+
+
+        // To set both the buttons of the same width
+        switchHistory.setMaxWidth(85);
+        skipDays.setMaxWidth(85);
 
         VBox previsionAndSwitchButton = new VBox(previsionComponent.getPrevisionBox(), switchHistory, skipDays);
         previsionAndSwitchButton.setSpacing(10);
         previsionAndSwitchButton.setAlignment(Pos.CENTER);
         previsionAndSwitchButton.setPadding(new Insets(0, 0, 50,0)); // Padding to move the button higher
-
-        // To set both the buttons of the same width
-        switchHistory.setMaxWidth(85);
-        skipDays.setMaxWidth(85);
-//        previsionAndSwitchButton.setSpacing();
 
         // Add the Box with prevision button to the leftPaneBox (it is below the checkboxes)
         leftPaneBox.getChildren().addAll(previsionAndSwitchButton);
@@ -422,8 +419,8 @@ public class WelcomePane extends APIData { // To use data from api obj
         VBox chartsBox = new VBox(10);
         chartsBox.getChildren().addAll(lineChart);
 
-        // Add the list of data that the user bet on, and stuff like that, to the layout
-        investmentBox.getChildren().add(list);
+        // Add the hBoxList of data that the user bet on, and stuff like that, to the layout
+        investmentBox.getChildren().add(hBoxList);
 
         // Define a SplitPane for inserting PieChart and InvestmentBox
         SplitPane investmentAndPieSplitPane = new SplitPane();
@@ -624,7 +621,7 @@ public class WelcomePane extends APIData { // To use data from api obj
         // Label for the stocks bet on
         String stringOfBetStocks = " Stocks bet on:\n";
 
-        // Label with the list of Stock the user bet
+        // Label with the hBoxList of Stock the user bet
         listOfBetStock = new Label(stringOfBetStocks);
 
         Label amountLabel = new Label("Your amount: ");

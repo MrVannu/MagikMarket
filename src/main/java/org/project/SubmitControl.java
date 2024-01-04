@@ -179,7 +179,6 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                                 }
                                 rowIndex++;
                             }
-                            // LIST.REVERT to be implemented by luca :)
 
 
                             list.getChildren().add(gridPane);
@@ -253,27 +252,27 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                     regPriceAPI.fetchData(symbol);
                     regMarkPriceL.setText(String.valueOf(regPriceAPI.regularMarketPrice()));
 
-                        // Create radio buttons for percentage options
-                        RadioButton radio25 = new RadioButton("25%");
-                        RadioButton radio50 = new RadioButton("50%");
-                        RadioButton radio75 = new RadioButton("75%");
-                        RadioButton radio100 = new RadioButton("100%");
+                    // Create radio buttons for percentage options
+                    RadioButton radio25 = new RadioButton("25%");
+                    RadioButton radio50 = new RadioButton("50%");
+                    RadioButton radio75 = new RadioButton("75%");
+                    RadioButton radio100 = new RadioButton("100%");
 
-                        // Create a ToggleGroup to ensure only one radio button is selected at a time
-                        ToggleGroup toggleGroup = new ToggleGroup();
-                        radio25.setToggleGroup(toggleGroup);
-                        radio50.setToggleGroup(toggleGroup);
-                        radio75.setToggleGroup(toggleGroup);
-                        radio100.setToggleGroup(toggleGroup);
+                    // Create a ToggleGroup to ensure only one radio button is selected at a time
+                    ToggleGroup toggleGroup = new ToggleGroup();
+                    radio25.setToggleGroup(toggleGroup);
+                    radio50.setToggleGroup(toggleGroup);
+                    radio75.setToggleGroup(toggleGroup);
+                    radio100.setToggleGroup(toggleGroup);
 
-                        // Create a TextField for entering a specific value
-                        TextField specificValueField = new TextField();
-                        specificValueField.setPromptText("Enter value");
+                    // Create a TextField for entering a specific value
+                    TextField specificValueField = new TextField();
+                    specificValueField.setPromptText("Enter value");
 
-                        // Create the layout for the popup
-                        HBox radioButtonsBox = new HBox(10);
-                        radioButtonsBox.setPadding(new Insets(10));
-                        radioButtonsBox.getChildren().addAll(radio25, radio50, radio75, radio100);
+                    // Create the layout for the popup
+                    HBox radioButtonsBox = new HBox(10);
+                    radioButtonsBox.setPadding(new Insets(10));
+                    radioButtonsBox.getChildren().addAll(radio25, radio50, radio75, radio100);
 
                     // Define Box with elements for the popup (invest button)
                     VBox windowSellBox = new VBox(instructions, regMarkPriceL, radioButtonsBox, specificValueField, buttonsSellBox);
@@ -290,37 +289,28 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                                 boolean noRadio = false;
 
                                 // Retrieve the selected value
-                                if (radio25.isSelected()) {
-                                    selectedPercentage = 25.0;
-                                } else if (radio50.isSelected()) {
-                                    selectedPercentage = 50.0;
-                                } else if (radio75.isSelected()) {
-                                    selectedPercentage = 75.0;
-                                } else if (radio100.isSelected()) {
-                                    selectedPercentage = 100.0;
-                                } else {
+                                if (radio25.isSelected()) selectedPercentage = 25.0;
+                                else if (radio50.isSelected()) selectedPercentage = 50.0;
+                                else if (radio75.isSelected()) selectedPercentage = 75.0;
+                                else if (radio100.isSelected()) selectedPercentage = 100.0;
+                                else {
                                     // If no radio button is selected, check the specific value TextField
                                     selectedValue = specificValueField.getText();
                                     noRadio = true;
-
-//                                    // If the nrOfStock value inserted is greater than the nr of stock that are possible to sell, then alert and close popup
-//                                    if(Double.parseDouble(selectedValue)>nrOfStock){
-//                                        AlertField.showErrorAlert("Invalid input", "The amount you inserted is greater than the amount of stock you have");
-//                                        System.out.println("Invalid input. Please enter a valid number.");
-//                                    }
                                 }
+
                                 double finalNumberOfStockToSell=0.00;
                                 // If such radio button was pressed then
-                                    if(!noRadio) {
-                                        finalNumberOfStockToSell = (nrOfStock * (selectedPercentage / 100.0));
-                                        double newNrOfStock = nrOfStock - finalNumberOfStockToSell; //TO BE INSERTED TO THE DB AS A UPDATED VALUE
-                                    } else { // If such radio button was not pressed
-                                        // Attempt to parse the text as a double. If parsing is successful, it's a valid number
-                                        finalNumberOfStockToSell = Double.parseDouble(selectedValue);
-                                    }
+                                if(!noRadio) {
+                                    finalNumberOfStockToSell = (nrOfStock * (selectedPercentage / 100.0));
+                                    double newNrOfStock = nrOfStock - finalNumberOfStockToSell; //TO BE INSERTED TO THE DB AS A UPDATED VALUE
+                                } else { // If such radio button was not pressed
+                                    // Attempt to parse the text as a double. If parsing is successful, it's a valid number
+                                    finalNumberOfStockToSell = Double.parseDouble(selectedValue);
+                                }
 
                                 // Calculate the price of the stock that you are going to sell
-                                    double priceSold = finalNumberOfStockToSell*Double.parseDouble(regMarkPriceL.getText());
+                                double priceSold = finalNumberOfStockToSell*Double.parseDouble(regMarkPriceL.getText());
 
 
                                 //Add the user's amount of money in the GUI label
@@ -333,26 +323,6 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
 
                                 saveStocks(userRegistered.getUsername(),symbol,regPriceAPI.regularMarketDayHigh(),regPriceAPI.regularMarketDayLow(),regPriceAPI.regularMarketDayOpen(),regPriceAPI.regularMarketPreviousClose(),priceSold,regPriceAPI.regularMarketPrice());
 
-                                    /*if (stocksBetOn.stream().anyMatch(stock -> {
-                                        return stock.getName().equals(symbol);
-                                    })) */
-                                //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
-//                                stocksCheckedOn.forEach(stock -> {
-//                                    if(stock.getName().equals(symbol)) {
-//                                        stock.setInvestedOn(true);
-//                                        stock.saveStocks(userRegistered.getUsername(), stock.getName(),
-//                                                stock.getRegularMarketDayHigh(), stock.getRegularMarketDayLow(),
-//                                                stock.getRegularMarketOpen(), stock.getMarkerPreviousClose(),
-//                                                stock.getAmountBetted(),stock.getRegularMarketPrice());
-//                                    }
-//                                });
-//                            }//CLOSE TRY
-//                           catch(NumberFormatException er){
-//                                // Parsing failed, the text is not a valid number
-//                                // Handle the case where the input is not a number
-//                                AlertField.showErrorAlert("Invalid input", "Please enter a valid number.");
-//                                System.out.println("Invalid input. Please enter a valid number.");
-//                            }
                     });
 
                     // Handle closeBetPopup button
@@ -380,14 +350,14 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
         buyAndSellBox.setSpacing(10);
         return buyAndSellBox;
     }
-    public void showStocks(User userRegistered, HBox list){
-        List<List<String>> theList = getSavedStocks(userRegistered.getUsername());
+    public void showStocks(User userRegistered, HBox hBoxList){
+        List<List<String>> userRelatedMovements = getSavedStocks(userRegistered.getUsername());
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10); // Horizontal space between columns
-        list.getChildren().clear();
+        hBoxList.getChildren().clear();
 
         int rowIndex = 0;
-        for (List<String> outEl : theList) {
+        for (List<String> outEl : userRelatedMovements) {
             int columnIndex = 0;
             outEl.set(0,"");
             for (String innerEl : outEl) {
@@ -397,10 +367,9 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
             }
             rowIndex++;
         }
-        // LIST.REVERT to be implemented by luca :)
 
 
-        list.getChildren().add(gridPane);
+        hBoxList.getChildren().add(gridPane);
 
 
     }

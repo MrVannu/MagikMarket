@@ -132,7 +132,8 @@ public class Stock{
 
     // Save the stocks which the user invested in including parameters, and the time of the investment
     public void saveStocks(String username, String symbol, double regularMarketDayHigh, double regularMarketDayLow,
-                                   double regularMarketOpen, double marketPreviousClose, double amountBet, double regularMarketPrice) {
+                                   double regularMarketOpen, double marketPreviousClose, double amountBet,
+                                   double regularMarketPrice) {
 
         String numberOfPieces = String.valueOf(amountBet / regularMarketPrice);
 

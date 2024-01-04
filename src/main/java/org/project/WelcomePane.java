@@ -86,7 +86,7 @@ public class WelcomePane extends APIData { // To use data from api obj
     public WelcomePane(Stage primaryStage, Scene LoginScene, User userRegistered){
         super();
 
-        // Define a hBoxList of checkBoxes
+        // Define a list of checkBoxes
         List<CheckBox> checkBoxesArrayList = new ArrayList<>();
         List<Button> betButtonsArrayList = new ArrayList<>();
         symbols.add("amc");
@@ -118,8 +118,6 @@ public class WelcomePane extends APIData { // To use data from api obj
         // Add the internalVerticalSplitPane to the right pane (of the main splitPane)
         rightPaneBox.getChildren().add(rightVerticalSplitPane);
 
-//        // Tell the splitPane to occupy the whole space in the VBox
-//        VBox.setVgrow(rightVerticalSplitPane, Priority.ALWAYS);
 
         // Define logOut button
         Button logOut = new  Button();
@@ -137,9 +135,6 @@ public class WelcomePane extends APIData { // To use data from api obj
 
         // Create line chart
         LineChart<Number, Number> lineChart= LineChartGenerator.createLineChart("Choose a company");
-
-        // Define layout for the left split pane
-
 
         // Create GridPane to substitute boxBox and betButtonsBox for layout of the checkboxes and the bet buttons
         GridPane checkAndBetGpane = new GridPane();
@@ -184,8 +179,6 @@ public class WelcomePane extends APIData { // To use data from api obj
         HBox investmentBox = new HBox();
         investmentBox.setAlignment(Pos.CENTER);
 
-        // Define arrayList of strings for containing the stocks in which the user invested
-        List<String> listStockInvestedOn = new ArrayList<>();
 
         // Define HBox for hBoxList of stocks
         HBox hBoxList = new HBox();
@@ -193,25 +186,10 @@ public class WelcomePane extends APIData { // To use data from api obj
 
 
 
-        //Define PieChart for other datas
-        /*PieChart.Data[] pieChartData = {
-                new PieChart.Data("USD", 25000000),
-                new PieChart.Data("EUR", 18000000),
-                new PieChart.Data("JPY", 15000000),
-        };*/
-
         // Create pie chart
         PieChart pieChart = new PieChart();
-        //pieChart.getData().addAll(pieChartData);
 
-    /*
-       In this foreach the Stock CheckBoxes are defined. Next to the checkboxes a button is added that permits the
-       user to invest an amount of money to a specific Stock.
-       A custom popup appears where the amount of bet money is inserted
-    */
         for (String symbol : symbols) {
-
-
             CheckBox checkBox = new CheckBox(symbol);
             checkBox.getStyleClass().add("checkbox");
 
@@ -223,9 +201,7 @@ public class WelcomePane extends APIData { // To use data from api obj
             String sym = "phSymbol";
             String nameOfCompany = "phNameOfCompany";
 
-            //API CALL!!
             final APIData testObj  = new APIData();
-
 
 
             // Handle CheckBox action foreach checkBox
@@ -257,11 +233,6 @@ public class WelcomePane extends APIData { // To use data from api obj
                             }
                         }
 
-                        // Initialize the stock and put the stock into the ArrayList
-                        //Stock stock = new Stock(testObj.extractSymbolOfCompany(), testObj.extractNameOfCompany(), testObj.regularMarketDayOpen(), testObj.regularMarketDayHigh(), testObj.regularMarketDayLow(), testObj.regularMarketPreviousClose());
-                        //stocksCheckedOn.add(stock);
-
-                        // Placeholder data
                         try {
                             // Placeholders for testing
                             updateDataHistory(1, 3.0, 8.0, 11.0, "name", 1.8,21.0,17.5,1.0, "name1", "name2");
@@ -371,7 +342,7 @@ public class WelcomePane extends APIData { // To use data from api obj
             checkAndBetGpane.add(submitControl.getBuyAndSell(), 1, numOfBoxes);
             numOfBoxes++;
 
-        } // CLOSE FOREACH
+        }
 
         // Add the checkBox + betButton into the layout
         leftPaneBox.getChildren().addAll(lowerLeftBox);
@@ -409,7 +380,6 @@ public class WelcomePane extends APIData { // To use data from api obj
         // Add the Box with prevision button to the leftPaneBox (it is below the checkboxes)
         leftPaneBox.getChildren().addAll(previsionAndSwitchButton);
         leftPaneBox.setSpacing(10);
-//        leftPaneBox.setSpacing(); // Define space between the elements inside the box
 
         // Set title to pie chart
         pieChart.setTitle("Avg. 3 Month Volume");
@@ -419,8 +389,8 @@ public class WelcomePane extends APIData { // To use data from api obj
         VBox chartsBox = new VBox(10);
         chartsBox.getChildren().addAll(lineChart);
 
-        // Add the hBoxList of data that the user bet on, and stuff like that, to the layout
-        investmentBox.getChildren().add(hBoxList);
+        // Add the list of data that the user bet on, and stuff like that, to the layout
+        investmentBox.getChildren().add(list);
 
         // Define a SplitPane for inserting PieChart and InvestmentBox
         SplitPane investmentAndPieSplitPane = new SplitPane();
@@ -429,8 +399,8 @@ public class WelcomePane extends APIData { // To use data from api obj
 
         rightVerticalSplitPane.getItems().addAll(chartsBox);
 
-            // Add the barChart to the chartsBox
-            chartsBox.getChildren().addAll();
+        // Add the barChart to the chartsBox
+        chartsBox.getChildren().addAll();
 
         // Add the line chart to the bottomRightPane
         bottomRightPane.getChildren().addAll(investmentAndPieSplitPane);

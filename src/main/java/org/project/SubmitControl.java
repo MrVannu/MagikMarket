@@ -179,7 +179,6 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                                 }
                                 rowIndex++;
                             }
-                            // LIST.REVERT to be implemented by luca :)
 
 
                             list.getChildren().add(gridPane);
@@ -290,29 +289,26 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                                 boolean noRadio = false;
 
                                 // Retrieve the selected value
-                                if (radio25.isSelected()) {
-                                    selectedPercentage = 25.0;
-                                } else if (radio50.isSelected()) {
-                                    selectedPercentage = 50.0;
-                                } else if (radio75.isSelected()) {
-                                    selectedPercentage = 75.0;
-                                } else if (radio100.isSelected()) {
-                                    selectedPercentage = 100.0;
-                                } else {
+                                if (radio25.isSelected()) selectedPercentage = 25.0;
+                                else if (radio50.isSelected()) selectedPercentage = 50.0;
+                                else if (radio75.isSelected()) selectedPercentage = 75.0;
+                                else if (radio100.isSelected()) selectedPercentage = 100.0;
+                                else {
                                     // If no radio button is selected, check the specific value TextField
                                     selectedValue = specificValueField.getText();
                                     noRadio = true;
 
                                 }
+
                                 double finalNumberOfStockToSell=0.00;
                                 // If such radio button was pressed then
-                                    if(!noRadio) {
-                                        finalNumberOfStockToSell = (nrOfStock * (selectedPercentage / 100.0));
-                                        double newNrOfStock = nrOfStock - finalNumberOfStockToSell; //TO BE INSERTED TO THE DB AS A UPDATED VALUE
-                                    } else { // If such radio button was not pressed
-                                        // Attempt to parse the text as a double. If parsing is successful, it's a valid number
-                                        finalNumberOfStockToSell = Double.parseDouble(selectedValue);
-                                    }
+                                if(!noRadio) {
+                                    finalNumberOfStockToSell = (nrOfStock * (selectedPercentage / 100.0));
+                                    double newNrOfStock = nrOfStock - finalNumberOfStockToSell; //TO BE INSERTED TO THE DB AS A UPDATED VALUE
+                                } else { // If such radio button was not pressed
+                                    // Attempt to parse the text as a double. If parsing is successful, it's a valid number
+                                    finalNumberOfStockToSell = Double.parseDouble(selectedValue);
+                                }
 
                                 // Calculate the price of the stock that you are going to sell
                                 double priceSold = finalNumberOfStockToSell*Double.parseDouble(regMarkPriceL.getText());
@@ -328,26 +324,6 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
 
                                 saveStocks(userRegistered.getUsername(),symbol,regPriceAPI.regularMarketDayHigh(),regPriceAPI.regularMarketDayLow(),regPriceAPI.regularMarketDayOpen(),regPriceAPI.regularMarketPreviousClose(),priceSold,regPriceAPI.regularMarketPrice());
 
-                                    /*if (stocksBetOn.stream().anyMatch(stock -> {
-                                        return stock.getName().equals(symbol);
-                                    })) */
-                                //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
-//                                stocksCheckedOn.forEach(stock -> {
-//                                    if(stock.getName().equals(symbol)) {
-//                                        stock.setInvestedOn(true);
-//                                        stock.saveStocks(userRegistered.getUsername(), stock.getName(),
-//                                                stock.getRegularMarketDayHigh(), stock.getRegularMarketDayLow(),
-//                                                stock.getRegularMarketOpen(), stock.getMarkerPreviousClose(),
-//                                                stock.getAmountBetted(),stock.getRegularMarketPrice());
-//                                    }
-//                                });
-//                            }//CLOSE TRY
-//                           catch(NumberFormatException er){
-//                                // Parsing failed, the text is not a valid number
-//                                // Handle the case where the input is not a number
-//                                AlertField.showErrorAlert("Invalid input", "Please enter a valid number.");
-//                                System.out.println("Invalid input. Please enter a valid number.");
-//                            }
                     });
 
                     // Handle closeBetPopup button

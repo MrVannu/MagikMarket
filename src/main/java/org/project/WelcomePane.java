@@ -390,7 +390,7 @@ public class WelcomePane extends APIData { // To use data from api obj
         chartsBox.getChildren().addAll(lineChart);
 
         // Add the list of data that the user bet on, and stuff like that, to the layout
-        investmentBox.getChildren().add(list);
+        investmentBox.getChildren().add(hBoxList);
 
         // Define a SplitPane for inserting PieChart and InvestmentBox
         SplitPane investmentAndPieSplitPane = new SplitPane();

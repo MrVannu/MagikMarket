@@ -22,7 +22,7 @@ public class WelcomePane extends APIData { // To use data from api obj
     private final String pathUserDB = "src/main/resources/userDB.csv";  // Path to DB for users tracking
     private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";  // Path to DB for data history
     private short dataToUpdateIndex = 0;
-    private ArrayList<String> symbols = new ArrayList<String>();
+    private ArrayList<String> symbolsOfStock = new ArrayList<String>();
 
     //DATA HISTORY MANAGEMENT
     public void updateDataHistory(
@@ -89,18 +89,7 @@ public class WelcomePane extends APIData { // To use data from api obj
         // Define a list of checkBoxes
         List<CheckBox> checkBoxesArrayList = new ArrayList<>();
         List<Button> betButtonsArrayList = new ArrayList<>();
-        symbols.add("amc");
-        symbols.add("x");
-        symbols.add("tsla");
-        symbols.add("kvue");
-        symbols.add("nio");
-        symbols.add("nvda");
-        symbols.add("jnj");
-        symbols.add("amd");
-        symbols.add("f");
-        symbols.add("googl");
-        symbols.add("ENL.BE");
-
+        symbolsOfStock.add("amc");symbolsOfStock.add("x");symbolsOfStock.add("tsla");symbolsOfStock.add("kvue");symbolsOfStock.add("nio");symbolsOfStock.add("f");symbolsOfStock.add("googl");symbolsOfStock.add("ENL.BE");
 
         // Define VBox for the right pane of the main SplitPane
         VBox rightPaneBox = new VBox();
@@ -120,8 +109,8 @@ public class WelcomePane extends APIData { // To use data from api obj
 
 
         // Define logOut button
-        Button logOut = new  Button();
-        logOut.setOnAction(e->{
+        Button logOutButton = new  Button();
+        logOutButton.setOnAction(e->{
             primaryStage.setTitle("Start App");
             primaryStage.setScene(LoginScene);
         });
@@ -131,7 +120,7 @@ public class WelcomePane extends APIData { // To use data from api obj
         ImageView logoutImageView = new ImageView(logoutImage);
         logoutImageView.setFitWidth(24); // Set the desired width
         logoutImageView.setFitHeight(24); // Set the desired height
-        logOut.setGraphic(logoutImageView);
+        logOutButton.setGraphic(logoutImageView);
 
         // Create line chart
         LineChart<Number, Number> lineChart= LineChartGenerator.createLineChart("Choose a company");
@@ -189,7 +178,7 @@ public class WelcomePane extends APIData { // To use data from api obj
         // Create pie chart
         PieChart pieChart = new PieChart();
 
-        for (String symbol : symbols) {
+        for (String symbol : symbolsOfStock) {
             CheckBox checkBox = new CheckBox(symbol);
             checkBox.getStyleClass().add("checkbox");
 
@@ -327,7 +316,7 @@ public class WelcomePane extends APIData { // To use data from api obj
             }); // Closing checkBox action
 
             // Define instance of SubmitControl
-            SubmitControl submitControl = new SubmitControl(userRegistered, primaryStage, stocksCheckedOn, symbols, hBoxList, symbol, moneyLabel, checkBox, pieChart);
+            SubmitControl submitControl = new SubmitControl(userRegistered, primaryStage, stocksCheckedOn, symbolsOfStock, hBoxList, symbol, moneyLabel, checkBox, pieChart);
 
 
             // Add the bet button into the ArrayList
@@ -353,6 +342,7 @@ public class WelcomePane extends APIData { // To use data from api obj
 
 
         SwitchPane switchPane = new SwitchPane(hBoxList);
+
         // Define switch button
         Button switchHistory = new Button("Switch history");
         switchHistory.setOnAction(e->{
@@ -406,7 +396,7 @@ public class WelcomePane extends APIData { // To use data from api obj
         bottomRightPane.getChildren().addAll(investmentAndPieSplitPane);
 
         // Define the action of the logOut button
-        logOut.setOnAction(e ->{
+        logOutButton.setOnAction(e ->{
             primaryStage.setTitle("Login");
             primaryStage.setScene(LoginScene);
         });

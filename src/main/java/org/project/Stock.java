@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -180,9 +181,7 @@ public class Stock extends APIData{
             for (String[] row : allData) {
                 if (row[0].equals(username)) {
                     List<String> rowData = new ArrayList<>();
-                    for (String value : row) {
-                        rowData.add(value);
-                    }
+                    Collections.addAll(rowData, row);
                     userStocks.add(rowData);
                 }
             }
@@ -227,13 +226,8 @@ public class Stock extends APIData{
         }
 
         // Check if there are items before performing the division
-        if (counterOfItems != 0) {
-            return Math.abs(total / counterOfItems);
-        } else {
-            System.out.println("Warning: No items found for symbol " + symbol);
-            // Return a default value or handle the case accordingly
-            return 0.0;
-        }
+        if (counterOfItems != 0) return Math.abs(total / counterOfItems);
+        else return 0.0;
 
     }
 

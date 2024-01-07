@@ -133,30 +133,30 @@ public class SwitchPane extends Stock{
 
 
         // Set texts
-        APIData obj = new APIData();
+        APIData apiDataObject = new APIData();
 
-        fetchUpdatesRealTimeBoard(obj, "AMC", AMC_currentPrice, AMC_piecesOwned,
+        fetchUpdatesRealTimeBoard(apiDataObject, "AMC", AMC_currentPrice, AMC_piecesOwned,
                 AMC_averageBuyPrice, userRegistered.getUsername());
 
-        fetchUpdatesRealTimeBoard(obj, "X", X_currentPrice, X_piecesOwned,
+        fetchUpdatesRealTimeBoard(apiDataObject, "X", X_currentPrice, X_piecesOwned,
                 X_averageBuyPrice, userRegistered.getUsername());
 
-        fetchUpdatesRealTimeBoard(obj, "TSLA", TSLA_currentPrice, TSLA_piecesOwned,
+        fetchUpdatesRealTimeBoard(apiDataObject, "TSLA", TSLA_currentPrice, TSLA_piecesOwned,
                 TSLA_averageBuyPrice, userRegistered.getUsername());
 
-        fetchUpdatesRealTimeBoard(obj, "KVUE", KVUE_currentPrice, KVUE_piecesOwned,
+        fetchUpdatesRealTimeBoard(apiDataObject, "KVUE", KVUE_currentPrice, KVUE_piecesOwned,
                 KVUE_averageBuyPrice, userRegistered.getUsername());
 
-        fetchUpdatesRealTimeBoard(obj, "NIO", NIO_currentPrice, NIO_piecesOwned,
+        fetchUpdatesRealTimeBoard(apiDataObject, "NIO", NIO_currentPrice, NIO_piecesOwned,
                 NIO_averageBuyPrice, userRegistered.getUsername());
 
-        fetchUpdatesRealTimeBoard(obj, "F", F_currentPrice, F_piecesOwned,
+        fetchUpdatesRealTimeBoard(apiDataObject, "F", F_currentPrice, F_piecesOwned,
                 F_averageBuyPrice, userRegistered.getUsername());
 
-        fetchUpdatesRealTimeBoard(obj, "GOOGL", GOOGL_currentPrice, GOOGL_piecesOwned,
+        fetchUpdatesRealTimeBoard(apiDataObject, "GOOGL", GOOGL_currentPrice, GOOGL_piecesOwned,
                 GOOGL_averageBuyPrice, userRegistered.getUsername());
 
-        fetchUpdatesRealTimeBoard(obj, "ENL.BE", ENLBE_currentPrice, ENLBE_piecesOwned,
+        fetchUpdatesRealTimeBoard(apiDataObject, "ENL.BE", ENLBE_currentPrice, ENLBE_piecesOwned,
                 ENLBE_averageBuyPrice, userRegistered.getUsername());
 
 
@@ -166,21 +166,5 @@ public class SwitchPane extends Stock{
         toggle = !toggle;
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

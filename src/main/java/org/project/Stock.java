@@ -12,7 +12,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class Stock{
+public class Stock extends APIData{
     private final String stockDbPath = "src/main/resources/StocksDB.csv";
     private double regularMarketDayHigh;
     private double regularMarketDayLow;

@@ -341,6 +341,8 @@ public class WelcomePane extends APIData { // To use data from api obj
         PrevisionComponent previsionComponent= new PrevisionComponent(stocksCheckedOn, primaryStage, moneyLabel);
 
 
+
+
         SwitchPane switchPane = new SwitchPane(hBoxList);
 
         // Define switch button
@@ -351,6 +353,9 @@ public class WelcomePane extends APIData { // To use data from api obj
             else
                 switchPane.showOtherView(userRegistered, hBoxList);
         });
+
+
+
         Button skipDays = new Button("Skip Days");
         skipDays.setOnAction(e->{
             // HERE

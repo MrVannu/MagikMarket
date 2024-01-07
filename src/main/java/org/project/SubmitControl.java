@@ -161,7 +161,10 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
 
                             APIData apiResponseObj = new APIData();
                             apiResponseObj.fetchData(symbol);
-                            saveStocks(userRegistered.getUsername(),symbol,apiResponseObj.regularMarketDayHigh(),apiResponseObj.regularMarketDayLow(),apiResponseObj.regularMarketDayOpen(),apiResponseObj.regularMarketPreviousClose(),Double.parseDouble(buyField.getText())*(-1),apiResponseObj.regularMarketPrice()*(-1));
+                            saveStocks(userRegistered.getUsername(),symbol,apiResponseObj.regularMarketDayHigh(),
+                                    apiResponseObj.regularMarketDayLow(),apiResponseObj.regularMarketDayOpen(),
+                                    apiResponseObj.regularMarketPreviousClose(),Double.parseDouble(buyField.getText())*(-1),
+                                    apiResponseObj.regularMarketPrice()*(-1));
 
                             List<List<String>> theList = getSavedStocks(userRegistered.getUsername());
                             GridPane gridPane = new GridPane();

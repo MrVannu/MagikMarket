@@ -324,26 +324,6 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
 
                                 saveStocks(userRegistered.getUsername(),symbol,regPriceAPI.regularMarketDayHigh(),regPriceAPI.regularMarketDayLow(),regPriceAPI.regularMarketDayOpen(),regPriceAPI.regularMarketPreviousClose(),priceSold,regPriceAPI.regularMarketPrice());
 
-                                    /*if (stocksBetOn.stream().anyMatch(stock -> {
-                                        return stock.getName().equals(symbol);
-                                    })) */
-                                //updateListOfBetStockLabel(stocksBetOn, listOfBetStock);
-//                                stocksCheckedOn.forEach(stock -> {
-//                                    if(stock.getName().equals(symbol)) {
-//                                        stock.setInvestedOn(true);
-//                                        stock.saveStocks(userRegistered.getUsername(), stock.getName(),
-//                                                stock.getRegularMarketDayHigh(), stock.getRegularMarketDayLow(),
-//                                                stock.getRegularMarketOpen(), stock.getMarkerPreviousClose(),
-//                                                stock.getAmountBetted(),stock.getRegularMarketPrice());
-//                                    }
-//                                });
-//                            }//CLOSE TRY
-//                           catch(NumberFormatException er){
-//                                // Parsing failed, the text is not a valid number
-//                                // Handle the case where the input is not a number
-//                                AlertField.showErrorAlert("Invalid input", "Please enter a valid number.");
-//                                System.out.println("Invalid input. Please enter a valid number.");
-//                            }
                     });
 
                     // Handle closeBetPopup button

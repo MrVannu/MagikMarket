@@ -353,6 +353,38 @@ public class WelcomePane extends APIData { // To use data from api obj
         });
         Button skipDays = new Button("Skip Days");
         skipDays.setOnAction(e->{
+            // HERE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         });
 

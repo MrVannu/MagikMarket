@@ -35,9 +35,9 @@ public class SwitchPane extends Stock{
         list.getChildren().add(gridPane);
         this.toggle = !this.toggle;
 
-
-
     }
+
+
 
     private void addStockInfoToGrid(GridPane gridPane, Label nameLabel, Label priceLabel, Label piecesLabel, Label averageLabel, int row) {
         gridPane.add(nameLabel, 0, row);
@@ -46,29 +46,20 @@ public class SwitchPane extends Stock{
         gridPane.add(averageLabel, 3, row);
     }
 
-
-
-
-
-
-
-
-
     private void fetchUpdatesRealTimeBoard(APIData obj, String symbol, Label currentPriceLabel, Label piecesOwnedLabel,
                                            Label averageBuyPriceLabel, String username) {
-
         obj.fetchData(symbol.toLowerCase());
 
         currentPriceLabel.setText(String.valueOf(obj.regularMarketPrice()));
         piecesOwnedLabel.setText(String.valueOf(getSumAndPieces(username, symbol.toLowerCase())));
-        averageBuyPriceLabel.setText("Method missing");
-
+        averageBuyPriceLabel.setText(String.valueOf(getAverageOfPurchased(username, symbol)));
     }
 
 
 
-        public void showOtherView (User userRegistered, HBox list){
+    public void showOtherView (User userRegistered, HBox list){
         list.getChildren().clear();
+
         GridPane gridPane = new GridPane();
         gridPane.setHgap(40);
         gridPane.setVgap(20);
@@ -121,8 +112,6 @@ public class SwitchPane extends Stock{
 
 
 
-
-
         // Define stock information
         Label[] nameLabels = {symbolName, AMC_name, X_name, TSLA_name, KVUE_name, NIO_name, F_name, GOOGL_name, ENLBE_name};
 
@@ -136,9 +125,11 @@ public class SwitchPane extends Stock{
                 KVUE_averageBuyPrice, NIO_averageBuyPrice, F_averageBuyPrice, GOOGL_averageBuyPrice, ENLBE_averageBuyPrice};
 
 
+
         for (int i = 0; i < nameLabels.length; i++) {
             addStockInfoToGrid(gridPane, nameLabels[i], priceLabels[i], piecesLabels[i], averageLabels[i], i);
         }
+
 
 
         // Set texts

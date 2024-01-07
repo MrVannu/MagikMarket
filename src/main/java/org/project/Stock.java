@@ -209,4 +209,33 @@ public class Stock extends APIData{
     }
 
 
+    public double getAverageOfPurchased(String username, String symbol) {
+        List<List<String>> result = getSavedStocks(username);
+        double total = 0.0;
+        int counterOfItems = 0;
+
+        for (List<String> row : result) {
+            if (row.get(1).equals(symbol.toLowerCase())) {
+                double purchasePrice = Double.parseDouble(row.get(6));
+                double quantity = Double.parseDouble(row.get(8));
+
+                if (quantity != 0.0) {
+                    total += (purchasePrice / quantity);
+                    counterOfItems += 1;
+                }
+            }
+        }
+
+        // Check if there are items before performing the division
+        if (counterOfItems != 0) {
+            return Math.abs(total / counterOfItems);
+        } else {
+            System.out.println("Warning: No items found for symbol " + symbol);
+            // Return a default value or handle the case accordingly
+            return 0.0;
+        }
+
+    }
+
+
 }

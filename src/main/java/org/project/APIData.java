@@ -55,15 +55,18 @@ public class APIData{
 
             if (response.statusCode() == 429 ||
                     response.body().contains("{\"message\":\"Blocked User. Please contact your API provider.\"}")) { // Means daily rate limit has been exceeded
-                System.out.println("\nERROR 429 DETECTED\n");
+                System.out.println("\nERROR 429 DETECTED -> NO MORE API CALLS AVAILABLE\n");
 
                 if (keyID < myKeys.length - 1) { // Check if there are more keys available
                     ++keyID;
                     fetchData(symbol); // Retry with the next key
                     System.out.println("Switching to API Key ID: " + keyID);
                 }
-                else System.out.println("NO MORE API KEYS AVAILABLE ATM");
-                // Eventually: grace period (depends on the API provider)
+                else{
+                    System.out.println("NO MORE API KEYS AVAILABLE ATM");
+                    // Eventually: grace period (depends on the API provider)
+                }
+
             } else {
                 data = new JSONObject(response.body());
                 System.out.println("RESPONSE is: " + response.body());

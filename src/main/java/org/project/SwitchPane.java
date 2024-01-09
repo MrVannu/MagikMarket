@@ -106,7 +106,7 @@ public class SwitchPane extends Stock{
         AMC_name.setStyle("-fx-font-weight: bold;");
         Label AMC_currentPrice = new Label("Please");
         Label AMC_piecesOwned = new Label("Click on");
-        Label AMC_averageBuyPrice = new Label("Refresh");
+        Label AMC_averageBuyPrice = new Label("Refresh (⟳)");
 
         Label X_name = new Label("X");
         X_name.setStyle("-fx-font-weight: bold;");
@@ -171,9 +171,18 @@ public class SwitchPane extends Stock{
         }
 
         // Define refresh button
-        Button refresh = new Button("Refresh");
+        Button refresh = new Button("\u27F3"); // This unicode is ⟳
+        refresh.setStyle(
+                "-fx-font-size: 1.5em; " +
+                        "-fx-text-fill: #ffffff; " +
+                        "-fx-background-color: #4CAF50; " +
+                        "-fx-padding: 8px; " +
+                        "-fx-border-radius: 10px; " +
+                        "-fx-border-color: #388E3C; " +
+                        "-fx-background-radius: 10; " +
+                        "-fx-effect: innershadow(gaussian, #73FF6E, 10, 0, 0, 0);"
+        );
         gridPane.add(refresh, 4, 10);
-
 
         // Refresh button -> updates the labels' value
         refresh.setOnAction(e -> {

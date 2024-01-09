@@ -6,7 +6,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -180,5 +179,6 @@ public class SwitchPane extends Stock{
         list.getChildren().add(gridPane);
         toggle = !toggle;
     }
+
 
 }

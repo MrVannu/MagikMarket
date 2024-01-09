@@ -1,11 +1,18 @@
 package org.project;
 
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class SwitchPane extends Stock{
     public boolean toggle = false;
@@ -135,41 +142,43 @@ public class SwitchPane extends Stock{
 
 
         // Refresh button -> updates the labels' value
-        refresh.setOnAction(e->{
+        refresh.setOnAction(e -> {
+            ExecutorService executorServiceObj = Executors.newFixedThreadPool(9); // Number of stocks
 
-            fetchUpdatesRealTimeBoard(apiDataObject, "AMC", AMC_currentPrice, AMC_piecesOwned,
-                    AMC_averageBuyPrice, userRegistered.getUsername());
+            List<Future<?>> futures = new ArrayList<>();
 
-            fetchUpdatesRealTimeBoard(apiDataObject, "X", X_currentPrice, X_piecesOwned,
-                    X_averageBuyPrice, userRegistered.getUsername());
+            String[] symbols = {"AMC", "X", "TSLA", "KVUE", "NIO", "F", "GOOGL", "ENL.BE"};
 
-            fetchUpdatesRealTimeBoard(apiDataObject, "TSLA", TSLA_currentPrice, TSLA_piecesOwned,
-                    TSLA_averageBuyPrice, userRegistered.getUsername());
+            for (int i = 0; i < symbols.length; i++) {
+                final int index = i;
+                Future<?> future = executorServiceObj.submit(() -> {
+                    Platform.runLater(() -> {
+                        fetchUpdatesRealTimeBoard(apiDataObject, symbols[index],
+                                priceLabels[index + 1], piecesLabels[index + 1], averageLabels[index + 1],
+                                userRegistered.getUsername());
+                    });
+                });
 
-            fetchUpdatesRealTimeBoard(apiDataObject, "KVUE", KVUE_currentPrice, KVUE_piecesOwned,
-                    KVUE_averageBuyPrice, userRegistered.getUsername());
+                futures.add(future);
+            }
 
-            fetchUpdatesRealTimeBoard(apiDataObject, "NIO", NIO_currentPrice, NIO_piecesOwned,
-                    NIO_averageBuyPrice, userRegistered.getUsername());
+            executorServiceObj.shutdown();
 
-            fetchUpdatesRealTimeBoard(apiDataObject, "F", F_currentPrice, F_piecesOwned,
-                    F_averageBuyPrice, userRegistered.getUsername());
 
-            fetchUpdatesRealTimeBoard(apiDataObject, "GOOGL", GOOGL_currentPrice, GOOGL_piecesOwned,
-                    GOOGL_averageBuyPrice, userRegistered.getUsername());
-
-            fetchUpdatesRealTimeBoard(apiDataObject, "ENL.BE", ENLBE_currentPrice, ENLBE_piecesOwned,
-                    ENLBE_averageBuyPrice, userRegistered.getUsername());
-
+            // Wait for all threads finisj their execution
+            try {
+                for (Future<?> future : futures) {
+                    future.get();
+                }
+            }
+            catch (InterruptedException | ExecutionException exception) {
+                exception.printStackTrace();
+            }
         });
 
         // Adding the GridPane to the list
         list.getChildren().add(gridPane);
-
-        // Switch for the view
         toggle = !toggle;
-
     }
-
 
 }

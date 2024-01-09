@@ -88,8 +88,15 @@ public class WelcomePane extends APIData { // To use data from api obj
 
         // Define a list of checkBoxes
         List<CheckBox> checkBoxesArrayList = new ArrayList<>();
-        List<Button> betButtonsArrayList = new ArrayList<>();
-        symbolsOfStock.add("amc");symbolsOfStock.add("x");symbolsOfStock.add("tsla");symbolsOfStock.add("kvue");symbolsOfStock.add("nio");symbolsOfStock.add("f");symbolsOfStock.add("googl");symbolsOfStock.add("ENL.BE");
+        List<Button> investmentButtonsArrayList = new ArrayList<>();
+        symbolsOfStock.add("amc");
+        symbolsOfStock.add("x");
+        symbolsOfStock.add("tsla");
+        symbolsOfStock.add("kvue");
+        symbolsOfStock.add("nio");
+        symbolsOfStock.add("f");
+        symbolsOfStock.add("googl");
+        symbolsOfStock.add("ENL.BE");
 
         // Define VBox for the right pane of the main SplitPane
         VBox rightPaneBox = new VBox();
@@ -320,7 +327,7 @@ public class WelcomePane extends APIData { // To use data from api obj
 
 
             // Add the bet button into the ArrayList
-            betButtonsArrayList.add(submitControl.getBet());
+            investmentButtonsArrayList.add(submitControl.getBet());
 
             // Add the checkBox into the ArrayList
             checkBoxesArrayList.add(checkBox);
@@ -347,6 +354,7 @@ public class WelcomePane extends APIData { // To use data from api obj
 
         // Define switch button
         Button switchHistory = new Button("Switch history");
+        switchPane.showOtherView(userRegistered, hBoxList);
         switchHistory.setOnAction(e->{
             if(switchPane.toggle)
                 switchPane.showStocks(userRegistered, hBoxList);
@@ -356,50 +364,10 @@ public class WelcomePane extends APIData { // To use data from api obj
 
 
 
-        Button skipDays = new Button("Skip Days");
-        skipDays.setOnAction(e->{
-            // HERE
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        });
-
-
-
         // To set both the buttons of the same width
         switchHistory.setMaxWidth(85);
-        skipDays.setMaxWidth(85);
 
-        VBox previsionAndSwitchButton = new VBox(previsionComponent.getPrevisionBox(), switchHistory, skipDays);
+        VBox previsionAndSwitchButton = new VBox(previsionComponent.getPrevisionBox(), switchHistory);
         previsionAndSwitchButton.setSpacing(10);
         previsionAndSwitchButton.setAlignment(Pos.CENTER);
         previsionAndSwitchButton.setPadding(new Insets(0, 0, 50,0)); // Padding to move the button higher
@@ -606,7 +574,6 @@ public class WelcomePane extends APIData { // To use data from api obj
                 // Load the selected image and display it in the ImageView
                 Image image = new Image(selectedFile.toURI().toString());
                 imgView.setImage(image);
-                //selectImageButton.setText("\nModify");
             }
         });
 
@@ -614,12 +581,6 @@ public class WelcomePane extends APIData { // To use data from api obj
         HBox profilePic = new HBox(imgView, selectImageButton);
         profilePic.setAlignment(Pos.CENTER);
         profilePic.setSpacing(10);
-
-        // Label for the stocks bet on
-        String stringOfBetStocks = " Stocks bet on:\n";
-
-        // Label with the hBoxList of Stock the user bet
-        listOfBetStock = new Label(stringOfBetStocks);
 
         Label amountLabel = new Label("Your amount: ");
         amountLabel.setStyle("-fx-font-style: italic;");
@@ -639,7 +600,7 @@ public class WelcomePane extends APIData { // To use data from api obj
                 separator3.setPrefHeight(20);
 
         // Add all the elements into the tobBox
-        topBox.getChildren().addAll(profilePic, separator1, username, separator2, moneyBox, separator3, listOfBetStock);
+        topBox.getChildren().addAll(profilePic, separator1, username, separator2, moneyBox);
 
         // Add the topBot into the StackPane
         topRightPane.getChildren().addAll(topBox);

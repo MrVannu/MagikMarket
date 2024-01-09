@@ -1,5 +1,6 @@
 package org.project;
 
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -111,7 +112,6 @@ public class SwitchPane extends Stock{
         Label ENLBE_averageBuyPrice = new Label("0");
 
 
-
         // Define stock information
         Label[] nameLabels = {symbolName, AMC_name, X_name, TSLA_name, KVUE_name, NIO_name, F_name, GOOGL_name, ENLBE_name};
 
@@ -130,6 +130,9 @@ public class SwitchPane extends Stock{
             addStockInfoToGrid(gridPane, nameLabels[i], priceLabels[i], piecesLabels[i], averageLabels[i], i);
         }
 
+        // Define refresh button
+        Button refresh = new Button("Refresh");
+        gridPane.add(refresh, 4, 10);
 
 
         // Set texts

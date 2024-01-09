@@ -16,10 +16,8 @@ import java.net.URI;
 //Fetch the data + return a list
 public class APIData{
 
-    private String symbol;
     private JSONObject data;
     private final ObjectMapper mapper = new ObjectMapper();
-    private String nameOfCompany;
     private short keyID = 0;
 
     /*
@@ -35,7 +33,8 @@ public class APIData{
     }; // Max number of API calls per day => 35 (max) * 5 (n of keys) = 175 (calls per day)
 
 
-    public APIData() {this.symbol=symbol;}
+    public APIData() {
+    }
 
 
     //Requesting APIData (live)
@@ -48,13 +47,14 @@ public class APIData{
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
 
-        HttpResponse<String> response = null;
+        HttpResponse<String> response;
 
         try {
             response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
+            String errorMessageAPI = "{\"message\":\"Blocked User. Please contact your API provider.\"}";
             if (response.statusCode() == 429 ||
-                    response.body().contains("{\"message\":\"Blocked User. Please contact your API provider.\"}")) { // Means daily rate limit has been exceeded
+                    response.body().contains(errorMessageAPI)) { // Means daily rate limit has been exceeded
                 System.out.println("\nERROR 429 DETECTED -> NO MORE API CALLS AVAILABLE\n");
 
                 if (keyID < myKeys.length - 1) { // Check if there are more keys available
@@ -62,49 +62,17 @@ public class APIData{
                     fetchData(symbol); // Retry with the next key
                     System.out.println("Switching to API Key ID: " + keyID);
                 }
-                else{
-                    System.out.println("NO MORE API KEYS AVAILABLE ATM");
-                    // Eventually: grace period (depends on the API provider)
-                }
+                else System.out.println("NO MORE API KEYS AVAILABLE ATM");
+                // Eventually: grace period (depends on the API provider)
 
             } else {
                 data = new JSONObject(response.body());
                 System.out.println("RESPONSE is: " + response.body());
-                nameOfCompany = extractNameOfCompany();
+                String nameOfCompany = extractNameOfCompany();
             }
         } catch (IOException | InterruptedException | JSONException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public String getNameOfCompany() {
-        return nameOfCompany;
-    }
-
-    public int maxAge() {
-        int defaultValue = 101; // Default value
-
-        try {
-            if (data != null) {
-                JsonNode toRead = mapper.readTree(data.toString());
-                JsonNode maxAgeNode = toRead.get("maxAge");
-
-                // Check if maxAgeNode is null and if it could be converted into int
-                if (maxAgeNode != null && maxAgeNode.isInt()) {
-                    return maxAgeNode.asInt();
-                } else {
-                    System.out.println("Value not available or invalid: maxAge");
-                }
-            } else {
-                System.out.println("Data is null.");
-            }
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        //If it was not possible to obtain a value, return the default value
-        System.out.println("Using default value: " + defaultValue);
-        return defaultValue;
     }
 
     public double postMarketChangePercent() {
@@ -354,30 +322,6 @@ public class APIData{
         return defaultValue;
     }
 
-    public String extractCurrencySymbol() {
-        String defaultValue = "101"; // Defined value
-
-        try {
-            if(data != null) {
-                JsonNode toRead = mapper.readTree(data.toString());
-                JsonNode currencySymbolNode = toRead.get("currencySymbol");
-
-                // Check if currencySymbolNode is not null and if currecySymbolNode contains a string
-                if (currencySymbolNode != null && currencySymbolNode.isTextual()) {
-                    return currencySymbolNode.asText();
-                } else {
-                    System.out.println("Value not available or invalid: currencySymbol");
-                }
-            }
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        // If it wasn't possible to obtain a value, return the default value "N/A"
-        System.out.println("Using default value: " + defaultValue);
-        return defaultValue;
-    }
-
     public String extractAverageDailyVolume3MonthFmt() {
         String defaultValue = "Value not available or invalid"; // Default value
 
@@ -421,6 +365,59 @@ public class APIData{
     }
 
 
+    // For future improvements to the platform - WIP
+    public int maxAge() {
+        int defaultValue = 101; // Default value
+
+        try {
+            if (data != null) {
+                JsonNode toRead = mapper.readTree(data.toString());
+                JsonNode maxAgeNode = toRead.get("maxAge");
+
+                // Check if maxAgeNode is null and if it could be converted into int
+                if (maxAgeNode != null && maxAgeNode.isInt()) {
+                    return maxAgeNode.asInt();
+                } else {
+                    System.out.println("Value not available or invalid: maxAge");
+                }
+            } else {
+                System.out.println("Data is null.");
+            }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        //If it was not possible to obtain a value, return the default value
+        System.out.println("Using default value: " + defaultValue);
+        return defaultValue;
+    }
+
+    // For future improvements to the platform - WIP
+    public String extractCurrencySymbol() {
+        String defaultValue = "101"; // Defined value
+
+        try {
+            if(data != null) {
+                JsonNode toRead = mapper.readTree(data.toString());
+                JsonNode currencySymbolNode = toRead.get("currencySymbol");
+
+                // Check if currencySymbolNode is not null and if currecySymbolNode contains a string
+                if (currencySymbolNode != null && currencySymbolNode.isTextual()) {
+                    return currencySymbolNode.asText();
+                } else {
+                    System.out.println("Value not available or invalid: currencySymbol");
+                }
+            }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        // If it wasn't possible to obtain a value, return the default value "N/A"
+        System.out.println("Using default value: " + defaultValue);
+        return defaultValue;
+    }
+
+
 }
 
-//NAMING CONVENTION 101 = VALUE NOT FOUND / AVAILABLE
+//NAMING CONVENTION 101 = VALUE NOT FOUND / CURRENTLY NOT AVAILABLE

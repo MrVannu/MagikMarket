@@ -24,10 +24,11 @@ public class SwitchPane extends Stock{
 
     // Show user's stock buy/sell operation
     public void showStocks(User userRegistered, HBox list) {
+        list.getChildren().clear();
+
         List<List<String>> theList = getSavedStocks(userRegistered.getUsername());
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10); // Horizontal space between columns
-        list.getChildren().clear();
 
         int rowIndex = 0;
         for (List<String> outEl : theList) {
@@ -53,13 +54,35 @@ public class SwitchPane extends Stock{
     }
 
     // Fetch data to update values into the gridPane
-    private void fetchUpdatesRealTimeBoard(APIData obj, String symbol, Label currentPriceLabel, Label piecesOwnedLabel,
-                                           Label averageBuyPriceLabel, String username) {
+    public void fetchUpdatesRealTimeBoard(APIData obj, String symbol, Label currentPriceLabel, Label piecesOwnedLabel,
+                                          Label averageBuyPriceLabel, String username) {
         obj.fetchData(symbol.toLowerCase());
 
-        currentPriceLabel.setText(String.valueOf(obj.regularMarketPrice()));
-        piecesOwnedLabel.setText(String.valueOf(getSumAndPieces(username, symbol.toLowerCase())));
-        averageBuyPriceLabel.setText(String.valueOf(getAverageOfPurchased(username, symbol)));
+        String currentPrice = String.valueOf(obj.regularMarketPrice());
+        String piecesOwned = String.valueOf(getSumAndPieces(username, symbol.toLowerCase()));
+        String averageBuyPrice = String.valueOf(getAverageOfPurchased(username, symbol));
+
+        Platform.runLater(() -> {
+            currentPriceLabel.setText(currentPrice);
+            piecesOwnedLabel.setText(piecesOwned);
+            averageBuyPriceLabel.setText(averageBuyPrice);
+
+            // Set color based on gain possibility
+            setColorOfLabelsBasingOnGainPossibility(currentPriceLabel, new Label(averageBuyPrice));
+        });
+    }
+
+
+    private void setColorOfLabelsBasingOnGainPossibility(Label actualPrice, Label purchasedPrice){
+        if(Double.parseDouble(actualPrice.getText()) > Double.parseDouble(purchasedPrice.getText())){
+            actualPrice.setStyle("-fx-text-fill: darkgreen; -fx-background-color: rgba(144, 238, 144, 0.3);");
+        }
+        else if (Double.parseDouble(actualPrice.getText()) < Double.parseDouble(purchasedPrice.getText())){
+            actualPrice.setStyle("-fx-text-fill: darkred; -fx-background-color: rgba(255, 99, 71, 0.3);");
+        }
+        else {
+            actualPrice.setStyle("-fx-text-fill: darkgray; -fx-background-color: rgba(169, 169, 169, 0.3);");
+        }
     }
 
     // Show the real time stocks board
@@ -71,46 +94,58 @@ public class SwitchPane extends Stock{
         gridPane.setVgap(20);
 
         Label symbolName = new Label("SYMBOL");
+        symbolName.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
         Label currentPrice = new Label("CURRENT PRICE");
+        currentPrice.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
         Label piecesOwned = new Label("PIECES OWNED");
+        piecesOwned.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
         Label averageBuyPrice = new Label("AVERAGE BUY PRICE");
+        averageBuyPrice.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
 
         Label AMC_name = new Label("AMC");
+        AMC_name.setStyle("-fx-font-weight: bold;");
         Label AMC_currentPrice = new Label("Please");
         Label AMC_piecesOwned = new Label("Click on");
         Label AMC_averageBuyPrice = new Label("Refresh");
 
         Label X_name = new Label("X");
+        X_name.setStyle("-fx-font-weight: bold;");
         Label X_currentPrice = new Label("n/d");
         Label X_piecesOwned = new Label("n/d");
         Label X_averageBuyPrice = new Label("n/d");
 
         Label TSLA_name = new Label("TSLA");
+        TSLA_name.setStyle("-fx-font-weight: bold;");
         Label TSLA_currentPrice = new Label("n/d");
         Label TSLA_piecesOwned = new Label("n/d");
         Label TSLA_averageBuyPrice = new Label("n/d");
 
         Label KVUE_name = new Label("KVUE");
+        KVUE_name.setStyle("-fx-font-weight: bold;");
         Label KVUE_currentPrice = new Label("n/d");
         Label KVUE_piecesOwned = new Label("n/d");
         Label KVUE_averageBuyPrice = new Label("n/d");
 
         Label NIO_name = new Label("NIO");
+        NIO_name.setStyle("-fx-font-weight: bold;");
         Label NIO_currentPrice = new Label("n/d");
         Label NIO_piecesOwned = new Label("n/d");
         Label NIO_averageBuyPrice = new Label("n/d");
 
         Label F_name = new Label("F");
+        F_name.setStyle("-fx-font-weight: bold;");
         Label F_currentPrice = new Label("n/d");
         Label F_piecesOwned = new Label("n/d");
         Label F_averageBuyPrice = new Label("n/d");
 
         Label GOOGL_name = new Label("GOOGL");
+        GOOGL_name.setStyle("-fx-font-weight: bold;");
         Label GOOGL_currentPrice = new Label("n/d");
         Label GOOGL_piecesOwned = new Label("n/d");
         Label GOOGL_averageBuyPrice = new Label("n/d");
 
         Label ENLBE_name = new Label("ENLBE");
+        ENLBE_name.setStyle("-fx-font-weight: bold;");
         Label ENLBE_currentPrice = new Label("n/d");
         Label ENLBE_piecesOwned = new Label("n/d");
         Label ENLBE_averageBuyPrice = new Label("n/d");

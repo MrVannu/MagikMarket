@@ -175,7 +175,7 @@ public class SwitchPane extends Stock{
         refresh.setStyle(
                 "-fx-font-size: 1.5em; " +
                         "-fx-text-fill: #ffffff; " +
-                        "-fx-background-color: #4CAF50; " +
+                        "-fx-background-color: #00A77B; " +
                         "-fx-padding: 8px; " +
                         "-fx-border-radius: 10px; " +
                         "-fx-border-color: #388E3C; " +

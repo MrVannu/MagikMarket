@@ -37,6 +37,7 @@ public class APIData{
     }
 
 
+
     //Requesting APIData (live)
     public void fetchData(String symbol) {
         HttpRequest request = HttpRequest.newBuilder()

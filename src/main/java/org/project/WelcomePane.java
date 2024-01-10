@@ -13,6 +13,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.*;
 
 
@@ -165,13 +166,16 @@ public class WelcomePane extends APIData { // To use data from api obj
         topBox.setVgap(10);
 
         // Create a label for the amount of money
-        Label moneyLabel = new Label(userRegistered.getUserCredit()); // Replace with the actual amount
-        moneyLabel.getStyleClass().add("money-label"); // You can define a CSS class for styling
+        DecimalFormat decimalFormat = new DecimalFormat("#.00");
+        double userCredit = userRegistered.getUserCredit() != null ? Double.parseDouble(userRegistered.getUserCredit()) : 0.0;
+        Label moneyLabel = new Label(decimalFormat.format(userCredit));
+        moneyLabel.getStyleClass().add("money-label");
+
 
         ArrayList<Stock> stocksCheckedOn = new ArrayList<>();
         Label listOfBetStock = new Label() ;
 
-        // Define investmentBox for showing the investements
+        // Define investmentBox for showing the investments
         HBox investmentBox = new HBox();
         investmentBox.setAlignment(Pos.CENTER);
 

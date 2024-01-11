@@ -286,14 +286,11 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                         double nrOfStock = getSumAndPieces(userRegistered.getUsername(), symbol);
 
                         if(nrOfStock == 0){
-                            //System.out.println("NO STOCKS ");
+                            //System.out.println("NO STOCKS OWNED BY THE CURRENT USER");
                             throw new InsufficientCredit();
                         }
 
-                        //String selectedValue = specificValueField.getText();
                         double selectedPercentage = 0.00;
-
-
                         try {
                             if (radio25.isSelected()) selectedPercentage = 25.0;
                             else if (radio50.isSelected()) selectedPercentage = 50.0;
@@ -312,23 +309,12 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                                 finalGain = manualValue * Double.parseDouble(regMarkPriceL.getText());
                             }
 
-                            double gain = finalGain;
-                            double newUserCredit = Double.parseDouble(userRegistered.getUserCredit()) + gain;
+                            double newUserCredit = Double.parseDouble(userRegistered.getUserCredit()) + finalGain;
 
                             DecimalFormat decimalFormat = new DecimalFormat("#.00");
                             moneyLabel.setText(decimalFormat.format(newUserCredit));
 
-                            // Update the user's credit
                             userRegistered.setUserCredit(newUserCredit);
-
-                            // Update database and create exception if user has no sotcks of that type
-                            //////
-                            //////
-                            //////
-                            //////
-                            //////
-                            //////
-                            //////
 
                             specificValueField.clear();
                             sellPopup.close();
@@ -336,7 +322,7 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                             // Save stock information to the database
                             saveStocks(userRegistered.getUsername(), symbol, regPriceAPI.regularMarketDayHigh(),
                                     regPriceAPI.regularMarketDayLow(), regPriceAPI.regularMarketDayOpen(),
-                                    regPriceAPI.regularMarketPreviousClose(), (-1) * gain, regPriceAPI.regularMarketPrice());
+                                    regPriceAPI.regularMarketPreviousClose(), (-1) * finalGain, regPriceAPI.regularMarketPrice());
                         }
                         catch (NumberFormatException ex) {
                             System.err.println("Invalid input value. Please enter a valid number.");

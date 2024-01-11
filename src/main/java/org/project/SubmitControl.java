@@ -282,61 +282,67 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                     windowSellBox.setAlignment(Pos.CENTER);
 
                     //Handle submitSellAmount button
-            submitSellAmount.setOnAction(e -> {
-                double nrOfStock = getSumAndPieces(userRegistered.getUsername(), symbol);
+                    submitSellAmount.setOnAction(e -> {
+                        double nrOfStock = getSumAndPieces(userRegistered.getUsername(), symbol);
 
-                String selectedValue = specificValueField.getText();
-                double selectedPercentage = 0.00;
+                        if(nrOfStock == 0){
+                            //System.out.println("NO STOCKS ");
+                            throw new InsufficientCredit();
+                        }
 
-                try {
-                    if (radio25.isSelected()) selectedPercentage = 25.0;
-                    else if (radio50.isSelected()) selectedPercentage = 50.0;
-                    else if (radio75.isSelected()) selectedPercentage = 75.0;
-                    else if (radio100.isSelected()) selectedPercentage = 100.0;
+                        //String selectedValue = specificValueField.getText();
+                        double selectedPercentage = 0.00;
 
-                    double finalGain;
 
-                    if (selectedPercentage > 0) {
-                        // Use percentage value
-                        double percentageValue = nrOfStock * (selectedPercentage / 100.0);
-                        finalGain = percentageValue * Double.parseDouble(regMarkPriceL.getText());
-                    } else {
-                        // Use manually entered value
-                        double manualValue = Double.parseDouble(selectedValue);
-                        finalGain = manualValue * Double.parseDouble(regMarkPriceL.getText());
-                    }
+                        try {
+                            if (radio25.isSelected()) selectedPercentage = 25.0;
+                            else if (radio50.isSelected()) selectedPercentage = 50.0;
+                            else if (radio75.isSelected()) selectedPercentage = 75.0;
+                            else if (radio100.isSelected()) selectedPercentage = 100.0;
 
-                    double gain = finalGain;
-                    double newUserCredit = Double.parseDouble(userRegistered.getUserCredit()) + gain;
+                            double finalGain;
 
-                    DecimalFormat decimalFormat = new DecimalFormat("#.00");
-                    moneyLabel.setText(decimalFormat.format(newUserCredit));
+                            if (selectedPercentage > 0) {
+                                // Use percentage value
+                                double percentageValue = nrOfStock * (selectedPercentage / 100.0);
+                                finalGain = percentageValue * Double.parseDouble(regMarkPriceL.getText());
+                            } else {
+                                // Use manually entered value
+                                double manualValue = Double.parseDouble(specificValueField.getText());
+                                finalGain = manualValue * Double.parseDouble(regMarkPriceL.getText());
+                            }
 
-                    // Update the user's credit
-                    userRegistered.setUserCredit(newUserCredit);
+                            double gain = finalGain;
+                            double newUserCredit = Double.parseDouble(userRegistered.getUserCredit()) + gain;
 
-                    // Update database and create exception if user has no sotcks of that type
-                    //////
-                    //////
-                    //////
-                    //////
-                    //////
-                    //////
-                    //////
+                            DecimalFormat decimalFormat = new DecimalFormat("#.00");
+                            moneyLabel.setText(decimalFormat.format(newUserCredit));
 
-                    specificValueField.clear();
-                    sellPopup.close();
+                            // Update the user's credit
+                            userRegistered.setUserCredit(newUserCredit);
 
-                    // Save stock information to the database
-                    saveStocks(userRegistered.getUsername(), symbol, regPriceAPI.regularMarketDayHigh(),
-                            regPriceAPI.regularMarketDayLow(), regPriceAPI.regularMarketDayOpen(),
-                            regPriceAPI.regularMarketPreviousClose(), (-1) * gain, regPriceAPI.regularMarketPrice());
-                }
-                catch (NumberFormatException ex) {
-                    System.err.println("Invalid input value. Please enter a valid number.");
-                }
+                            // Update database and create exception if user has no sotcks of that type
+                            //////
+                            //////
+                            //////
+                            //////
+                            //////
+                            //////
+                            //////
 
-            });
+                            specificValueField.clear();
+                            sellPopup.close();
+
+                            // Save stock information to the database
+                            saveStocks(userRegistered.getUsername(), symbol, regPriceAPI.regularMarketDayHigh(),
+                                    regPriceAPI.regularMarketDayLow(), regPriceAPI.regularMarketDayOpen(),
+                                    regPriceAPI.regularMarketPreviousClose(), (-1) * gain, regPriceAPI.regularMarketPrice());
+                        }
+                        catch (NumberFormatException ex) {
+                            System.err.println("Invalid input value. Please enter a valid number.");
+                        }
+
+                    });
 
 
 

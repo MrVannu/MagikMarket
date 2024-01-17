@@ -133,7 +133,8 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                 buyPopup.setHeight(200);
 
                 // Create UI elements for the custom popup (invest button)
-                Label instruction = new Label("Stock you would like to buy");
+                Label instruction = new Label("Insert the amount you would like to buy for the selected stock");
+                instruction.setFont(Font.font("Helvetica", FontWeight.NORMAL, 14));
                 TextField buyField = new TextField();
                 Button submitBuyAmount = new Button("Submit");
                 Button closeBuyPopup = new Button("Close");
@@ -264,10 +265,10 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                     RadioButton radio50 = new RadioButton("50%");
                     RadioButton radio75 = new RadioButton("75%");
                     RadioButton radio100 = new RadioButton("100%");
-                    radio25.setFont(Font.font("Helvetica"));
-                    radio50.setFont(Font.font("Helvetica"));
-                    radio75.setFont(Font.font("Helvetica"));
-                    radio100.setFont(Font.font("Helvetica"));
+                    radio25.setFont(Font.font("Helvetica", FontWeight.NORMAL, 14));
+                    radio50.setFont(Font.font("Helvetica", FontWeight.NORMAL, 14));
+                    radio75.setFont(Font.font("Helvetica", FontWeight.NORMAL, 14));
+                    radio100.setFont(Font.font("Helvetica", FontWeight.NORMAL, 14));
 
 
                     // Create a ToggleGroup to ensure only one radio button is selected at a time

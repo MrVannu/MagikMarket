@@ -6,6 +6,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -28,15 +30,57 @@ public class SwitchPane extends Stock{
 
         List<List<String>> theList = getSavedStocks(userRegistered.getUsername());
         GridPane gridPane = new GridPane();
-        gridPane.setHgap(10); // Horizontal space between columns
+        gridPane.setHgap(25); // Horizontal space between columns
+        gridPane.setVgap(20); // Vertical space between rows
 
-        int rowIndex = 0;
+        // Define headers for each column
+        Text stock = new Text("User");
+        Text stock1 = new Text("Stock name");
+        Text stock2 = new Text("Regular Market Day High");
+        Text stock3 = new Text("Regular Market Day Low");
+        Text stock4 = new Text("Regular Market Open");
+        Text stock5 = new Text("Market Previous Close");
+        Text dollarsSpent = new Text("Money spent/earned");
+        Text dateOfTransaction = new Text("Transaction date");
+        Text pieceOfStockGotten = new Text("Amount held ");
+
+        // Define style for each column header
+        stock.setStyle("-fx-font-weight: bold;");
+        stock1.setStyle("-fx-font-weight: bold;");
+        stock2.setStyle("-fx-font-weight: bold;");
+        stock3.setStyle("-fx-font-weight: bold;");
+        stock4.setStyle("-fx-font-weight: bold;");
+        stock5.setStyle("-fx-font-weight: bold;");
+        dollarsSpent.setStyle("-fx-font-weight: bold;");
+        dateOfTransaction.setStyle("-fx-font-weight: bold;");
+        pieceOfStockGotten.setStyle("-fx-font-weight: bold;");
+
+        // Insert the column's header into the gridPane
+        gridPane.add(stock,0,0);
+        gridPane.add(stock1,1,0);
+        gridPane.add(stock2,2,0);
+        gridPane.add(stock3,3,0);
+        gridPane.add(stock4,4,0);
+        gridPane.add(stock5,5,0);
+        gridPane.add(dollarsSpent,6,0);
+        gridPane.add(dateOfTransaction,7,0);
+        gridPane.add(pieceOfStockGotten,8,0);
+
+        // Define a decimal format object to format the numbers of the grid pane
+        DecimalFormat decimalFormat = new DecimalFormat("#.####");
+
+        int rowIndex = 1;
         for (List<String> outEl : theList) {
             int columnIndex = 0;
             for (String innerEl : outEl) {
                 Text text = new Text(innerEl);
                 gridPane.add(text, columnIndex, rowIndex);
                 columnIndex++;
+
+                if(columnIndex==9){
+                    double number = Double.parseDouble(text.getText());
+                    text.setText(decimalFormat.format(number));
+                }
             }
             rowIndex++;
         }
@@ -164,7 +208,6 @@ public class SwitchPane extends Stock{
                 KVUE_averageBuyPrice, NIO_averageBuyPrice, F_averageBuyPrice, GOOGL_averageBuyPrice, ENLBE_averageBuyPrice};
 
 
-
         // Fill the Pane
         for (int i = 0; i < nameLabels.length; i++) {
             addStockInfoToGrid(gridPane, nameLabels[i], priceLabels[i], piecesLabels[i], averageLabels[i], i);
@@ -180,7 +223,9 @@ public class SwitchPane extends Stock{
                         "-fx-border-radius: 10px; " +
                         "-fx-border-color: #388E3C; " +
                         "-fx-background-radius: 10; " +
-                        "-fx-effect: innershadow(gaussian, #73FF6E, 10, 0, 0, 0);"
+                        "-fx-effect: innershadow(gaussian, #73FF6E, 10, 0, 0, 0);" +
+                        "-fx-min-width: 50px; " +
+                        "-fx-min-height: 50px;"
         );
         gridPane.add(refresh, 4, 10);
 
@@ -208,7 +253,7 @@ public class SwitchPane extends Stock{
             executorServiceObj.shutdown();
 
 
-            // Wait for all threads finisj their execution
+            // Wait for all threads finish their execution
             try {
                 for (Future<?> future : futures) {
                     future.get();

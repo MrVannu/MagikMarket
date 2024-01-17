@@ -3,14 +3,17 @@ package org.project;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import java.io.*;
 import java.text.DecimalFormat;
@@ -367,7 +370,6 @@ public class WelcomePane extends APIData { // To use data from api obj
         });
 
 
-
         // To set both the buttons of the same width
         switchHistory.setMaxWidth(85);
 
@@ -545,12 +547,16 @@ public class WelcomePane extends APIData { // To use data from api obj
         mainPane.setTop(menuBar);
 
         // Instantiate the whole scene and define its dimension
-        WelcomeScene = new Scene(mainPane, 1400, 900); // <---- Dimension of the WelcomePane
+        WelcomeScene = new Scene(mainPane, 1900, 900); // <---- Dimension of the WelcomePane
         WelcomeScene.getStylesheets().add("styles.css"); // Reference to the CSS file
 
         // Define elements and HBox for the topRightPane
         // Define username label to show username from the DB
         Label username = new Label(userRegistered.getUsername());
+
+        // Define the text of the username
+        Label textUsername = new Label("Username: ");
+        textUsername.setFont(Font.font("Helvetica"));
 
         // Create an ImageView for the user image
         ImageView imgView = new ImageView();
@@ -587,6 +593,7 @@ public class WelcomePane extends APIData { // To use data from api obj
         profilePic.setSpacing(10);
 
         Label amountLabel = new Label("Your amount: ");
+        amountLabel.setFont(Font.font("Helvetica"));
         amountLabel.setStyle("-fx-font-style: italic;");
 
         // Layout to visualize the money
@@ -604,7 +611,7 @@ public class WelcomePane extends APIData { // To use data from api obj
                 separator3.setPrefHeight(20);
 
         // Add all the elements into the tobBox
-        topBox.getChildren().addAll(profilePic, separator1, username, separator2, moneyBox);
+        topBox.getChildren().addAll(profilePic, separator1, textUsername, username, separator2, moneyBox);
 
         // Add the topBot into the StackPane
         topRightPane.getChildren().addAll(topBox);

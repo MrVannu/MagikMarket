@@ -9,7 +9,9 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -74,18 +76,13 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                         DecimalFormat decimalFormat = new DecimalFormat("#.00");
                         moneyLabel.setText(decimalFormat.format(userRegistered.getUserCredit()));
 
-
-
                         betField.clear();
                         betPopup.close();
 
-
                         miniBox.getChildren().add(new Label());
                         miniBox.getChildren().add(new Label());
-
 
                         list.getChildren().add(new Label(symbol+" amount bet on"+", "+betField.getText()));
-
 
                         stocksCheckedOn.forEach(stock -> {
                             if(stock.getName().equals(symbol)) {
@@ -234,30 +231,44 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
         sell.setOnAction(event -> {
                     // Create a custom popup using a Stage (invest button)
                     Stage sellPopup = new Stage();
+                    sellPopup.setWidth(700);
+                    sellPopup.setHeight(300);
                     sellPopup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
                     sellPopup.initOwner(primaryStage); // Set primaryStage as the parent of popup
                     sellPopup.setTitle("Sell Input");
-                    sellPopup.setWidth(400);
-                    sellPopup.setHeight(200);
 
                     // Create UI elements for the custom popup (invest button)
                     Button submitSellAmount = new Button("Submit");
-                    Button closeSellPopul = new Button("Close");
-                    HBox buttonsSellBox = new HBox(submitSellAmount, closeSellPopul);
+                    Button closeSellPopup = new Button("Close");
+                    HBox buttonsSellBox = new HBox(submitSellAmount, closeSellPopup);
                     buttonsSellBox.setSpacing(30);
 
-
-                    Label instructions = new Label("Select the percentage you would like to sell, or insert the amount of stock you would like to sell");
+                    Label instructions = new Label("Select the percentage you would like to sell, or insert the amount of stock you would like to sell.");
+                    instructions.setFont(Font.font("Helvetica", FontWeight.NORMAL, 14));
                     Label regMarkPriceL = new Label();
                     APIData regPriceAPI = new APIData();
                     regPriceAPI.fetchData(symbol);
-                    regMarkPriceL.setText(String.valueOf(regPriceAPI.regularMarketPrice()));
+                    regMarkPriceL.setText("Current market price of "+ symbol+ " is → " + regPriceAPI.regularMarketPrice());
+
+                    Text regMrkPriceText = new Text("Current market price of " + symbol + " is → ");
+                    regMrkPriceText.setFont(Font.font("Helvetica", FontWeight.NORMAL, 14));
+                    Text regMrkPriceValue = new Text(String.valueOf(regPriceAPI.regularMarketPrice()));
+                    regMrkPriceValue.setFont(Font.font("Helvetica", FontWeight.BOLD, 16));
+                    regMrkPriceValue.setFill(Color.ORANGE);
+
+                    HBox regMrkPriceTextAndValueBox = new HBox(regMrkPriceText,regMrkPriceValue);
+                    regMrkPriceTextAndValueBox.setAlignment(Pos.CENTER);
 
                     // Create radio buttons for percentage options
                     RadioButton radio25 = new RadioButton("25%");
                     RadioButton radio50 = new RadioButton("50%");
                     RadioButton radio75 = new RadioButton("75%");
                     RadioButton radio100 = new RadioButton("100%");
+                    radio25.setFont(Font.font("Helvetica"));
+                    radio50.setFont(Font.font("Helvetica"));
+                    radio75.setFont(Font.font("Helvetica"));
+                    radio100.setFont(Font.font("Helvetica"));
+
 
                     // Create a ToggleGroup to ensure only one radio button is selected at a time
                     ToggleGroup toggleGroup = new ToggleGroup();
@@ -272,13 +283,15 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
 
                     // Create the layout for the popup
                     HBox radioButtonsBox = new HBox(10);
+                    radioButtonsBox.setAlignment(Pos.CENTER);
                     radioButtonsBox.setPadding(new Insets(10));
                     radioButtonsBox.getChildren().addAll(radio25, radio50, radio75, radio100);
 
                     // Define Box with elements for the popup (invest button)
-                    VBox windowSellBox = new VBox(instructions, regMarkPriceL, radioButtonsBox, specificValueField, buttonsSellBox);
+                    VBox windowSellBox = new VBox(instructions, regMrkPriceTextAndValueBox, radioButtonsBox, specificValueField, buttonsSellBox);
                     windowSellBox.setPadding(new Insets(10));
                     windowSellBox.setSpacing(10);
+                    windowSellBox.setPrefSize(400,800);
                     windowSellBox.setAlignment(Pos.CENTER);
 
                     //Handle submitSellAmount button
@@ -335,13 +348,14 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
 
 
             // Handle closeBetPopup button
-                    closeSellPopul.setOnAction(e->{
+                    closeSellPopup.setOnAction(e->{
                         sellPopup.close();
                     });
 
                     // Create a scene for the custom popup
-                    Scene betPopupScene = new Scene(windowSellBox);
-                    sellPopup.setScene(betPopupScene);
+                    Scene sellSectionScene = new Scene(windowSellBox);
+
+                    sellPopup.setScene(sellSectionScene);
 
                     // Show the custom popup
                     sellPopup.showAndWait(); // Use showAndWait to wait for user interaction before continuing

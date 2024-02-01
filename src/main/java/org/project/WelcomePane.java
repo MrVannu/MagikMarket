@@ -3,7 +3,6 @@ package org.project;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
@@ -24,10 +23,8 @@ import java.util.*;
 public class WelcomePane extends APIData { // To use data from api obj
     Scene WelcomeScene;
     private static final int MAX_SELECTED_CHECKBOXES = 4;
-    private final String pathUserDB = "src/main/resources/userDB.csv";  // Path to DB for users tracking
-    private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";  // Path to DB for data history
     private short dataToUpdateIndex = 0;
-    private ArrayList<String> symbolsOfStock = new ArrayList<String>();
+    private final ArrayList<String> symbolsOfStock = new ArrayList<>();
     private final APIData testObj  = new APIData();
 
     //DATA HISTORY MANAGEMENT
@@ -61,6 +58,8 @@ public class WelcomePane extends APIData { // To use data from api obj
 
         // Read all lines from the file
         List<String> lines = new ArrayList<>();
+        // Path to DB for data history
+        String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";
         try (BufferedReader reader = new BufferedReader(new FileReader(pathDataHistoryDB))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -183,7 +182,7 @@ public class WelcomePane extends APIData { // To use data from api obj
 
             // Checkbox creating a new series for each checkbox
             XYChart.Series<Number, Number> series = new XYChart.Series<>();
-            series.setName(symbol); // Set the name of the serie
+            series.setName(symbol); // Set the name of the series
 
 
 
@@ -294,10 +293,10 @@ public class WelcomePane extends APIData { // To use data from api obj
                     // Take the symbol of the deselected checkBox
                     final String temp = (checkBox.getText()).toUpperCase();
                     // Remove the series of data with the same symbol of the checkBox
-                    lineChart.getData().removeIf(serieLine -> serieLine.getName().equals(temp));
+                    lineChart.getData().removeIf(seriesLine -> seriesLine.getName().equals(temp));
 
                     //Remove the series of data with the same symbol of the checkBox
-                    pieChart.getData().removeIf(seriePie -> seriePie.getName().equals(temp));
+                    pieChart.getData().removeIf(seriesPie -> seriesPie.getName().equals(temp));
                     lineChart.setTitle("");
 
                 }
@@ -384,22 +383,19 @@ public class WelcomePane extends APIData { // To use data from api obj
         Menu infoMenu = new Menu("Info");
         // Create menu items for the "File" menu
         MenuItem instructionsItem = new MenuItem("Instructions");
-        instructionsItem.setOnAction(e->{
-            AlertField.showSuccessAlert("Information","This is a simulation of an " +
-                    "application that can help you having a look at the real market. You can invest some " +
-                    "money in some Stocks. You can have a look at the Stocks by selecting from the " +
-                    "checkboxes the Stocks you are interested on. You can select maximum 4 Stocks" +
-                    "You have an amount of money that is, by default, 1,000 (you can modify it form the edit" +
-                    "menu). As much as you invest, the amount of money will decrease. There will be " +
-                    "a simulation that will show you if your prediction was correct or not." +
-                    "When clicking the Prevision button some random data change the chart. This is a way" +
-                    "to simulate some kind of changes. When the chart has decreased you loose money. When the" +
-                    "chart has increased you win money." +
-                    "The bar chart will help you having a look at the market volume of a selected Stock. This data " +
-                    "is very important as it provides insights into the liquidity and trading activity of the " +
-                    "stock, which can be valuable for making informed investment decisions.");
-
-        });
+        instructionsItem.setOnAction(e-> AlertField.showSuccessAlert("Information","This is a simulation of an " +
+                "application that can help you having a look at the real market. You can invest some " +
+                "money in some Stocks. You can have a look at the Stocks by selecting from the " +
+                "checkboxes the Stocks you are interested on. You can select maximum 4 Stocks" +
+                "You have an amount of money that is, by default, 1,000 (you can modify it form the edit" +
+                "menu). As much as you invest, the amount of money will decrease. There will be " +
+                "a simulation that will show you if your prediction was correct or not." +
+                "When clicking the Prevision button some random data change the chart. This is a way" +
+                "to simulate some kind of changes. When the chart has decreased you loose money. When the" +
+                "chart has increased you win money." +
+                "The bar chart will help you having a look at the market volume of a selected Stock. This data " +
+                "is very important as it provides insights into the liquidity and trading activity of the " +
+                "stock, which can be valuable for making informed investment decisions."));
         MenuItem exitItem = new MenuItem("Exit");
         // Exit the application if you click the exit item
         exitItem.setOnAction(e -> {
@@ -460,7 +456,7 @@ public class WelcomePane extends APIData { // To use data from api obj
                             popup.close();
                         }
                     } catch (NumberFormatException k) {
-                        //System.out.println("Input non valido: " + nativeData);
+                        //System.out.println("Input non valid: " + nativeData);
                         newCredit.setText(""); // Clean out
                     }
                 } else {

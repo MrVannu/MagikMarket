@@ -3,7 +3,6 @@ package org.project;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
@@ -21,7 +20,7 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 
-public class WelcomePane extends APIData { // To use data from api obj
+public class WelcomePane extends APIData { // Extends APIData to use data from the API
     Scene WelcomeScene;
     private static final int MAX_SELECTED_CHECKBOXES = 4;
     private short dataToUpdateIndex = 0;
@@ -67,8 +66,6 @@ public class WelcomePane extends APIData { // To use data from api obj
                 lines.add(line);
             }
         }
-
-
 
         // Pad the list with empty lines up to 100 elements
         while (lines.size() < 200) {
@@ -167,12 +164,9 @@ public class WelcomePane extends APIData { // To use data from api obj
         HBox investmentBox = new HBox();
         investmentBox.setAlignment(Pos.CENTER);
 
-
         // Define HBox for hBoxList of stocks
         HBox hBoxList = new HBox();
         hBoxList.setAlignment(Pos.CENTER);
-
-
 
         // Create pie chart
         PieChart pieChart = new PieChart();
@@ -304,7 +298,7 @@ public class WelcomePane extends APIData { // To use data from api obj
             }); // Closing checkBox action
 
             // Define instance of SubmitControl
-            SubmitControl submitControl = new SubmitControl(userRegistered, primaryStage, stocksCheckedOn, symbolsOfStock, hBoxList, symbol, moneyLabel, checkBox, pieChart);
+            SubmitControl submitControl = new SubmitControl(userRegistered, primaryStage, stocksCheckedOn, hBoxList, symbol, moneyLabel, checkBox);
 
             // Add the bet button into the ArrayList
             investmentButtonsArrayList.add(submitControl.getBet());
@@ -327,7 +321,7 @@ public class WelcomePane extends APIData { // To use data from api obj
         PrevisionComponent previsionComponent = new PrevisionComponent(stocksCheckedOn);
 
         // Define switchPane object of the hBoxList
-        SwitchPane switchPane = new SwitchPane(hBoxList);
+        SwitchPane switchPane = new SwitchPane();
         switchPane.showOtherView(userRegistered, hBoxList);
         // Define switch button
         Button switchHistory = new Button("Switch history");

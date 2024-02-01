@@ -9,16 +9,16 @@ import java.io.IOException;
 public class UserTest {
     @Test
     public void testGetUsername() {
-        User user = new User("john_doe", "password123", "hashedPassword",
-                "john.doe@example.com", 50.0);
+        User user = new User("john_doe"
+        );
         String username = user.getUsername();
         assertEquals("john_doe", username);
     }
 
     @Test
     public void testGetUserCredit() throws IOException {
-        User user = new User("testUsername", "password", "hashedPassword",
-                "user@example.com", 100.0);
+        User user = new User("testUsername"
+        );
 
         LoginControl obj = new LoginControl();
 
@@ -31,15 +31,15 @@ public class UserTest {
 
     @Test
     public void testGetUserCreditUserNotFound() {
-        User user = new User("nonExistingUsername", "password", "hashedPassword", "user@example.com", 100.0);
+        User user = new User("nonExistingUsername");
         RuntimeException exception = assertThrows(RuntimeException.class, user::getUserCredit);
         assertEquals("User not found into the DB", exception.getMessage());
     }
 
     @Test
     public void testSetUserCredit() throws IOException {
-        User user = new User("test2Username", "password", "hashedPassword",
-                "user@example.com", 100.0);
+        User user = new User("test2Username"
+        );
 
         LoginControl obj = new LoginControl();
 

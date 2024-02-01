@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class LoginControl implements Authentication{
     private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";  // Path to DB for data history
-    private User userRegistered = new User("", "", "", "", -101.0);;
+    private User userRegistered = new User("");;
     private boolean[] checkField;
 
 

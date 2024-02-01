@@ -33,12 +33,11 @@ public class PrevisionComponent{
 
     // Define Prevision button and its layout
     // Define image for the button
-    private Image arrowButtonImage = new Image("file:src/main/resources/frecciale.png");
-    private ImageView arrowButtonView = new ImageView(arrowButtonImage);
+    private final Image arrowButtonImage = new Image("file:src/main/resources/frecciale.png");
 
 
     // Define button name
-    String previsionForStockChange = "Prevision";
+    String previsionForStockChange = "   Prevision   ";
 
     // Define HBox with button name and button image
     public HBox previsionContentHBox = new HBox(3);
@@ -112,7 +111,8 @@ public class PrevisionComponent{
 
     public PrevisionComponent(ArrayList<Stock> stocksCheckedOn){
             previsionButton.setGraphic(previsionContentHBox); // Insert img inside button
-            arrowButtonView.setFitHeight(10);
+        ImageView arrowButtonView = new ImageView(arrowButtonImage);
+        arrowButtonView.setFitHeight(10);
             arrowButtonView.setFitWidth(15);
 
             previsionContentHBox.getChildren().addAll(new Text(previsionForStockChange), arrowButtonView);

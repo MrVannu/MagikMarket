@@ -11,20 +11,12 @@ import java.util.List;
 
 public class User {
     private String username;
-    private String password;
-    private String hashedPassword;
-    private String email;
-    private double userCredit;
     private final String pathUserDB = "src/main/resources/userDB.csv";  // Path to DB for users tracking
 
 
     public User() {}
-    public User(String username, String password, String hashedPassword, String email, Double userCredit) {
+    public User(String username) {
         this.username = username;
-        this.password = password;
-        this.hashedPassword = hashedPassword;
-        this.email = email;
-        this.userCredit = userCredit;
     }
 
 
@@ -55,7 +47,6 @@ public class User {
         // In case of user has not enough credit
         if(valueToSet < 0) throw new NoCreditException();
 
-        userCredit = valueToSet;
         try {
             List<String[]> lines = new ArrayList<>();
             boolean updated = false; // Flag for tracking if edited

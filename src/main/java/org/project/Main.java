@@ -1,9 +1,5 @@
 package org.project;
 
-
-
-
-import com.opencsv.exceptions.CsvValidationException;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -118,7 +114,7 @@ public class Main extends Application {
             if(loginControl.usernameExists(username, loginControl.getPathUserDB()) && loginControl.usernameValidator(username)
                     && loginControl.passwordCorresponds(username, password, loginControl.getPathUserDB())) {
 
-                loginControl.setUserRegistered(new User (username, password, hashedPassword, "",-101.0));
+                loginControl.setUserRegistered(new User (username));
                 WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, loginControl.getUserRegistered());
 
                 primaryStage.setTitle("Start App");

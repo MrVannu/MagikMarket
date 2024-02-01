@@ -69,7 +69,7 @@ public class APIData{
             } else {
                 data = new JSONObject(response.body());
                 System.out.println("RESPONSE is: " + response.body());
-                String nameOfCompany = extractNameOfCompany();
+                extractNameOfCompany();
             }
         } catch (IOException | InterruptedException | JSONException e) {
             throw new RuntimeException(e);

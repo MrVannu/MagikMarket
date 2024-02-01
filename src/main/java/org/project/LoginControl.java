@@ -13,20 +13,15 @@ import java.util.regex.Pattern;
 
 public class LoginControl implements Authentication{
     private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";  // Path to DB for data history
-    // Paths to databases (CSV files)
-    private final String pathUserDB = "src/main/resources/userDB.csv";  // Path to DB for users tracking
-
-    private final double initialUserCredit = 1000;
-
-    // Index of row to be overwritten (most remote in the db)
-    private short dataToUpdateIndex = 0;
-
     private User userRegistered = new User("", "", "", "", -101.0);;
-
     private boolean[] checkField;
 
 
+
     public String getPathUserDB() {
+        // Paths to databases (CSV files)
+        // Path to DB for users tracking
+        String pathUserDB = "src/main/resources/userDB.csv";
         return pathUserDB;
     }
 
@@ -47,6 +42,7 @@ public class LoginControl implements Authentication{
     }
 
     public double getInitialUserCredit() {
+        double initialUserCredit = 1000;
         return initialUserCredit;
     }
 
@@ -67,7 +63,6 @@ public class LoginControl implements Authentication{
             throw new RuntimeException(e);
         }
         return false; // If not found
-
     }
 
     // Checks if password is correct
@@ -120,8 +115,8 @@ public class LoginControl implements Authentication{
     }
 
     //Validator for username (no spaces allowed)
-    public boolean usernameValidator (String username){
-        return !username.contains(" ") && (!username.isEmpty());
+    public boolean usernameValidator(String username) {
+        return username != null && !username.contains(" ") && !username.isEmpty();
     }
 
     // Validator for email format (example@hello.world)

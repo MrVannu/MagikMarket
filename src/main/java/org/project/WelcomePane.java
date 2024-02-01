@@ -328,7 +328,7 @@ public class WelcomePane extends APIData { // To use data from api obj
 
         // Define switchPane object of the hBoxList
         SwitchPane switchPane = new SwitchPane(hBoxList);
-
+        switchPane.showOtherView(userRegistered, hBoxList);
         // Define switch button
         Button switchHistory = new Button("Switch history");
         switchHistory.setOnAction(e->{

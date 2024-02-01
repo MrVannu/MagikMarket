@@ -1,12 +1,14 @@
-package org.project;
+package org.project.view;
 
 import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+import org.project.model.APIData;
+import org.project.model.Stock;
+import org.project.model.User;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class SwitchPane extends Stock{
+public class SwitchPane extends Stock {
     public boolean toggle = false;
     private final APIData apiDataObject = new APIData();
 

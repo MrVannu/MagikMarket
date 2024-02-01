@@ -1,13 +1,9 @@
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ButtonBar.ButtonData;
 import org.junit.jupiter.api.Test;
-import org.project.AmountNotAllowed;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class AmountNotAllowedTest {
+public class AmountNotAllowedExceptionTest {
     int a = 0;
 
     @Test

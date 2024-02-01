@@ -1,4 +1,4 @@
-package org.project;
+package org.project.exceptions;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -6,8 +6,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import java.util.Optional;
 
-public class AmountNotAllowed extends RuntimeException {
-    public AmountNotAllowed() {
+public class AmountNotAllowedException extends RuntimeException {
+    public AmountNotAllowedException() {
         showAlert();
     }
 

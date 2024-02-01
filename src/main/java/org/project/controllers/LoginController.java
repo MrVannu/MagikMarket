@@ -1,9 +1,11 @@
-package org.project;
+package org.project.controllers;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
 import org.mindrot.jbcrypt.BCrypt;
+import org.project.interfaces.Authentication;
+import org.project.model.User;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -11,7 +13,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LoginControl implements Authentication{
+public class LoginController implements Authentication {
     private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";  // Path to DB for data history
     private User userRegistered = new User("");;
     private boolean[] checkField;

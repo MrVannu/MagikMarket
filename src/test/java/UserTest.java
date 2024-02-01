@@ -1,8 +1,8 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
-import org.project.LoginControl;
-import org.project.User;
+import org.project.controllers.LoginController;
+import org.project.model.User;
 import java.io.IOException;
 
 
@@ -20,7 +20,7 @@ public class UserTest {
         User user = new User("testUsername"
         );
 
-        LoginControl obj = new LoginControl();
+        LoginController obj = new LoginController();
 
         obj.registerNewUser("src/main/resources/userDB.csv", "testUsername", "hashedPassword",
                 "user@example.com", 100.00);
@@ -41,7 +41,7 @@ public class UserTest {
         User user = new User("test2Username"
         );
 
-        LoginControl obj = new LoginControl();
+        LoginController obj = new LoginController();
 
         obj.registerNewUser("src/main/resources/userDB.csv", "test2Username", "hashedPassword",
                 "user@example.com", 100.00);

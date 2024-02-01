@@ -1,7 +1,8 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mindrot.jbcrypt.BCrypt;
-import org.project.LoginControl;
+import org.project.controllers.LoginController;
+
 import java.io.IOException;
 import java.io.FileWriter;
 import java.nio.file.Files;
@@ -10,7 +11,7 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LoginControlTest {
+class LoginControllerTest {
     @BeforeEach
     void setUp() {
         clearTestDB();// Initialize or clear the test CSV file
@@ -23,7 +24,7 @@ class LoginControlTest {
         createTestCsvUsername(testCsvPath);
 
         // Creating an instance of YourClass (replace with the actual class name)
-        LoginControl myClass = new LoginControl();
+        LoginController myClass = new LoginController();
 
         // Test cases
         assertTrue(myClass.usernameExists("existingUser", testCsvPath));
@@ -46,7 +47,7 @@ class LoginControlTest {
         createTestCsvPassword(testCsvPath);
 
         // Creating an instance of YourClass (replace with the actual class name)
-        LoginControl myClass = new LoginControl();
+         LoginController myClass = new LoginController();
 
         // Test cases
         assertTrue(myClass.passwordCorresponds("existingUser", "password123", testCsvPath));
@@ -67,7 +68,7 @@ class LoginControlTest {
     @Test
     public void testCheckRegexMatch() {
         // Creating an instance of LoginControl
-        LoginControl myClass = new LoginControl();
+        LoginController myClass = new LoginController();
 
         // Test cases
         assertTrue(myClass.checkRegexMatch("\\d{3}-\\d{2}-\\d{4}", "123-45-6789")); // Valid SSN
@@ -80,62 +81,62 @@ class LoginControlTest {
     @Test
     public void testValidUsername() {
         String validUsername = "JohnDoe";
-        boolean isValid = new LoginControl().usernameValidator(validUsername);
+        boolean isValid = new LoginController().usernameValidator(validUsername);
         assertTrue(isValid);
     }
 
     @Test
     public void testInvalidUsernameWithSpace() {
         String invalidUsername = "John Doe";
-        boolean isValid = new LoginControl().usernameValidator(invalidUsername);
+        boolean isValid = new LoginController().usernameValidator(invalidUsername);
         assertFalse(isValid);
     }
 
     @Test
     public void testInvalidUsernameEmpty() {
         String invalidUsername = "";
-        boolean isValid = new LoginControl().usernameValidator(invalidUsername);
+        boolean isValid = new LoginController().usernameValidator(invalidUsername);
         assertFalse(isValid);
     }
 
     @Test
     public void testInvalidUsernameNull() {
-        boolean isValid = new LoginControl().usernameValidator(null);
+        boolean isValid = new LoginController().usernameValidator(null);
         assertFalse(isValid);
     }
 
     @Test
     public void testValidEmail() {
         String validEmail = "john.doe@example.com";
-        boolean isValid = new LoginControl().emailValidator(validEmail);
+        boolean isValid = new LoginController().emailValidator(validEmail);
         assertTrue(isValid);
     }
 
     @Test
     public void testInvalidEmailNoAtSymbol() {
         String invalidEmail = "john.doeexample.com";
-        boolean isValid = new LoginControl().emailValidator(invalidEmail);
+        boolean isValid = new LoginController().emailValidator(invalidEmail);
         assertFalse(isValid);
     }
 
     @Test
     public void testInvalidEmailNoDot() {
         String invalidEmail = "john.doe@examplecom";
-        boolean isValid = new LoginControl().emailValidator(invalidEmail);
+        boolean isValid = new LoginController().emailValidator(invalidEmail);
         assertFalse(isValid);
     }
 
     @Test
     public void testInvalidEmailNoUsername() {
         String invalidEmail = "@example.com";
-        boolean isValid = new LoginControl().emailValidator(invalidEmail);
+        boolean isValid = new LoginController().emailValidator(invalidEmail);
         assertFalse(isValid);
     }
 
     @Test
     public void testInvalidEmailNoDomain() {
         String invalidEmail = "john.doe@.com";
-        boolean isValid = new LoginControl().emailValidator(invalidEmail);
+        boolean isValid = new LoginController().emailValidator(invalidEmail);
         assertFalse(isValid);
     }
 

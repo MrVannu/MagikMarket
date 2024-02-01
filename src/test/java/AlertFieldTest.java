@@ -1,9 +1,7 @@
 import javafx.scene.control.Alert;
-import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.project.AlertField;
+import org.project.util.AlertField;
 
 class AlertFieldTest {
 

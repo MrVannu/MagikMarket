@@ -12,6 +12,11 @@ import javafx.geometry.Insets;
 import javafx.scene.text.Font;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.project.controllers.LoginController;
+import org.project.model.User;
+import org.project.util.AlertField;
+import org.project.view.WelcomePane;
+
 import java.io.*;
 
 
@@ -20,7 +25,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         //User userRegistered = new User();
-        LoginControl loginControl = new LoginControl();
+        LoginController loginController = new LoginController();
 
         // Defining the panes
         GridPane layoutLogin = new GridPane();
@@ -111,11 +116,11 @@ public class Main extends Application {
             String hashedPassword = BCrypt.hashpw(passwordFieldLogin.getText(), BCrypt.gensalt());
 
             // Validating credentials
-            if(loginControl.usernameExists(username, loginControl.getPathUserDB()) && loginControl.usernameValidator(username)
-                    && loginControl.passwordCorresponds(username, password, loginControl.getPathUserDB())) {
+            if(loginController.usernameExists(username, loginController.getPathUserDB()) && loginController.usernameValidator(username)
+                    && loginController.passwordCorresponds(username, password, loginController.getPathUserDB())) {
 
-                loginControl.setUserRegistered(new User (username));
-                WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, loginControl.getUserRegistered());
+                loginController.setUserRegistered(new User(username));
+                WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, loginController.getUserRegistered());
 
                 primaryStage.setTitle("Start App");
                 primaryStage.setScene(welcomePane.getScene());
@@ -193,28 +198,28 @@ public class Main extends Application {
             String email = emailFieldRegister.getText();
 
             // Checking that the registration credential meet the requirements
-            if(!(loginControl.globalValidator(username, password, hashedPassword, email))){
+            if(!(loginController.globalValidator(username, password, hashedPassword, email))){
 
                 // If the registration was not successful then it will follow one of the 3 cases below
                 System.out.println("Authentication failed");
-                if(loginControl.getCheckField(0)){ // If the username already exists then the field is red
+                if(loginController.getCheckField(0)){ // If the username already exists then the field is red
                     AlertField.showErrorAlert("Username error","Username not inserted or use another username.");
                     AlertField.invalidField(usernameFieldRegister);
-                    loginControl.setCheckField(false, 0); // Resetting the check to false
+                    loginController.setCheckField(false, 0); // Resetting the check to false
                 }
-                if(loginControl.getCheckField(1)){// If the password is empty then the field is red
+                if(loginController.getCheckField(1)){// If the password is empty then the field is red
                     AlertField.showErrorAlert("Password error","The password you inserted is not allowed or the field is empty.");
                     AlertField.invalidField(passwordFieldRegister);
-                    loginControl.setCheckField(false, 1); // Resetting the check to false
+                    loginController.setCheckField(false, 1); // Resetting the check to false
                 }
-                if(loginControl.getCheckField(2)){// If the email does not match the regex (so is not valid) then the field is red
+                if(loginController.getCheckField(2)){// If the email does not match the regex (so is not valid) then the field is red
                     AlertField.showErrorAlert("Email error","The email you inserted is not an email.");
                     AlertField.invalidField(emailFieldRegister);
-                    loginControl.setCheckField(false, 2); // Resetting the check to false
+                    loginController.setCheckField(false, 2); // Resetting the check to false
                 }
             } else { // If the registration was successful
                 try {
-                    loginControl.registerNewUser(loginControl.getPathUserDB(), username, hashedPassword, email, loginControl.getInitialUserCredit()); // The credentials of the user are saved into the database
+                    loginController.registerNewUser(loginController.getPathUserDB(), username, hashedPassword, email, loginController.getInitialUserCredit()); // The credentials of the user are saved into the database
                     AlertField.resetField(usernameFieldRegister,passwordFieldRegister,emailFieldRegister); // Resetting the fields
                     AlertField.showSuccessAlert("Registration successful","Your registration was successful!");
                     primaryStage.setScene(LoginScene); // Changing scene to LoginScene

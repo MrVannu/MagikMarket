@@ -1,4 +1,4 @@
-package org.project;
+package org.project.exceptions;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;

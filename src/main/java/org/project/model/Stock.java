@@ -1,8 +1,10 @@
-package org.project;
+package org.project.model;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
+import org.project.model.APIData;
+
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,7 +15,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class Stock extends APIData{
+public class Stock extends APIData {
     private String stockDbPath = "src/main/resources/StocksDB.csv";
     private double regularMarketDayHigh;
     private double regularMarketDayLow;

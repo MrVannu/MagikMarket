@@ -1,10 +1,9 @@
-package org.project;
+package org.project.controllers;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -13,20 +12,25 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.project.exceptions.InsufficientCreditException;
+import org.project.model.APIData;
+import org.project.model.Stock;
+import org.project.model.User;
+import org.project.util.AlertField;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
-public class SubmitControl extends Stock{ //Invest button + method to invest
+public class SubmitController extends Stock { //Invest button + method to invest
 
     private final HBox checkBoxInsideHBox = new HBox(10);
     private final Button bet = new Button("Invest"); // Define bet button
     private final Button buy = new Button("Buy"); // Define buy button
     private final Button sell = new Button("Sell"); // Define sell button
 
-    public SubmitControl(User userRegistered, Stage primaryStage, ArrayList<Stock> stocksCheckedOn,
-                         HBox list, String symbol, Label moneyLabel,
-                         CheckBox checkBox) {
+    public SubmitController(User userRegistered, Stage primaryStage, ArrayList<Stock> stocksCheckedOn,
+                            HBox list, String symbol, Label moneyLabel,
+                            CheckBox checkBox) {
         super();
         bet.getStyleClass().add("my-button");
         buy.getStyleClass().add("button-buy");
@@ -292,7 +296,7 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
 
                         if(nrOfStock == 0){
                             //System.out.println("NO STOCKS OWNED BY THE CURRENT USER");
-                            throw new InsufficientCredit();
+                            throw new InsufficientCreditException();
                         }
 
                         double selectedPercentage = 0.00;

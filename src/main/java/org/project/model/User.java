@@ -1,8 +1,10 @@
-package org.project;
+package org.project.model;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
+import org.project.exceptions.NoCreditException;
+
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;

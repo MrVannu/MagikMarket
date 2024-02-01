@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.project.APIData;
-import org.project.Stock;
+import org.project.model.APIData;
+import org.project.model.Stock;
 
 import java.io.IOException;
 import java.nio.file.Files;

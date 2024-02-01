@@ -1,4 +1,4 @@
-package org.project;
+package org.project.controllers;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
@@ -9,7 +9,6 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -17,7 +16,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.scene.paint.Color;
+import org.project.controllers.LoginController;
+import org.project.model.Stock;
+import org.project.util.LineChartGenerator;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -25,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class PrevisionComponent{
+public class PrevisionController {
 
     // Define the prevision button and its box
     public Button previsionButton = new Button();
@@ -49,14 +51,14 @@ public class PrevisionComponent{
     // Define box to insert prevision button and animation
     private HBox previsionHBox = new HBox(previsionButton);
 
-    public ArrayList<Double> generateNextPrevision(String nameToScanFor, LoginControl loginControl){
+    public ArrayList<Double> generateNextPrevision(String nameToScanFor, LoginController loginController){
         List<String> openRates = new ArrayList<>();
         List<String> closingRates = new ArrayList<>();
         List<String> highestRates = new ArrayList<>();
         List<String> lowestRates = new ArrayList<>();
         ArrayList<Double> returnValues = new ArrayList<>();
 
-        try (CSVReader reader = new CSVReader(new FileReader(loginControl.getPathUserDB()))) {
+        try (CSVReader reader = new CSVReader(new FileReader(loginController.getPathUserDB()))) {
             String[] nextLine;
 
             while ((nextLine = reader.readNext()) != null) {
@@ -109,7 +111,7 @@ public class PrevisionComponent{
         }
     }
 
-    public PrevisionComponent(ArrayList<Stock> stocksCheckedOn){
+    public PrevisionController(ArrayList<Stock> stocksCheckedOn){
             previsionButton.setGraphic(previsionContentHBox); // Insert img inside button
         ImageView arrowButtonView = new ImageView(arrowButtonImage);
         arrowButtonView.setFitHeight(10);

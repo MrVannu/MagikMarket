@@ -12,6 +12,7 @@ public interface Authentication {
 
    boolean checkRegexMatch(String regex, String textToMatch);
 
+
     boolean usernameValidator (String username);
 
     boolean emailValidator (String username);
@@ -19,6 +20,3 @@ public interface Authentication {
     boolean globalValidator (String username, String password, String hashedPassword, String email);
 
 }
-
-
-// to be implemented: password recovery process

@@ -1,12 +1,9 @@
-package org.project;
+package org.project.controllers;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -15,21 +12,25 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.project.exceptions.InsufficientCreditException;
+import org.project.model.APIData;
+import org.project.model.Stock;
+import org.project.model.User;
+import org.project.util.AlertField;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
-public class SubmitControl extends Stock{ //Invest button + method to invest
+public class SubmitController extends Stock { //Invest button + method to invest
 
     private final HBox checkBoxInsideHBox = new HBox(10);
     private final Button bet = new Button("Invest"); // Define bet button
     private final Button buy = new Button("Buy"); // Define buy button
     private final Button sell = new Button("Sell"); // Define sell button
 
-    public SubmitControl(User userRegistered, Stage primaryStage, ArrayList<Stock> stocksCheckedOn,
-                         ArrayList<String> symbols, HBox list, String symbol, Label moneyLabel,
-                         CheckBox checkBox, PieChart pieChart) {
+    public SubmitController(User userRegistered, Stage primaryStage, ArrayList<Stock> stocksCheckedOn,
+                            HBox list, String symbol, Label moneyLabel,
+                            CheckBox checkBox) {
         super();
         bet.getStyleClass().add("my-button");
         buy.getStyleClass().add("button-buy");
@@ -108,9 +109,7 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
             });
 
             // Handle closeBetPopup button
-            closeBetPopup.setOnAction(e->{
-                betPopup.close();
-            });
+            closeBetPopup.setOnAction(e-> betPopup.close());
 
             // Create a scene for the custom popup
             Scene betPopupScene = new Scene(windowBetBox);
@@ -166,25 +165,23 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                                     apiResponseObj.regularMarketPreviousClose(),Double.parseDouble(buyField.getText())*(-1),
                                     apiResponseObj.regularMarketPrice()*(-1));
 
-                            List<List<String>> theList = getSavedStocks(userRegistered.getUsername());
-                            GridPane gridPane = new GridPane();
-                            gridPane.setHgap(10); // Horizontal space between columns
-                            list.getChildren().clear();
-
-                            int rowIndex = 0;
-                            for (List<String> outEl : theList) {
-                                int columnIndex = 0;
-                                outEl.set(0,"");
-                                for (String innerEl : outEl) {
-                                    Text text = new Text(innerEl);
-                                    gridPane.add(text, columnIndex, rowIndex);
-                                    columnIndex++;
-                                }
-                                rowIndex++;
-                            }
-
-
-                            list.getChildren().add(gridPane);
+//                            List<List<String>> theList = getSavedStocks(userRegistered.getUsername());
+//                            GridPane gridPane = new GridPane();
+//                            gridPane.setHgap(10); // Horizontal space between columns
+//                            list.getChildren().clear();
+//
+//                            int rowIndex = 0;
+//                            for (List<String> outEl : theList) {
+//                                int columnIndex = 0;
+//                                outEl.set(0,"");
+//                                for (String innerEl : outEl) {
+//                                    Text text = new Text(innerEl);
+//                                    gridPane.add(text, columnIndex, rowIndex);
+//                                    columnIndex++;
+//                                }
+//                                rowIndex++;
+//                            }
+//                            list.getChildren().add(gridPane);
 
                             buyField.clear();
                             buyPopup.close();
@@ -213,9 +210,7 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
                 });
 
                 // Handle closeBetPopup button
-                closeBuyPopup.setOnAction(e->{
-                    buyPopup.close();
-                });
+                closeBuyPopup.setOnAction(e-> buyPopup.close());
 
                 // Create a scene for the custom popup
                 Scene betPopupScene = new Scene(windowBuyBox);
@@ -301,7 +296,7 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
 
                         if(nrOfStock == 0){
                             //System.out.println("NO STOCKS OWNED BY THE CURRENT USER");
-                            throw new InsufficientCredit();
+                            throw new InsufficientCreditException();
                         }
 
                         double selectedPercentage = 0.00;
@@ -349,9 +344,7 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
 
 
             // Handle closeBetPopup button
-                    closeSellPopup.setOnAction(e->{
-                        sellPopup.close();
-                    });
+                    closeSellPopup.setOnAction(e-> sellPopup.close());
 
                     // Create a scene for the custom popup
                     Scene sellSectionScene = new Scene(windowSellBox);
@@ -374,25 +367,7 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
         buyAndSellBox.setSpacing(10);
         return buyAndSellBox;
     }
-    public void showStocks(User userRegistered, HBox list){
-        List<List<String>> theList = getSavedStocks(userRegistered.getUsername());
-        GridPane gridPane = new GridPane();
-        gridPane.setHgap(10); // Horizontal space between columns
-        list.getChildren().clear();
 
-        int rowIndex = 0;
-        for (List<String> outEl : theList) {
-            int columnIndex = 0;
-            outEl.set(0,"");
-            for (String innerEl : outEl) {
-                Text text = new Text(innerEl);
-                gridPane.add(text, columnIndex, rowIndex);
-                columnIndex++;
-            }
-            rowIndex++;
-        }
-        list.getChildren().add(gridPane);
-    }
 
     public Button getBet() { return bet; }
 

@@ -1,9 +1,8 @@
-package org.project;
+package org.project.view;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
@@ -16,12 +15,21 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.project.controllers.PrevisionController;
+import org.project.controllers.SubmitController;
+import org.project.exceptions.AmountNotAllowedException;
+import org.project.model.APIData;
+import org.project.model.Stock;
+import org.project.model.User;
+import org.project.util.AlertField;
+import org.project.util.LineChartGenerator;
+
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.*;
 
 
-public class WelcomePane extends APIData { // To use data from api obj
+public class WelcomePane extends APIData { // Extends APIData to use data from the API
     Scene WelcomeScene;
     private static final int MAX_SELECTED_CHECKBOXES = 4;
     private short dataToUpdateIndex = 0;
@@ -67,8 +75,6 @@ public class WelcomePane extends APIData { // To use data from api obj
                 lines.add(line);
             }
         }
-
-
 
         // Pad the list with empty lines up to 100 elements
         while (lines.size() < 200) {
@@ -167,12 +173,9 @@ public class WelcomePane extends APIData { // To use data from api obj
         HBox investmentBox = new HBox();
         investmentBox.setAlignment(Pos.CENTER);
 
-
         // Define HBox for hBoxList of stocks
         HBox hBoxList = new HBox();
         hBoxList.setAlignment(Pos.CENTER);
-
-
 
         // Create pie chart
         PieChart pieChart = new PieChart();
@@ -304,17 +307,17 @@ public class WelcomePane extends APIData { // To use data from api obj
             }); // Closing checkBox action
 
             // Define instance of SubmitControl
-            SubmitControl submitControl = new SubmitControl(userRegistered, primaryStage, stocksCheckedOn, symbolsOfStock, hBoxList, symbol, moneyLabel, checkBox, pieChart);
+            SubmitController submitController = new SubmitController(userRegistered, primaryStage, stocksCheckedOn, hBoxList, symbol, moneyLabel, checkBox);
 
             // Add the bet button into the ArrayList
-            investmentButtonsArrayList.add(submitControl.getBet());
+            investmentButtonsArrayList.add(submitController.getBet());
 
             // Add the checkBox into the ArrayList
             checkBoxesArrayList.add(checkBox);
 
             //Using the foreach to increment the counter to insert the checkboxes and buttons
-            checkAndBetGpane.add(submitControl.getCheckBoxInsideHBox(), 0, numOfBoxes);
-            checkAndBetGpane.add(submitControl.getBuyAndSell(), 1, numOfBoxes);
+            checkAndBetGpane.add(submitController.getCheckBoxInsideHBox(), 0, numOfBoxes);
+            checkAndBetGpane.add(submitController.getBuyAndSell(), 1, numOfBoxes);
             numOfBoxes++;
         }
 
@@ -324,10 +327,10 @@ public class WelcomePane extends APIData { // To use data from api obj
         VBox.setVgrow(lowerLeftBox, Priority.ALWAYS);
 
         // Define object of the prevision class to show UI components of the prevision
-        PrevisionComponent previsionComponent = new PrevisionComponent(stocksCheckedOn);
+        PrevisionController previsionController = new PrevisionController(stocksCheckedOn);
 
         // Define switchPane object of the hBoxList
-        SwitchPane switchPane = new SwitchPane(hBoxList);
+        SwitchPane switchPane = new SwitchPane();
         switchPane.showOtherView(userRegistered, hBoxList);
         // Define switch button
         Button switchHistory = new Button("Switch history");
@@ -343,7 +346,7 @@ public class WelcomePane extends APIData { // To use data from api obj
         switchHistory.setMaxWidth(100);
 
         // Define the VBox in the lower left part of the UI containing the previsionButton and switchHistoryButton
-        VBox previsionAndSwitchButton = new VBox(previsionComponent.getPrevisionHBox(), switchHistory);
+        VBox previsionAndSwitchButton = new VBox(previsionController.getPrevisionHBox(), switchHistory);
         previsionAndSwitchButton.setSpacing(10);
         previsionAndSwitchButton.setAlignment(Pos.CENTER);
         previsionAndSwitchButton.setPadding(new Insets(0, 0, 50,0)); // Padding to move the button higher
@@ -461,7 +464,7 @@ public class WelcomePane extends APIData { // To use data from api obj
                     }
                 } else {
                     System.out.println("ERR: No valid input");
-                    throw new AmountNotAllowed();
+                    throw new AmountNotAllowedException();
                 }
             });
 

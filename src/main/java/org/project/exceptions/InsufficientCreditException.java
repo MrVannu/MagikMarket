@@ -1,12 +1,12 @@
-package org.project;
+package org.project.exceptions;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import java.util.Optional;
 
-public class InsufficientCredit extends RuntimeException {
-    public InsufficientCredit() {
+public class InsufficientCreditException extends RuntimeException {
+    public InsufficientCreditException() {
         showAlert();
     }
 

@@ -1,26 +1,26 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
-import org.project.LoginControl;
-import org.project.User;
+import org.project.controllers.LoginController;
+import org.project.model.User;
 import java.io.IOException;
 
 
 public class UserTest {
     @Test
     public void testGetUsername() {
-        User user = new User("john_doe", "password123", "hashedPassword",
-                "john.doe@example.com", 50.0);
+        User user = new User("john_doe"
+        );
         String username = user.getUsername();
         assertEquals("john_doe", username);
     }
 
     @Test
     public void testGetUserCredit() throws IOException {
-        User user = new User("testUsername", "password", "hashedPassword",
-                "user@example.com", 100.0);
+        User user = new User("testUsername"
+        );
 
-        LoginControl obj = new LoginControl();
+        LoginController obj = new LoginController();
 
         obj.registerNewUser("src/main/resources/userDB.csv", "testUsername", "hashedPassword",
                 "user@example.com", 100.00);
@@ -31,17 +31,17 @@ public class UserTest {
 
     @Test
     public void testGetUserCreditUserNotFound() {
-        User user = new User("nonExistingUsername", "password", "hashedPassword", "user@example.com", 100.0);
+        User user = new User("nonExistingUsername");
         RuntimeException exception = assertThrows(RuntimeException.class, user::getUserCredit);
         assertEquals("User not found into the DB", exception.getMessage());
     }
 
     @Test
     public void testSetUserCredit() throws IOException {
-        User user = new User("test2Username", "password", "hashedPassword",
-                "user@example.com", 100.0);
+        User user = new User("test2Username"
+        );
 
-        LoginControl obj = new LoginControl();
+        LoginController obj = new LoginController();
 
         obj.registerNewUser("src/main/resources/userDB.csv", "test2Username", "hashedPassword",
                 "user@example.com", 100.00);

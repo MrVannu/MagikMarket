@@ -1,4 +1,4 @@
-package org.project;
+package org.project.view;
 
 import javafx.application.Platform;
 import javafx.scene.control.Button;
@@ -6,6 +6,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+import org.project.model.APIData;
+import org.project.model.Stock;
+import org.project.model.User;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -15,14 +18,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class SwitchPane extends Stock{
+public class SwitchPane extends Stock {
     public boolean toggle = false;
     private final APIData apiDataObject = new APIData();
 
 
-    public SwitchPane (HBox hBoxList){
-    }
-
+    public SwitchPane (){}
 
     // Show user's stock buy/sell operation
     public void showStocks(User userRegistered, HBox list) {
@@ -216,18 +217,14 @@ public class SwitchPane extends Stock{
         // Define refresh button
         Button refresh = new Button("\u27F3"); // This unicode is ⟳
         refresh.setStyle(
-                "-fx-font-size: 1.5em; " +
-                        "-fx-text-fill: #ffffff; " +
-                        "-fx-background-color: #5c3190; " +
-                        "-fx-padding: 8px; " +
-                        "-fx-border-radius: 10px; " +
-                        "-fx-border-color: #5c3190; " +
-                        "-fx-background-radius: 10; " +
-                        "-fx-effect: innershadow(gaussian, 5c3190, 10, 0, 0, 0);" +
-                        "-fx-min-width: 50px; " +
-                        "-fx-min-height: 50px;"
+                "-fx-font-size: 1.5em; "+
+                        "-fx-text-fill: #ffffff; "+
+                        "-fx-background-color: #5c3190; "+
+                        "-fx-background-radius: 10; "+
+                        "-fx-min-width: 2px; "+
+                        "-fx-min-height: 2px;"
         );
-        gridPane.add(refresh, 4, 10);
+        gridPane.add(refresh, 4, 0);
 
         // Refresh button -> updates the labels' value
         refresh.setOnAction(e -> {
@@ -263,6 +260,8 @@ public class SwitchPane extends Stock{
                 exception.printStackTrace();
             }
         });
+
+
 
         // Adding the GridPane to the list
         list.getChildren().add(gridPane);

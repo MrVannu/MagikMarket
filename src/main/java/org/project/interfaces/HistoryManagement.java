@@ -1,4 +1,6 @@
-package org.project;
+package org.project.interfaces;
+
+import org.project.controllers.LoginController;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ public interface HistoryManagement {
     ) throws IOException {}
 
 
-    ArrayList<Double> generateNextPrevision(String nameToScanFor, LoginControl loginControl);
+    ArrayList<Double> generateNextPrevision(String nameToScanFor, LoginController loginController);
 
     void saveStocks (String username, String name, double regularMarketDayHigh, double regularMarketDayLow,
                      double regularMarketOpen, double markerPreviousClose, double amountBet);

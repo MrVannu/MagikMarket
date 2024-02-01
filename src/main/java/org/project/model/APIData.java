@@ -1,4 +1,4 @@
-package org.project;
+package org.project.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -69,7 +69,7 @@ public class APIData{
             } else {
                 data = new JSONObject(response.body());
                 System.out.println("RESPONSE is: " + response.body());
-                String nameOfCompany = extractNameOfCompany();
+                extractNameOfCompany();
             }
         } catch (IOException | InterruptedException | JSONException e) {
             throw new RuntimeException(e);

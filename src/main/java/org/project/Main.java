@@ -1,9 +1,5 @@
 package org.project;
 
-
-
-
-import com.opencsv.exceptions.CsvValidationException;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -18,11 +14,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.*;
 
+
 public class Main extends Application {
-        
     @Override
     public void start(Stage primaryStage) {
-        //User userRegistered = new User();
         LoginControl loginControl= new LoginControl();
 
         // Defining the panes
@@ -61,44 +56,40 @@ public class Main extends Application {
         TextField usernameFieldLogin = new TextField();
         usernameFieldLogin.setPromptText("Enter your username (max 15 characters)");
         usernameFieldLogin.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.length() > 15) {
-                usernameFieldLogin.setText(oldValue); // Prevent entering more than 15 characters
-            }
+            // Prevent entering more than 15 characters
+            if (newValue.length() > 15) usernameFieldLogin.setText(oldValue);
         });
+
         // Create a TextField for the username with a maximum length of 15 characters for the RegisterScene
         TextField usernameFieldRegister = new TextField();
         usernameFieldRegister.setPromptText("Enter your username (max 15 characters)");
         usernameFieldRegister.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.length() > 15) {
-                usernameFieldRegister.setText(oldValue); // Prevent entering more than 15 characters
-            }
+            // Prevent entering more than 15 characters
+            if (newValue.length() > 15) usernameFieldRegister.setText(oldValue);
         });
 
         // Create a PasswordField for the password with a maximum length of 15 characters of the LoginScene
         PasswordField passwordFieldLogin = new PasswordField();
         passwordFieldLogin.setPromptText("Enter your password (max 15 characters)");
         passwordFieldLogin.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.length() > 15) {
-                passwordFieldLogin.setText(oldValue); // Prevent entering more than 15 characters
-            }
+            // Prevent entering more than 15 characters
+            if (newValue.length() > 15) passwordFieldLogin.setText(oldValue);
         });
 
         // Create a PasswordField for the password with a maximum length of 15 characters of the RegisterScene
         TextField passwordFieldRegister = new PasswordField();
         passwordFieldRegister.setPromptText("Enter your password (max 15 characters)");
         passwordFieldRegister.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.length() > 15) {
-                passwordFieldRegister.setText(oldValue); // Prevent entering more than 15 characters
-            }
+            // Prevent entering more than 15 characters
+            if (newValue.length() > 15) passwordFieldRegister.setText(oldValue);
         });
 
         // Create a emailField for the email with a maximum length of 30 characters in the RegisterScene
         TextField emailFieldRegister = new TextField();
         emailFieldRegister.setPromptText("Enter your email (max 30 characters)");
         emailFieldRegister.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.length() > 30) {
-                emailFieldRegister.setText(oldValue); // Prevent entering more than 15 characters
-            }
+            // Prevent entering more than 15 characters
+            if (newValue.length() > 30) emailFieldRegister.setText(oldValue);
         });
 
         // Define main BorderPane
@@ -108,19 +99,18 @@ public class Main extends Application {
         main.setAlignment(Pos.CENTER);
 
         // Defining the LoginScene which is the FIRST SCENE
-        Scene LoginScene = new Scene(main, 700, 400); // <---- Dimension of the LoginScene
+        Scene LoginScene = new Scene(main, 700, 400); // <- Dimension of the LoginScene
 
         // Button -> login
         Button loginButton = new Button("Login");
         loginButton.setOnAction(e -> {
             String username = usernameFieldLogin.getText();
             String password = passwordFieldLogin.getText();
-            String hashedPassword = BCrypt.hashpw(passwordFieldLogin.getText(), BCrypt.gensalt());  // Just to test
+            String hashedPassword = BCrypt.hashpw(passwordFieldLogin.getText(), BCrypt.gensalt());
 
             // Validating credentials
             if(loginControl.usernameExists(username, loginControl.getPathUserDB()) && loginControl.usernameValidator(username)
                     && loginControl.passwordCorresponds(username, password, loginControl.getPathUserDB())) {
-                // The user exists and the stage changes
 
                 loginControl.setUserRegistered(new User (username, password, hashedPassword, "",-101.0));
                 WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, loginControl.getUserRegistered());
@@ -128,21 +118,13 @@ public class Main extends Application {
                 primaryStage.setTitle("Start App");
                 primaryStage.setScene(welcomePane.getScene());
 
-
-                System.out.println("Exists");
                 AlertField.resetField(usernameFieldLogin,passwordFieldLogin);
             }
             else {
                 // The user does not exist
-                System.out.println("Does not exist");
                 AlertField.showErrorAlert("Authentication error", "User not found or incorrect credentials.");
                 AlertField.invalidField(usernameFieldLogin, passwordFieldLogin);
             }
-
-            // Authentication logic
-            System.out.println("Username: " + username);
-            System.out.println("Password: " + password);
-            System.out.println("PasswordInHash: " + hashedPassword);
         });
 
         // Button -> Register
@@ -203,7 +185,6 @@ public class Main extends Application {
         });
 
         registerButton.setOnAction(e -> {// Hides the LoginScene and shows the RegisterScene
-
             String username = usernameFieldRegister.getText();
             String password = passwordFieldRegister.getText();
             String hashedPassword = BCrypt.hashpw(passwordFieldRegister.getText(), BCrypt.gensalt());  // Just to test
@@ -213,7 +194,7 @@ public class Main extends Application {
             if(!(loginControl.globalValidator(username, password, hashedPassword, email))){
 
                 // If the registration was not successful then it will follow one of the 3 cases below
-                System.out.println("globalValidator failed");
+                System.out.println("Authentication failed");
                 if(loginControl.getCheckField(0)){ // If the username already exists then the field is red
                     AlertField.showErrorAlert("Username error","Username not inserted or use another username.");
                     AlertField.invalidField(usernameFieldRegister);
@@ -229,27 +210,21 @@ public class Main extends Application {
                     AlertField.invalidField(emailFieldRegister);
                     loginControl.setCheckField(false, 2); // Resetting the check to false
                 }
-
-            } else {
-                // If the registration was successful
+            } else { // If the registration was successful
                 try {
-
                     loginControl.registerNewUser(loginControl.getPathUserDB(), username, hashedPassword, email, loginControl.getInitialUserCredit()); // The credentials of the user are saved into the database
                     AlertField.resetField(usernameFieldRegister,passwordFieldRegister,emailFieldRegister); // Resetting the fields
                     AlertField.showSuccessAlert("Registration successful","Your registration was successful!");
                     primaryStage.setScene(LoginScene); // Changing scene to LoginScene
-
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             }
-
         });
 
     }
 
     public static void main(String[] args) {
-
         launch(args);
     }
 

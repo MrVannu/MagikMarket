@@ -1,5 +1,9 @@
 package org.project;
 
+
+
+
+import com.opencsv.exceptions.CsvValidationException;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -114,14 +118,16 @@ public class Main extends Application {
             String hashedPassword = BCrypt.hashpw(passwordFieldLogin.getText(), BCrypt.gensalt());  // Just to test
 
             // Validating credentials
-            if(loginControl.usernameExists(username, loginControl.getPathUserDB()) && loginControl.usernameValidator(username) && loginControl.passwordCorresponds(username, password, loginControl.getPathUserDB())) {
+            if(loginControl.usernameExists(username, loginControl.getPathUserDB()) && loginControl.usernameValidator(username)
+                    && loginControl.passwordCorresponds(username, password, loginControl.getPathUserDB())) {
                 // The user exists and the stage changes
 
-                loginControl.setUserRegistered( new User (username, password, hashedPassword, "",-101.0));
+                loginControl.setUserRegistered(new User (username, password, hashedPassword, "",-101.0));
                 WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, loginControl.getUserRegistered());
 
                 primaryStage.setTitle("Start App");
                 primaryStage.setScene(welcomePane.getScene());
+
 
                 System.out.println("Exists");
                 AlertField.resetField(usernameFieldLogin,passwordFieldLogin);

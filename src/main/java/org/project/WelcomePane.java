@@ -3,6 +3,7 @@ package org.project;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
@@ -490,10 +491,23 @@ public class WelcomePane extends APIData { // To use data from api obj
         Menu options = new Menu("Options");
         MenuItem logOutItem = new MenuItem("Log out");
         logOutItem.setOnAction(e->{
+            primaryStage.setOnCloseRequest(event -> {
+                event.consume();
+
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Exit");
+                alert.setHeaderText("Are you sure you want to close the current session?");
+                alert.setContentText("Your data will not be lost! \n\n\n Click on \"Leave\" to exit");
+
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        System.out.println("\nGoodbye!");
+                        primaryStage.close();
+                    }
+                });
+            });
             primaryStage.setTitle("Start App");
             primaryStage.setScene(LoginScene);
-
-
         });
 
         // Add menu items to the "LogOut" menu
@@ -610,4 +624,7 @@ public class WelcomePane extends APIData { // To use data from api obj
     public Scene getScene(){
         return WelcomeScene;
     }
+
+
+
 }

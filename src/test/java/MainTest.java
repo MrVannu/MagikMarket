@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 public class MainTest {
-    private Main test = new Main();
+    private final Main test = new Main();
 
 
 }

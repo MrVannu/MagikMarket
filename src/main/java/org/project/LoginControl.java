@@ -19,10 +19,8 @@ public class LoginControl implements Authentication{
 
 
     public String getPathUserDB() {
-        // Paths to databases (CSV files)
         // Path to DB for users tracking
-        String pathUserDB = "src/main/resources/userDB.csv";
-        return pathUserDB;
+        return "src/main/resources/userDB.csv";
     }
 
     public void setUserRegistered(User userRegistered) {
@@ -42,8 +40,7 @@ public class LoginControl implements Authentication{
     }
 
     public double getInitialUserCredit() {
-        double initialUserCredit = 1000;
-        return initialUserCredit;
+        return 1000;
     }
 
     // Authentication functionalities

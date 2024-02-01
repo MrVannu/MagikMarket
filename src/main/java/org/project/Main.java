@@ -23,7 +23,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         //User userRegistered = new User();
-        LoginControl loginControl= new LoginControl();
+        LoginControl loginControl = new LoginControl();
 
         // Defining the panes
         GridPane layoutLogin = new GridPane();

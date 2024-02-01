@@ -2,7 +2,8 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import org.junit.jupiter.api.Test;
-import org.project.controllers.LineChartController;
+import org.project.util.LineChartGenerator;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,7 +18,7 @@ public class LineChartGeneratorTest {
 //        }catch(ExceptionInInitializerError e){}
 //        // Verify that the line chart is not null
 //        assertNotNull(lineChart);
-        LineChart<Number, Number> lineChart = LineChartController.createLineChart("XYZ Company");
+        LineChart<Number, Number> lineChart = LineChartGenerator.createLineChart("XYZ Company");
 
         // Verify that the X-Axis label is set correctly
         NumberAxis xAxis = (NumberAxis) lineChart.getXAxis();

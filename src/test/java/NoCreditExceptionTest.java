@@ -16,6 +16,7 @@ public class NoCreditExceptionTest {
             }
         });
 
+
         String expectedMessage = "No credit Exception thrown";
         String actualMessage = exception.getMessage();
 

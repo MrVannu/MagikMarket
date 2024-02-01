@@ -8,12 +8,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AmountNotAllowedTest {
-    int a = 0;
+    int test = 0; // Sostituisci con il valore desiderato per il test
 
     @Test
     public void whenAmountIsLessThanOrEqualToZero_thenExceptionIsThrown() {
         Exception exception = assertThrows(RuntimeException.class, () -> {
-            throw new RuntimeException("Amount must be greater than 0");
+            if (test <= 0) {
+                throw new RuntimeException("Amount must be greater than 0");
+            }
         });
 
         String expectedMessage = "Amount must be greater than 0";
@@ -22,4 +24,5 @@ public class AmountNotAllowedTest {
         assertTrue(actualMessage.contains(expectedMessage));
     }
 }
+
 

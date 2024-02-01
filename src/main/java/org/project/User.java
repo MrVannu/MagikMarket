@@ -19,7 +19,6 @@ public class User {
 
 
     public User() {}
-
     public User(String username, String password, String hashedPassword, String email, Double userCredit) {
         this.username = username;
         this.password = password;
@@ -28,12 +27,13 @@ public class User {
         this.userCredit = userCredit;
     }
 
+
+
     public String getUsername() {
         return username;
     }
 
-
-    // Method to modify the userCredit value into the UserDB
+    // Get the userCredit value into the UserDB
     public String getUserCredit() {
         try (CSVReader reader = new CSVReader(new FileReader(pathUserDB))) {
             String[] nextLine;  // Stores what is contained in the row
@@ -50,7 +50,6 @@ public class User {
 
         throw new RuntimeException("User not found into the DB");
     }
-
 
     public void setUserCredit(Double valueToSet) {
         // In case of user has not enough credit

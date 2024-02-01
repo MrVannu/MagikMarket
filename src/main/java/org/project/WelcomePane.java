@@ -487,21 +487,6 @@ public class WelcomePane extends APIData { // To use data from api obj
         Menu options = new Menu("Options");
         MenuItem logOutItem = new MenuItem("Log out");
         logOutItem.setOnAction(e->{
-            primaryStage.setOnCloseRequest(event -> {
-                event.consume();
-
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Exit");
-                alert.setHeaderText("Are you sure you want to close the current session?");
-                alert.setContentText("Your data will not be lost! \n\n\n Click on \"Leave\" to exit");
-
-                alert.showAndWait().ifPresent(response -> {
-                    if (response == ButtonType.OK) {
-                        System.out.println("\nGoodbye!");
-                        primaryStage.close();
-                    }
-                });
-            });
             primaryStage.setTitle("Start App");
             primaryStage.setScene(LoginScene);
         });
@@ -595,7 +580,24 @@ public class WelcomePane extends APIData { // To use data from api obj
         // Add the topBot into the StackPane
         topRightPane.getChildren().addAll(topBox);
 
-    } // Close WelcomePane
+        primaryStage.setOnCloseRequest(event -> {
+            event.consume();
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Exit the application");
+            alert.setHeaderText("Are you sure you want to close the current session?");
+            alert.setContentText("Your data are already saved! \n\n\n Click on \"Leave\" to exit");
+
+            alert.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    System.out.println("\nGoodbye!");
+                    primaryStage.close();
+                }
+            });
+        });
+
+
+    }
 
     public Scene getScene(){
         return WelcomeScene;

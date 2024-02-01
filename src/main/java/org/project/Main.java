@@ -1,5 +1,9 @@
 package org.project;
 
+
+
+
+import com.opencsv.exceptions.CsvValidationException;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -16,9 +20,11 @@ import java.io.*;
 
 
 public class Main extends Application {
+        
     @Override
     public void start(Stage primaryStage) {
-        LoginControl loginControl= new LoginControl();
+        //User userRegistered = new User();
+        LoginControl loginControl = new LoginControl();
 
         // Defining the panes
         GridPane layoutLogin = new GridPane();

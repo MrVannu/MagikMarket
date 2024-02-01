@@ -32,15 +32,14 @@ public class PrevisionComponent{
     // Define the prevision button and its box
     public Button previsionButton = new Button();
 
-
     // Define Prevision button and its layout
     // Define image for the button
-    private  Image arrowGui = new Image("file:src/main/resources/frecciale.png");
+    private final Image arrowGui = new Image("file:src/main/resources/frecciale.png");
     private ImageView arrowGuiImg = new ImageView(arrowGui);
 
 
     // Define button name
-    String previsionString = "Prevision";
+    String previsionString = "    Prevision  ";
 
     // Define HBox with button name and button image
     public HBox content = new HBox(3);
@@ -50,7 +49,7 @@ public class PrevisionComponent{
     }
 
     // Define box to insert prevision button and animation
-    private HBox previsionBox = new HBox(previsionButton);
+    private final HBox previsionBox = new HBox(previsionButton);
 
     // This method is yet to be improved providing a switch structure for various type of data are needed
     public ArrayList<Double> generateNextPrevision(String nameToScanFor, LoginControl loginControl){
@@ -114,20 +113,22 @@ public class PrevisionComponent{
         }
     }
 
-    public PrevisionComponent(ArrayList<Stock> stocksCheckedOn, Stage primaryStage, Label moneyLabel){
+    public PrevisionComponent(ArrayList<Stock> stocksCheckedOn, Stage primaryStage){
             previsionButton.setGraphic(content); // Insert img inside button
+            previsionButton.setMaxWidth(100);
+
             arrowGuiImg.setFitHeight(10);
             arrowGuiImg.setFitWidth(15);
 
+            // Define elements inside contentBox to be inserted into previsionButton
             content.getChildren().addAll(new Text(previsionString), arrowGuiImg);
             content.setAlignment(Pos.CENTER);
+
             previsionBox.setAlignment(Pos.CENTER);
+            previsionBox.setMaxWidth(1000);
 
             // Handle prevision button action
             previsionButton.setOnAction(e->{
-
-                // Check if stock has been invested
-
                 // Popup for new graph
                 Stage previsionStage = new Stage();
                 previsionStage.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
@@ -142,7 +143,6 @@ public class PrevisionComponent{
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setContentText("Select at least a stock in the left hand corner");
                     alert.showAndWait();
-
                 }
 
                 // Define a line chart

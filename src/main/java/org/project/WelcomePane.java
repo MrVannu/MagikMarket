@@ -154,7 +154,7 @@ public class WelcomePane extends APIData { // To use data from api obj
         topBox.setHgap(10);
         topBox.setVgap(10);
 
-        // Create a label for the amount of money
+        // Create a label for the money shown in the UI with relative style class
         DecimalFormat decimalFormat = new DecimalFormat("#.00");
         double userCredit = userRegistered.getUserCredit() != null ? Double.parseDouble(userRegistered.getUserCredit()) : 0.0;
         Label moneyLabel = new Label(decimalFormat.format(userCredit));
@@ -323,11 +323,10 @@ public class WelcomePane extends APIData { // To use data from api obj
         // Let previsionBox occupy all the space inside the VBox it is inserted
         VBox.setVgrow(lowerLeftBox, Priority.ALWAYS);
 
-        PrevisionComponent previsionComponent= new PrevisionComponent(stocksCheckedOn, primaryStage, moneyLabel);
+        // Define object of the prevision class to show UI components of the prevision
+        PrevisionComponent previsionComponent = new PrevisionComponent(stocksCheckedOn, primaryStage);
 
-
-
-
+        // Define switchPane object of the hBoxList
         SwitchPane switchPane = new SwitchPane(hBoxList);
 
         // Define switch button
@@ -344,6 +343,7 @@ public class WelcomePane extends APIData { // To use data from api obj
         // To set both the buttons of the same width
         switchHistory.setMaxWidth(100);
 
+        // Define the VBox in the lower left part of the UI containing the previsionButton and switchHistoryButton
         VBox previsionAndSwitchButton = new VBox(previsionComponent.getPrevisionBox(), switchHistory);
         previsionAndSwitchButton.setSpacing(10);
         previsionAndSwitchButton.setAlignment(Pos.CENTER);
@@ -356,7 +356,6 @@ public class WelcomePane extends APIData { // To use data from api obj
         // Set title to pie chart
         pieChart.setTitle("Avg. 3 Month Volume");
 
-        // Layout
         // Define a box to insert all the charts
         VBox chartsBox = new VBox(10);
         chartsBox.getChildren().addAll(lineChart);
@@ -451,13 +450,11 @@ public class WelcomePane extends APIData { // To use data from api obj
                             // New label value
                             userRegistered.setUserCredit(newAmount);
                             moneyLabel.setText(String.valueOf(newAmount));
-                            //System.out.println("User input: " + newAmount);
 
                             // Close
                             popup.close();
                         }
                     } catch (NumberFormatException k) {
-                        //System.out.println("Input non valid: " + nativeData);
                         newCredit.setText(""); // Clean out
                     }
                 } else {

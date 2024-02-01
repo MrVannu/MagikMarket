@@ -2,6 +2,7 @@ package org.project;
 
 import java.io.IOException;
 
+
 public interface Authentication {
 
     boolean usernameExists(String usernameInserted, String pathToUse);
@@ -11,7 +12,6 @@ public interface Authentication {
    void registerNewUser(String pathToUse, String username, String hashedPassword, String email, Double userCredit) throws IOException;
 
    boolean checkRegexMatch(String regex, String textToMatch);
-
 
     boolean usernameValidator (String username);
 

@@ -3,17 +3,17 @@ package org.project;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import java.io.*;
 import java.text.DecimalFormat;
@@ -27,6 +27,7 @@ public class WelcomePane extends APIData { // To use data from api obj
     private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";  // Path to DB for data history
     private short dataToUpdateIndex = 0;
     private ArrayList<String> symbolsOfStock = new ArrayList<String>();
+    private final APIData testObj  = new APIData();
 
     //DATA HISTORY MANAGEMENT
     public void updateDataHistory(
@@ -44,15 +45,15 @@ public class WelcomePane extends APIData { // To use data from api obj
     ) throws IOException
     {
         // Build the String to be written on DB
-        String toWrite = String.valueOf(maxAge) + ", " +
-                String.valueOf(postMarketChangePercent) + ", " +
-                String.valueOf(regularMarketChangePercent) + ", " +
-                String.valueOf(preMarketChange) + ", " +
+        String toWrite = maxAge + ", " +
+                postMarketChangePercent + ", " +
+                regularMarketChangePercent + ", " +
+                preMarketChange + ", " +
                 extractNameOfCompany + ", " +
-                String.valueOf(regularMarketOpen) + ", " +
-                String.valueOf(regularMarketDayHigh) + ", " +
-                String.valueOf(regularMarketDayLow) + ", " +
-                String.valueOf(regularMarketPreviousClose) + ", " +
+                regularMarketOpen + ", " +
+                regularMarketDayHigh + ", " +
+                regularMarketDayLow + ", " +
+                regularMarketPreviousClose + ", " +
                 symbolOfCompany + ", " +
                 extractCurrencySymbol;
 
@@ -84,7 +85,6 @@ public class WelcomePane extends APIData { // To use data from api obj
 
         ++dataToUpdateIndex; // Increment the counter of the most remote index
         if(dataToUpdateIndex>=200) dataToUpdateIndex=0;
-        //System.out.println(dataToUpdateIndex);
     }
 
     public WelcomePane(Stage primaryStage, Scene LoginScene, User userRegistered){
@@ -117,21 +117,6 @@ public class WelcomePane extends APIData { // To use data from api obj
 
         // Add the internalVerticalSplitPane to the right pane (of the main splitPane)
         rightPaneBox.getChildren().add(rightVerticalSplitPane);
-
-
-        // Define logOut button
-        Button logOutButton = new  Button();
-        logOutButton.setOnAction(e->{
-            primaryStage.setTitle("Start App");
-            primaryStage.setScene(LoginScene);
-        });
-
-        // Create an ImageView for the image
-        Image logoutImage = new Image("file:src/main/resources/logoutImg.png");
-        ImageView logoutImageView = new ImageView(logoutImage);
-        logoutImageView.setFitWidth(24); // Set the desired width
-        logoutImageView.setFitHeight(24); // Set the desired height
-        logOutButton.setGraphic(logoutImageView);
 
         // Create line chart
         LineChart<Number, Number> lineChart= LineChartGenerator.createLineChart("Choose a company");
@@ -176,7 +161,6 @@ public class WelcomePane extends APIData { // To use data from api obj
 
 
         ArrayList<Stock> stocksCheckedOn = new ArrayList<>();
-        Label listOfBetStock = new Label() ;
 
         // Define investmentBox for showing the investments
         HBox investmentBox = new HBox();
@@ -200,11 +184,6 @@ public class WelcomePane extends APIData { // To use data from api obj
             XYChart.Series<Number, Number> series = new XYChart.Series<>();
             series.setName(symbol); // Set the name of the serie
 
-            // Placeholders values in case something goes wrong with API call
-            String sym = "phSymbol";
-            String nameOfCompany = "phNameOfCompany";
-
-            final APIData testObj  = new APIData();
 
 
             // Handle CheckBox action foreach checkBox
@@ -227,7 +206,6 @@ public class WelcomePane extends APIData { // To use data from api obj
 
                 //For adding new line
                 if (checkBox.isSelected()) {
-                        boolean callMade = true; // Activate/deactivate api call
 
                         for (CheckBox cb : checkBoxesArrayList) {
                             if (cb.isSelected()) {
@@ -247,8 +225,9 @@ public class WelcomePane extends APIData { // To use data from api obj
                         // Define the lineChart with all the data
                         // Create a new series for this checkBox
                         XYChart.Series<Number, Number> lineChartSeries = new XYChart.Series<>();
+
                         // Define caption; if testObj is null then placeHolderString as name, otherwise SymbolOfCompany as name of the serie
-                        lineChartSeries.setName((testObj==null? nameOfCompany: testObj.extractSymbolOfCompany()));
+                        lineChartSeries.setName((testObj.extractSymbolOfCompany()));
 
 
                     //Randomizes the random points
@@ -259,13 +238,13 @@ public class WelcomePane extends APIData { // To use data from api obj
 
                     lineChartSeries.getData().addAll(
                             //(testObj==null? nameOfCompany: testObj.extractNameOfCompany())
-                            new XYChart.Data<>(0, (callMade? testObj.regularMarketDayOpen(): 50)),
-                            new XYChart.Data<>(xs.get(0), (callMade? (testObj.regularMarketDayHigh()*10 + testObj.regularMarketDayOpen())/1.8: 50)),
-                            new XYChart.Data<>(xs.get(1), (callMade? testObj.regularMarketDayHigh()*10: 50)),
-                            new XYChart.Data<>(xs.get(2), (callMade? (testObj.regularMarketDayHigh()*10 + testObj.regularMarketDayLow())/2: 50)),
-                            new XYChart.Data<>(xs.get(3), (callMade? testObj.regularMarketDayLow()/10: 50)),
-                            new XYChart.Data<>(xs.get(4), (callMade? (testObj.regularMarketDayLow()*10 + testObj.regularMarketPreviousClose())/2.2: 50)),
-                            new XYChart.Data<>(24, (callMade? testObj.regularMarketPreviousClose(): 200))
+                            new XYChart.Data<>(0, (testObj.regularMarketDayOpen())),
+                            new XYChart.Data<>(xs.get(0), ((testObj.regularMarketDayHigh()*10 + testObj.regularMarketDayOpen())/1.8)),
+                            new XYChart.Data<>(xs.get(1), (testObj.regularMarketDayHigh()*10)),
+                            new XYChart.Data<>(xs.get(2), ((testObj.regularMarketDayHigh()*10 + testObj.regularMarketDayLow())/2)),
+                            new XYChart.Data<>(xs.get(3), (testObj.regularMarketDayLow()/10)),
+                            new XYChart.Data<>(xs.get(4), ((testObj.regularMarketDayLow()*10 + testObj.regularMarketPreviousClose())/2.2)),
+                            new XYChart.Data<>(24, (testObj.regularMarketPreviousClose()))
                     );
 
 
@@ -275,25 +254,22 @@ public class WelcomePane extends APIData { // To use data from api obj
                         // Create a new PieChart.Data object
                         PieChart.Data newData = new PieChart.Data( symbol, stock.getVolume() );
 
-
                         // Update the pie chart with the modified data
                         pieChart.getData().add(newData);
 
-
-
                         // Add the new series to the line chart
-                        lineChart.setTitle((testObj==null? nameOfCompany: testObj.extractNameOfCompany()));
+                        lineChart.setTitle((testObj.extractNameOfCompany()));
                         // Define chart title; if object is null then name placeholder name, otherwise nameOfCompany
-                        lineChart.setTitle((testObj==null ? nameOfCompany : testObj.extractNameOfCompany()));
+                        lineChart.setTitle((testObj.extractNameOfCompany()));
 
                         // Add the data (points) to the line chart
                         lineChart.getData().add(lineChartSeries);
 
                         // Define the barChart with all the data
-                        //Create a new series for this checkBox
+                        // Create a new series for this checkBox
                         XYChart.Series<String, Number> barChartSeries = new XYChart.Series<>();
                         // Set the title
-                        barChartSeries.setName((testObj==null? nameOfCompany: testObj.extractSymbolOfCompany()));
+                        barChartSeries.setName((testObj.extractSymbolOfCompany()));
 
                         // Data management for barChart
                         // Extract symbol and average daily volume (formatted) from JSON response
@@ -303,21 +279,19 @@ public class WelcomePane extends APIData { // To use data from api obj
                         System.out.println("DATA:"+averageDailyVolumeFmt);
                         // If string value is not empty then parse with the right format
                         double averageDailyVolume = 0.0;
-                        if(!averageDailyVolumeFmt.equals("")) averageDailyVolume = testObj.parseFormattedValue(averageDailyVolumeFmt);
+                        if(!averageDailyVolumeFmt.isEmpty()) averageDailyVolume = testObj.parseFormattedValue(averageDailyVolumeFmt);
                         else System.out.println("Empty averageDailyVolumeFmt!");
 
                         // Define the bar chart and enter the manipulated data
                         barChartSeries.getData().add(
                                 new XYChart.Data<>(stringSymbol, averageDailyVolume)
                         );
-
-
                     } // Close if
 
                 // If checkbox is not selected then remove the line from the chart
                 if (!checkBox.isSelected() ) {
                     // Take the symbol of the deselected checkBox
-                    final String temp = (testObj == null ? nameOfCompany : checkBox.getText()).toUpperCase();
+                    final String temp = (checkBox.getText()).toUpperCase();
                     // Remove the series of data with the same symbol of the checkBox
                     lineChart.getData().removeIf(serieLine -> serieLine.getName().equals(temp));
 
@@ -326,12 +300,10 @@ public class WelcomePane extends APIData { // To use data from api obj
                     lineChart.setTitle("");
 
                 }
-
             }); // Closing checkBox action
 
             // Define instance of SubmitControl
             SubmitControl submitControl = new SubmitControl(userRegistered, primaryStage, stocksCheckedOn, symbolsOfStock, hBoxList, symbol, moneyLabel, checkBox, pieChart);
-
 
             // Add the bet button into the ArrayList
             investmentButtonsArrayList.add(submitControl.getBet());
@@ -339,12 +311,10 @@ public class WelcomePane extends APIData { // To use data from api obj
             // Add the checkBox into the ArrayList
             checkBoxesArrayList.add(checkBox);
 
-
             //Using the foreach to increment the counter to insert the checkboxes and buttons
             checkAndBetGpane.add(submitControl.getCheckBoxInsideHBox(), 0, numOfBoxes);
             checkAndBetGpane.add(submitControl.getBuyAndSell(), 1, numOfBoxes);
             numOfBoxes++;
-
         }
 
         // Add the checkBox + betButton into the layout
@@ -371,7 +341,7 @@ public class WelcomePane extends APIData { // To use data from api obj
 
 
         // To set both the buttons of the same width
-        switchHistory.setMaxWidth(85);
+        switchHistory.setMaxWidth(100);
 
         VBox previsionAndSwitchButton = new VBox(previsionComponent.getPrevisionBox(), switchHistory);
         previsionAndSwitchButton.setSpacing(10);
@@ -406,13 +376,6 @@ public class WelcomePane extends APIData { // To use data from api obj
         // Add the line chart to the bottomRightPane
         bottomRightPane.getChildren().addAll(investmentAndPieSplitPane);
 
-        // Define the action of the logOut button
-        logOutButton.setOnAction(e ->{
-            primaryStage.setTitle("Login");
-            primaryStage.setScene(LoginScene);
-        });
-
-        // Define the menu bar
         // Define the menu bar in the top of the mainPain
         MenuBar menuBar = new MenuBar();// Create a menu bar
 
@@ -529,7 +492,10 @@ public class WelcomePane extends APIData { // To use data from api obj
         logOutItem.setOnAction(e->{
             primaryStage.setTitle("Start App");
             primaryStage.setScene(LoginScene);
+
+
         });
+
         // Add menu items to the "LogOut" menu
         options.getItems().addAll(logOutItem);
 
@@ -553,10 +519,12 @@ public class WelcomePane extends APIData { // To use data from api obj
         // Define elements and HBox for the topRightPane
         // Define username label to show username from the DB
         Label username = new Label(userRegistered.getUsername());
+        username.setTextFill(Color.rgb(255, 164, 94));
 
         // Define the text of the username
         Label textUsername = new Label("Username: ");
-        textUsername.setFont(Font.font("Helvetica"));
+        textUsername.setFont(Font.font("Helvetica", FontWeight.BOLD, 12));
+        textUsername.setTextFill(Color.rgb(92, 49, 144));
 
         // Create an ImageView for the user image
         ImageView imgView = new ImageView();
@@ -593,8 +561,9 @@ public class WelcomePane extends APIData { // To use data from api obj
         profilePic.setSpacing(10);
 
         Label amountLabel = new Label("Your amount: ");
-        amountLabel.setFont(Font.font("Helvetica"));
-        amountLabel.setStyle("-fx-font-style: italic;");
+        amountLabel.setFont(Font.font("Helvetica", FontWeight.BOLD, 12));
+        amountLabel.setTextFill(Color.rgb(92, 49, 144));
+
 
         // Layout to visualize the money
         HBox moneyBox = new HBox(amountLabel, moneyLabel);
@@ -634,7 +603,6 @@ public class WelcomePane extends APIData { // To use data from api obj
 
         // Create the bar chart
         final BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
-        //barChart.setTitle();
 
         return barChart;
     }

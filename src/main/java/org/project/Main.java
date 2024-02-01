@@ -1,22 +1,15 @@
 package org.project;
 
-import com.opencsv.exceptions.CsvValidationException;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.control.*;
 import javafx.application.Application;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Screen;
 import org.mindrot.jbcrypt.BCrypt;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javafx.geometry.Insets;
 import javafx.scene.text.Font;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVWriter;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.*;
@@ -129,7 +122,6 @@ public class Main extends Application {
 
                 primaryStage.setTitle("Start App");
                 primaryStage.setScene(welcomePane.getScene());
-
 
                 System.out.println("Exists");
                 AlertField.resetField(usernameFieldLogin,passwordFieldLogin);

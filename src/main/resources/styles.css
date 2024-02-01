@@ -37,7 +37,7 @@
 /* Style for the money label */
 .money-label {
     -fx-font-size: 18px;
-    -fx-text-fill: green;
+    -fx-text-fill: #FFA45e;
 }
 
 /* Style for the logOut button */
@@ -52,7 +52,7 @@
 
 /* Style for the "Buy" button */
 .button-buy {
-    -fx-background-color: #4CAF50; /* Background color green */
+    -fx-background-color: #5c3190; /* Background color green */
     -fx-text-fill: white; /* Text color white */
     -fx-font-size: 14px; /* Font size */
     -fx-padding: 5px 7px; /* Inner spacing */
@@ -61,7 +61,7 @@
 
 /* Style for the "Sell" button */
 .button-sell {
-    -fx-background-color: #FF6347; /* Background color red */
+    -fx-background-color: #E0B0FF; /* Background color red */
     -fx-text-fill: white; /* Text color white */
     -fx-font-size: 14px; /* Font size */
     -fx-padding: 5px 7px; /* Inner spacing */

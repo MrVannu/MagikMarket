@@ -121,7 +121,7 @@ public class LoginControl implements Authentication{
 
     //Validator for username (no spaces allowed)
     public boolean usernameValidator (String username){
-        return !username.contains(" ") && (!username.equals(""));
+        return !username.contains(" ") && (!username.isEmpty());
     }
 
     // Validator for email format (example@hello.world)

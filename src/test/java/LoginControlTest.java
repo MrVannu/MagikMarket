@@ -1,11 +1,21 @@
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mindrot.jbcrypt.BCrypt;
 import org.project.LoginControl;
 import java.io.IOException;
 import java.io.FileWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class LoginControlTest {
+    @BeforeEach
+    void setUp() {
+        clearTestDB();// Initialize or clear the test CSV file
+    }
+
     @Test
     public void testUsernameExists() throws IOException {
         // Create a temporary CSV file for testing
@@ -130,4 +140,16 @@ class LoginControlTest {
     }
 
 
+
+
+    private void clearTestDB() {
+        // Clears the test CSV file
+        Path testDBPath = Paths.get("LoginControlTest.java");
+        try {
+            Files.deleteIfExists(testDBPath);
+            Files.createFile(testDBPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

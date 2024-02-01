@@ -53,12 +53,9 @@ public class User {
 
     public void setUserCredit(Double valueToSet) {
         // In case of user has not enough credit
-        if(valueToSet<0) throw new NoCreditException(); // Launch
+        if(valueToSet < 0) throw new NoCreditException();
 
-        // Update the class parameter
         userCredit = valueToSet;
-
-        // Update the database parameter
         try {
             List<String[]> lines = new ArrayList<>();
             boolean updated = false; // Flag for tracking if edited

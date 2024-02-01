@@ -10,3 +10,6 @@
 "qq","$2a$10$WdHI12nvkMLSm1uqRVuv/.YwRf2qaA/m3NsFfrZH3nGnCqoqe4JDC","q@q.q","1000.0"
 "p","$2a$10$vzt2lqeJPlNhWKLxV6wHauB6kc/DE2SgnCcC7DZfUA0RouyQQOUsO","p@p.p","1000.0"
 "pp","$2a$10$4LbJCr7VkAe68KsIlVipA.L0HWxI0Krty4ivGsaWfsJEd4tFF99wq","p@p.p","1000.0"
+"testUsername","hashedPassword","user@example.com","100.0"
+"test2Username","hashedPassword","user@example.com","150.0"
+"test3Username","hashedPassword","user@example.com","100.0"

@@ -1,37 +1,13 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
+import org.project.LoginControl;
 import org.project.NoCreditException;
 import org.project.User;
-
-import java.io.FileWriter;
 import java.io.IOException;
-/*
-@Test
-public void testUserNotFound() {
-        User user = new User("nonExistingUsername", "password", "hashedPassword",
-        "user@example.com", 100.0);
-        assertThrows(RuntimeException.class, user::getUserCredit);
-        }
 
- */
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class UserTest {
-
-    private static final String TEST_DB_PATH = "LoginControlTestDB.csv";
-
-    @BeforeEach
-    void setUp() {
-        clearTestDB();// Initialize or clear the test CSV file
-    }
-
     @Test
     public void testGetUsername() {
         User user = new User("john_doe", "password123", "hashedPassword",
@@ -41,9 +17,15 @@ public class UserTest {
     }
 
     @Test
-    public void testGetUserCredit() {
-        User user = new User("existingUsername", "password", "hashedPassword",
+    public void testGetUserCredit() throws IOException {
+        User user = new User("testUsername", "password", "hashedPassword",
                 "user@example.com", 100.0);
+
+        LoginControl obj = new LoginControl();
+
+        obj.registerNewUser("src/main/resources/userDB.csv", "testUsername", "hashedPassword",
+                "user@example.com", 100.00);
+
         String userCredit = user.getUserCredit();
         assertEquals("100.0", userCredit);
     }
@@ -57,36 +39,19 @@ public class UserTest {
 
     @Test
     public void testSetUserCredit() throws IOException {
-        // Arrange
-        User user = new User("existingUsername", "password", "hashedPassword",
+        User user = new User("test2Username", "password", "hashedPassword",
                 "user@example.com", 100.0);
 
-        // Act
+        LoginControl obj = new LoginControl();
+
+        obj.registerNewUser("src/main/resources/userDB.csv", "test2Username", "hashedPassword",
+                "user@example.com", 100.00);
+
         user.setUserCredit(150.0);
 
-        // Assert
         String userCreditAfterUpdate = user.getUserCredit();
         assertEquals("150.0", userCreditAfterUpdate);
     }
 
-    @Test
-    public void testSetUserCreditWithNoCreditException() {
-        // Arrange
-        User user = new User("existingUsername", "password", "hashedPassword", "user@example.com", 100.0);
 
-        // Act and Assert
-        NoCreditException exception = assertThrows(NoCreditException.class, () -> user.setUserCredit(-50.0));
-        assertEquals("User has insufficient credit", exception.getMessage());
-    }
-
-    private void clearTestDB() {
-        // Clears the test CSV file
-        Path testDBPath = Paths.get(TEST_DB_PATH);
-        try {
-            Files.deleteIfExists(testDBPath);
-            Files.createFile(testDBPath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

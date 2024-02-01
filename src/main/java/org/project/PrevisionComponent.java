@@ -1,7 +1,4 @@
 package org.project;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
@@ -29,29 +26,30 @@ import java.util.List;
 import java.util.Random;
 
 public class PrevisionComponent{
+
     // Define the prevision button and its box
     public Button previsionButton = new Button();
 
+
     // Define Prevision button and its layout
     // Define image for the button
-    private final Image arrowGui = new Image("file:src/main/resources/frecciale.png");
-    private ImageView arrowGuiImg = new ImageView(arrowGui);
+    private Image arrowButtonImage = new Image("file:src/main/resources/frecciale.png");
+    private ImageView arrowButtonView = new ImageView(arrowButtonImage);
 
 
     // Define button name
-    String previsionString = "    Prevision  ";
+    String previsionForStockChange = "Prevision";
 
     // Define HBox with button name and button image
-    public HBox content = new HBox(3);
+    public HBox previsionContentHBox = new HBox(3);
 
-    public HBox getPrevisionBox() {
-        return previsionBox;
+    public HBox getPrevisionHBox() {
+        return previsionHBox;
     }
 
     // Define box to insert prevision button and animation
-    private final HBox previsionBox = new HBox(previsionButton);
+    private HBox previsionHBox = new HBox(previsionButton);
 
-    // This method is yet to be improved providing a switch structure for various type of data are needed
     public ArrayList<Double> generateNextPrevision(String nameToScanFor, LoginControl loginControl){
         List<String> openRates = new ArrayList<>();
         List<String> closingRates = new ArrayList<>();
@@ -105,7 +103,6 @@ public class PrevisionComponent{
             returnValues.add(2, lowestValuesAverage/counterLowestValues);
             returnValues.add(3, closeValuesAverage/counterClosingValues);
 
-
             return returnValues;
 
         } catch (IOException | CsvValidationException e) {
@@ -113,81 +110,71 @@ public class PrevisionComponent{
         }
     }
 
-    public PrevisionComponent(ArrayList<Stock> stocksCheckedOn, Stage primaryStage){
-            previsionButton.setGraphic(content); // Insert img inside button
-            previsionButton.setMaxWidth(100);
+    public PrevisionComponent(ArrayList<Stock> stocksCheckedOn){
+            previsionButton.setGraphic(previsionContentHBox); // Insert img inside button
+            arrowButtonView.setFitHeight(10);
+            arrowButtonView.setFitWidth(15);
 
-            arrowGuiImg.setFitHeight(10);
-            arrowGuiImg.setFitWidth(15);
+            previsionContentHBox.getChildren().addAll(new Text(previsionForStockChange), arrowButtonView);
+            previsionContentHBox.setAlignment(Pos.CENTER);
+            previsionHBox.setAlignment(Pos.CENTER);
 
-            // Define elements inside contentBox to be inserted into previsionButton
-            content.getChildren().addAll(new Text(previsionString), arrowGuiImg);
-            content.setAlignment(Pos.CENTER);
-
-            previsionBox.setAlignment(Pos.CENTER);
-            previsionBox.setMaxWidth(1000);
-
+            Text particleLabel= new Text("");
             // Handle prevision button action
             previsionButton.setOnAction(e->{
+                particleLabel.setText("");
                 // Popup for new graph
                 Stage previsionStage = new Stage();
                 previsionStage.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
-                previsionStage.initOwner(primaryStage); // Set primaryStage as the parent of popup
-                previsionStage.setTitle("Bet Input");
+                //previsionStage.initOwner(primaryStage); // Set primaryStage as the parent of popup
+                previsionStage.setTitle("Prevision");
                 previsionStage.setWidth(800);
                 previsionStage.setHeight(500);
                 LineChart<Number, Number> lineChartPrevision = null;
-                if(!stocksCheckedOn.isEmpty())
-                    lineChartPrevision= LineChartGenerator.createLineChart("Prevision");
+
+                if(!stocksCheckedOn.isEmpty()) {
+                    lineChartPrevision = LineChartGenerator.createLineChart("Prevision");
+                }
                 else {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setContentText("Select at least a stock in the left hand corner");
                     alert.showAndWait();
                 }
 
-                // Define a line chart
+                HBox changedStocksHBox = new HBox();
 
-
-                System.out.println("Stocks checked on: \n");
-                HBox particlesContainer = new HBox();
-
-
-                String particleString="";
+                String stockChangeString="";
                 for (Stock stock:stocksCheckedOn) {
-
 
                     XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
                     newSeries.setName(stock.getName());
-                    //nameOfCompany= testObj.extractNameOfCompany();
 
                     Random rnd = new Random();
                     DecimalFormat decimalFormat = new DecimalFormat("0.00");
-                    final double PARTICLE= (rnd.nextDouble(21)+1)/10;
-                    particleString+= stock.getName()+" --->  "+ decimalFormat.format(PARTICLE)+"%";
+                    final double MODIFIERSTOCK= (rnd.nextDouble(21)+1)-10;
+                    stockChangeString+= stock.getName()+" --->  "+ decimalFormat.format(MODIFIERSTOCK)+"%";
                     double previousValue= stock.getMarkerPreviousClose();
-                    double addedValue = (stock.getMarketPreviousClose()-previousValue)*10;
+                    double addedValue = ((stock.getMarketPreviousClose()+MODIFIERSTOCK)-(previousValue));
+
                     //Adding arrow depending if lose or gain
-                    particleString+= (addedValue>0? "↗\n": "↘\n");
-                    Text particleLabel= new Text(particleString);
+                    stockChangeString+= (addedValue>0? "↗   \n": "↘   \n");
 
 
                     System.out.println("before MOD"+stock.getRegularMarketOpen()+stock.getMarketPreviousClose());
 
-                    //Algorithm to modify the stocks to be implemented
-                    stock.setRegularMarketOpen(stock.getRegularMarketOpen()*PARTICLE);
-                    stock.setRegularMarketDayHigh(stock.getRegularMarketDayHigh()*PARTICLE);
-                    stock.setRegularMarketDayLow(stock.getRegularMarketDayLow()*PARTICLE);
-                    stock.setMarketPreviousClose(stock.getMarketPreviousClose()*PARTICLE);
-                    //System.out.println("after MOD"+stock.getRegularMarketOpen()+stock.getMarketPreviousClose());
+                    //Modifier to modify the stocks to be implemented
+                    stock.setRegularMarketOpen(stock.getRegularMarketOpen()*MODIFIERSTOCK);
+                    stock.setRegularMarketDayHigh(stock.getRegularMarketDayHigh()*MODIFIERSTOCK);
+                    stock.setRegularMarketDayLow(stock.getRegularMarketDayLow()*MODIFIERSTOCK);
+                    stock.setMarketPreviousClose(stock.getMarketPreviousClose()*MODIFIERSTOCK);
 
 
-                    if(addedValue>0) particleLabel.setFill(Color.rgb(107, 205,0)); else particleLabel.setFill(Color.rgb(205, 0,0));
 
+                    particleLabel.setText(stockChangeString);
                     //This is to ensure there are no repeated stocks
-                    particlesContainer.getChildren().remove(particleLabel);
-                    particlesContainer.getChildren().add(particleLabel);
+                    changedStocksHBox.getChildren().remove(particleLabel);
+                    changedStocksHBox.getChildren().add(particleLabel);
                     newSeries.getData().addAll(
-                            //(testObj==null? nameOfCompany: testObj.extractNameOfCompany())
                             new XYChart.Data<>(0, stock.getRegularMarketOpen()),
                             new XYChart.Data<>(1,  (stock.getRegularMarketDayHigh()*10 + stock.getRegularMarketOpen())/1.8),
                             new XYChart.Data<>(2,  stock.getRegularMarketDayHigh()*10),
@@ -196,50 +183,39 @@ public class PrevisionComponent{
                             new XYChart.Data<>(5,  (stock.getRegularMarketDayLow()*10 + stock.getMarketPreviousClose())/2.2),
                             new XYChart.Data<>(6,  stock.getMarkerPreviousClose())
                     );
-
-
                     lineChartPrevision.getData().add(newSeries);
                     System.out.println(stock.getName());
-                    // Create UI elements for the custom popup
 
-                    // Use showAndWait to wait for user interaction before continuing
-
-
-                };
-
+                }
                 Button closePrevisionPopup = new Button("Close");
                 HBox previsionPopupBox = new HBox(closePrevisionPopup);
                 previsionPopupBox.setSpacing(30);
                 VBox windowBetBox= new VBox();
-                boolean show = true;
+
                 try {
                     // Define Box with elements for the popup
-                    windowBetBox = new VBox(particlesContainer, lineChartPrevision, closePrevisionPopup);
-                    particlesContainer = null;
+                    windowBetBox = new VBox(changedStocksHBox, lineChartPrevision, closePrevisionPopup);
                     windowBetBox.setPadding(new Insets(10));
                     windowBetBox.setSpacing(10);
                     windowBetBox.setAlignment(Pos.CENTER);
-                }catch (NullPointerException f){show=true;}
-
+                }catch (NullPointerException f){}
 
                 // Handle close button inside the popup
-
                 closePrevisionPopup.setOnAction(ex->{
-                    //particleString="";
                     previsionStage.close();
                 });
 
+
                 // Create a scene for the custom popup
                 Scene previsionScene = new Scene(windowBetBox);
-                //windowBetBox.setBackground(new Background(new BackgroundFill(Color.LIGHTCORAL, CornerRadii.EMPTY, Insets.EMPTY))); // Set the background color
-
                 previsionStage.setScene(previsionScene);
 
 
                 // Show the custom popup
-                if(show) previsionStage.showAndWait();
+                if(stocksCheckedOn.size()>=1) previsionStage.showAndWait();
 
             });
 
         }
+
 }

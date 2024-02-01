@@ -391,12 +391,7 @@ public class SubmitControl extends Stock{ //Invest button + method to invest
             }
             rowIndex++;
         }
-        // LIST.REVERT to be implemented by luca :)
-
-
         list.getChildren().add(gridPane);
-
-
     }
 
     public Button getBet() { return bet; }

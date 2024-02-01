@@ -218,12 +218,12 @@ public class SwitchPane extends Stock{
         refresh.setStyle(
                 "-fx-font-size: 1.5em; " +
                         "-fx-text-fill: #ffffff; " +
-                        "-fx-background-color: #00A77B; " +
+                        "-fx-background-color: #5c3190; " +
                         "-fx-padding: 8px; " +
                         "-fx-border-radius: 10px; " +
-                        "-fx-border-color: #388E3C; " +
+                        "-fx-border-color: #5c3190; " +
                         "-fx-background-radius: 10; " +
-                        "-fx-effect: innershadow(gaussian, #73FF6E, 10, 0, 0, 0);" +
+                        "-fx-effect: innershadow(gaussian, 5c3190, 10, 0, 0, 0);" +
                         "-fx-min-width: 50px; " +
                         "-fx-min-height: 50px;"
         );

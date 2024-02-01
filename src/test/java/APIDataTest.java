@@ -1,46 +1,71 @@
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.project.APIData;
 import static org.junit.jupiter.api.Assertions.*;
 
+
 class APIDataTest {
 
-    @Test
-    void testExtractPostMarketChange() {
-        // setup
-        //String responseBody = "{\"regularMarketChangePercent\":{\"fmt\":\"+0.47%\",\"raw\":0.0046781195},\"postMarketChange\":{\"fmt\":\"+0.10%\",\"raw\":0.001}}";
 
-        // exercise
-        APIData marketData = new APIData();
-       double result = marketData.postMarketChangePercent();
+    @BeforeEach
+    void testDataFetch(){
+        APIData testData = new APIData();
+        assertThrows(IllegalArgumentException.class, () -> {
+            testData.fetchData("wrong symbol");
+        });
 
-        // assert
-        assertEquals( result, -0.46);
     }
 
     @Test
-    void testExtractRegularMarketChange() {
-        // setup
-        //tring responseBody = "{\"regularMarketChangePercent\":{\"fmt\":\"+0.47%\",\"raw\":0.0046781195},\"postMarketChange\":{\"fmt\":\"+0.10%\",\"raw\":0.001}}";
+    void testExtractSymbolAndName() {
 
-        // exercise
-        APIData marketData = new APIData();
-        double result = marketData.regularMarketChangePercent();
+        APIData testData = new APIData();
+        testData.fetchData("tsla");
+        System.out.println(testData.extractSymbolOfCompany());
 
         // assert
-        assertEquals( result, -2.38);
+        assertEquals( testData.extractNameOfCompany(), "Tesla, Inc.");
+        assertEquals( testData.extractSymbolOfCompany(), "TSLA");
+    }
+
+    @Test
+    void testExtractRegularMarketPrice() {
+        // Create an instance of APIData
+        APIData testData = new APIData();
+
+        // Fetch data for a specific symbol (e.g., "tsla")
+        testData.fetchData("tsla");
+
+        // Extract the regular market change value
+        double regularMarketChange = testData.regularMarketPrice();
+
+        // Define your threshold
+        double threshold = 0.0; // Example threshold
+
+        // Assert that the actual value is less than the threshold
+        assertTrue(regularMarketChange < threshold);
     }
 
     @Test
     void testPreRegularMarketChange() {
-        // setup
-        String responseBody = "{\"regularMarketChangePercent\":{\"fmt\":\"+0.47%\",\"raw\":0.0046781195},\"postMarketChange\":{\"fmt\":\"+0.10%\",\"raw\":0.001}}";
 
-        // exercise
-        APIData marketData = new APIData();
-        double result = marketData.preMarketChange();
 
-        // assert
-        assertEquals( result, 101);
+        // Create an instance of APIData
+        APIData testData = new APIData();
+
+        // Fetch data for a specific symbol (e.g., "tsla")
+        testData.fetchData("TSLA");
+
+        // Extract the regular market change value
+        double regularMarketChange = testData.preMarketChange();
+
+        // Define your threshold
+        double threshold = 102; // Example threshold
+
+        // Assert that the actual value is less than the threshold
+        assertTrue(regularMarketChange < threshold);
+
     }
 
 

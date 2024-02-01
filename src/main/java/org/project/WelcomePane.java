@@ -3,6 +3,7 @@ package org.project;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
@@ -596,26 +597,6 @@ public class WelcomePane extends APIData { // To use data from api obj
         topRightPane.getChildren().addAll(topBox);
 
     } // Close WelcomePane
-
-
-
-    // Data history management
-    // Method to update data history database
-
-
-    //Method to add Line Chart
-
-
-    private BarChart<String, Number> createBarChart(String symbol) {
-        // Create X and Y axes for the bar chart
-        final CategoryAxis xAxis = new CategoryAxis();
-        final NumberAxis yAxis = new NumberAxis();
-
-        // Create the bar chart
-        final BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
-
-        return barChart;
-    }
 
     public Scene getScene(){
         return WelcomeScene;

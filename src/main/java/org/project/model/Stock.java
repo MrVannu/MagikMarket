@@ -27,7 +27,7 @@ public class Stock extends APIData {
     private double volume;
     private String symbol;
     private String name;
-    private double amountBetted = 0.0;
+    private double amountInvested = 0.0;
     private boolean investedOn = false;
 
 
@@ -58,8 +58,8 @@ public class Stock extends APIData {
         return symbol;
     }
 
-    public double getAmountBetted() {
-        return amountBetted;
+    public double getAmountInvested() {
+        return amountInvested;
     }
 
     public void setSymbol(String sym) {
@@ -87,8 +87,8 @@ public class Stock extends APIData {
         return investedOn;
     }
 
-    public void setAmountBet(double amountBet) {
-        this.amountBetted= amountBet;
+    public void setAmountInvested(double amountBet) {
+        this.amountInvested= amountBet;
     }
 
     public void setMarketPreviousClose(double marketPreviousClose) {

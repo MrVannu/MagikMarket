@@ -95,7 +95,7 @@ public class SubmitController extends Stock { //Invest button + method to invest
                                 stock.saveStocks(userRegistered.getUsername(), stock.getName(),
                                         stock.getRegularMarketDayHigh(), stock.getRegularMarketDayLow(),
                                         stock.getRegularMarketOpen(), stock.getMarkerPreviousClose(),
-                                        stock.getAmountBetted(), stock.getRegularMarketPrice());
+                                        stock.getAmountInvested(), stock.getRegularMarketPrice());
                             }
                         });
                     }
@@ -199,7 +199,7 @@ public class SubmitController extends Stock { //Invest button + method to invest
                                 stock.saveStocks(userRegistered.getUsername(), stock.getName(),
                                         stock.getRegularMarketDayHigh(), stock.getRegularMarketDayLow(),
                                         stock.getRegularMarketOpen(), stock.getMarkerPreviousClose(),
-                                        stock.getAmountBetted(),stock.getRegularMarketPrice());
+                                        stock.getAmountInvested(),stock.getRegularMarketPrice());
                             }
                         });
                     }

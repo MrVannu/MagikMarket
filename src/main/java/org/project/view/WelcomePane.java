@@ -1,10 +1,17 @@
 package org.project.view;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -22,9 +29,12 @@ import org.project.model.Stock;
 import org.project.model.User;
 import org.project.util.AlertField;
 import org.project.util.LineChartGenerator;
+
+import java.awt.*;
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.List;
 
 
 public class WelcomePane extends APIData { // Extends APIData to use data from the API
@@ -73,7 +83,7 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
             }
         }
 
-        // Pad the list with empty lines up to 200 elements
+        // Pad the list with empty lines up to 100 elements
         while (lines.size() < 200) {
             lines.add("");
         }
@@ -338,14 +348,17 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
 
             // Define switchPane instance to get formatted data to show into layout
             SwitchPane switchPane = new SwitchPane();
-            switchPane.showOtherView(userRegistered, hBoxUserTransactionHistoryList);
+            switchPane.showStocks(userRegistered, hBoxUserTransactionHistoryList);
             // Define switch button to switch between the user's transaction historical views
             Button switchHistory = new Button("Switch history");
             switchHistory.setOnAction(e->{
-                if(switchPane.toggle)
-                    switchPane.showStocks(userRegistered, hBoxUserTransactionHistoryList);
-                else
+                if(switchPane.toggle) {
                     switchPane.showOtherView(userRegistered, hBoxUserTransactionHistoryList);
+
+                }
+                else {
+                    switchPane.showStocks(userRegistered, hBoxUserTransactionHistoryList);
+                }
             });
             // Set both the buttons of the same width
             switchHistory.setMaxWidth(100);

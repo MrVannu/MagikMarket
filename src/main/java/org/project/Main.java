@@ -124,7 +124,7 @@ public class Main extends Application {
                 AlertField.showErrorAlert(errorNoConnectionTitle, errorNoConnectionBody);
             } else {
                 // Show the loading dialog
-                LoadingDialog.showLoadingAlert(primaryStage);
+                LoadingDialog.showLoadingAlert();
 
                 String username = usernameFieldLogin.getText();
                 String password = passwordFieldLogin.getText();
@@ -135,7 +135,6 @@ public class Main extends Application {
                             loginController.usernameValidator(username) &&
                             loginController.passwordCorresponds(username, password, loginController.getPathUserDB())) {
 
-                        // Update UI on the JavaFX Application Thread
                         Platform.runLater(() -> {
                             loginController.setUserRegistered(new User(username));
                             WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, loginController.getUserRegistered());
@@ -155,8 +154,6 @@ public class Main extends Application {
                 });
             }
         });
-
-
 
         // Button -> Register
         Button switchScenesRegister = new Button("Sign in");

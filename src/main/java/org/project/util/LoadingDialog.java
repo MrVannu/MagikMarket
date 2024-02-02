@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -20,7 +21,7 @@ import java.util.concurrent.CompletableFuture;
 public class LoadingDialog {
     private static final String LOADING_MESSAGE = "LOADING";
 
-    public static void showLoadingAlert(Stage primaryStage) {
+    public static void showLoadingAlert() {
         Stage loadingStage = new Stage(StageStyle.UNDECORATED);
         loadingStage.initModality(Modality.APPLICATION_MODAL);
 

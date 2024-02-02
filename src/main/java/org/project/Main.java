@@ -113,7 +113,6 @@ public class Main extends Application {
         loginButton.setOnAction(e -> {
             String username = usernameFieldLogin.getText();
             String password = passwordFieldLogin.getText();
-            String hashedPassword = BCrypt.hashpw(passwordFieldLogin.getText(), BCrypt.gensalt());
 
             // Validating credentials
             if(loginController.usernameExists(username, loginController.getPathUserDB()) && loginController.usernameValidator(username)

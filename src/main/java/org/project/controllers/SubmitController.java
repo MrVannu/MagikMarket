@@ -275,19 +275,39 @@ public class SubmitController extends Stock { //Invest button + method to invest
 
                     // Handle submitSellAmount button
                     submitSellAmount.setOnAction(e -> {
-                        double nrOfStock = getSumAndPieces(userRegistered.getUsername(), symbol);
+                        double nrOfStock = getSumAndPieces(userRegistered.getUsername(), symbol); // Get the number of stocks a specific user has for a specific stock (passed as symbol)
 
                         if(nrOfStock == 0){
-                            //System.out.println("NO STOCKS OWNED BY THE CURRENT USER");
+
+
+
+                            // ALERT TO INSERT
+
+
+
+
+                            System.out.println("NO STOCKS OWNED BY THE CURRENT USER");
                             throw new InsufficientCreditException();
                         }
 
                         double selectedPercentage = 0.00;
                         try {
-                            if (radio25.isSelected()) selectedPercentage = 25.0;
-                            else if (radio50.isSelected()) selectedPercentage = 50.0;
-                            else if (radio75.isSelected()) selectedPercentage = 75.0;
-                            else if (radio100.isSelected()) selectedPercentage = 100.0;
+                            if (radio25.isSelected()){
+                                selectedPercentage = 25.0;
+                                specificValueField.setDisable(true);
+                            }
+                            else if (radio50.isSelected()){
+                                selectedPercentage = 50.0;
+                                specificValueField.setDisable(true);
+                            }
+                            else if (radio75.isSelected()){
+                                selectedPercentage = 75.0;
+                                specificValueField.setDisable(true);
+                            }
+                            else if (radio100.isSelected()){
+                                selectedPercentage = 100.0;
+                                specificValueField.setDisable(true);
+                            }
 
                             double finalGain;
 
@@ -296,6 +316,7 @@ public class SubmitController extends Stock { //Invest button + method to invest
                                 double percentageValue = nrOfStock * (selectedPercentage / 100.0);
                                 finalGain = percentageValue * Double.parseDouble(regMarkPriceL.getText());
                             } else {
+                                specificValueField.setDisable(false);
                                 // Use manually entered value
                                 double manualValue = Double.parseDouble(specificValueField.getText());
                                 finalGain = manualValue * Double.parseDouble(regMarkPriceL.getText());
@@ -311,7 +332,7 @@ public class SubmitController extends Stock { //Invest button + method to invest
                             specificValueField.clear();
                             sellPopup.close();
 
-                            // Save stock information to the database
+                            // Save stock information to the database with negative amount of money "gained"
                             saveStocks(userRegistered.getUsername(), symbol, regPriceAPI.regularMarketDayHigh(),
                                     regPriceAPI.regularMarketDayLow(), regPriceAPI.regularMarketDayOpen(),
                                     regPriceAPI.regularMarketPreviousClose(), (-1) * finalGain, regPriceAPI.regularMarketPrice());

@@ -1,5 +1,6 @@
 package org.project;
 
+import javafx.application.Platform;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -12,13 +13,14 @@ import javafx.geometry.Insets;
 import javafx.scene.text.Font;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.project.controllers.CheckInternetConnection;
 import org.project.controllers.LoginController;
 import org.project.model.User;
 import org.project.util.AlertField;
 import org.project.view.WelcomePane;
-
 import java.io.*;
-
+import java.util.concurrent.CompletableFuture;
+import org.project.util.LoadingDialog;
 
 public class Main extends Application {
         
@@ -111,25 +113,45 @@ public class Main extends Application {
         // Button -> login
         Button loginButton = new Button("Login");
         loginButton.setOnAction(e -> {
-            String username = usernameFieldLogin.getText();
-            String password = passwordFieldLogin.getText();
+            if (!CheckInternetConnection.isInternetReachable()) {
+                String errorNoConnectionBody = """
+                You are not currently connected to the Internet.
 
-            // Validating credentials
-            if(loginController.usernameExists(username, loginController.getPathUserDB()) && loginController.usernameValidator(username)
-                    && loginController.passwordCorresponds(username, password, loginController.getPathUserDB())) {
+                 Please connect to a network to use this application!""";
 
-                loginController.setUserRegistered(new User(username));
-                WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, loginController.getUserRegistered());
+                String errorNoConnectionTitle = "CONNECTION ERROR";
 
-                primaryStage.setTitle("Start App");
-                primaryStage.setScene(welcomePane.getScene());
+                AlertField.showErrorAlert(errorNoConnectionTitle, errorNoConnectionBody);
+            } else {
+                // Show the loading dialog
+                LoadingDialog.showLoadingAlert();
 
-                AlertField.resetField(usernameFieldLogin,passwordFieldLogin);
-            }
-            else {
-                // The user does not exist
-                AlertField.showErrorAlert("Authentication error", "User not found or incorrect credentials.");
-                AlertField.invalidField(usernameFieldLogin, passwordFieldLogin);
+                String username = usernameFieldLogin.getText();
+                String password = passwordFieldLogin.getText();
+
+                // Perform the authentication task asynchronously
+                CompletableFuture.runAsync(() -> {
+                    if (loginController.usernameExists(username, loginController.getPathUserDB()) &&
+                            loginController.usernameValidator(username) &&
+                            loginController.passwordCorresponds(username, password, loginController.getPathUserDB())) {
+
+                        Platform.runLater(() -> {
+                            loginController.setUserRegistered(new User(username));
+                            WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, loginController.getUserRegistered());
+
+                            primaryStage.setTitle("Start App");
+                            primaryStage.setScene(welcomePane.getScene());
+
+                            AlertField.resetField(usernameFieldLogin, passwordFieldLogin);
+                        });
+                    } else {
+                        // The user does not exist
+                        Platform.runLater(() -> {
+                            AlertField.showErrorAlert("Authentication error", "User not found or incorrect credentials.");
+                            AlertField.invalidField(usernameFieldLogin, passwordFieldLogin);
+                        });
+                    }
+                });
             }
         });
 

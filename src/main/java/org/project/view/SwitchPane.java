@@ -114,15 +114,23 @@ public class SwitchPane extends Stock {
         String currentPrice = String.valueOf(obj.regularMarketPrice());
         String piecesOwned = String.valueOf(getSumAndPieces(username, symbol.toLowerCase()));
         String averageBuyPrice = String.valueOf(getAverageOfPurchased(username, symbol));
+        DecimalFormat decimalFormat = new DecimalFormat("#.####");
 
         Platform.runLater(() -> {
-            currentPriceLabel.setText(currentPrice);
-            piecesOwnedLabel.setText(piecesOwned);
-            averageBuyPriceLabel.setText(averageBuyPrice);
+            // Parse the values as numbers before formatting
+            double currentPriceValue = Double.parseDouble(currentPrice);
+            double piecesOwnedValue = Double.parseDouble(piecesOwned);
+            double averageBuyPriceValue = Double.parseDouble(averageBuyPrice);
+
+            // Format the numbers
+            currentPriceLabel.setText(decimalFormat.format(currentPriceValue));
+            piecesOwnedLabel.setText(decimalFormat.format(piecesOwnedValue));
+            averageBuyPriceLabel.setText(decimalFormat.format(averageBuyPriceValue));
 
             // Set color based on gain possibility
             setColorOfLabelsBasingOnGainPossibility(currentPriceLabel, new Label(averageBuyPrice));
         });
+
     }
 
 

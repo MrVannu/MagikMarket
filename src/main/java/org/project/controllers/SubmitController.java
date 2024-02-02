@@ -108,7 +108,7 @@ public class SubmitController extends Stock { //Invest button + method to invest
                 } else {
                     // The field is empty
                     AlertField.showErrorAlert("Invalid input", "Please enter a bet amount.");
-                    System.out.println("Field is empty. Please enter a bet amount.");
+                    System.out.println("Field is empty. Please enter an amount.");
                 }
             });
 
@@ -288,7 +288,6 @@ public class SubmitController extends Stock { //Invest button + method to invest
                 double nrOfStock = getSumAndPieces(userRegistered.getUsername(), symbol);
 
                 if(nrOfStock == 0){
-                    //System.out.println("NO STOCKS OWNED BY THE CURRENT USER");
                     throw new InsufficientCreditException();
                 }
 

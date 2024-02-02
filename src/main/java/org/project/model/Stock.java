@@ -157,7 +157,7 @@ public class Stock extends APIData {
             for (String[] row : existingData) {
                 String existingRecord = String.join(",", row);
                 if (existingRecord.equals(toWrite)) {
-                    System.out.println("The bet already exists in the database.");
+                    System.out.println("The investment already exists in the database.");
                     isBetNew = false;
                     break;
                 }
@@ -167,13 +167,13 @@ public class Stock extends APIData {
                 try (CSVWriter writer = new CSVWriter(new FileWriter(stockDbPath, true))) {
                     String[] data = toWrite.split(",");
                     writer.writeNext(data);
-                    System.out.println("Bet added to the database.");
+                    System.out.println("Record added to the database.");
                 } catch (IOException e) {
-                    System.out.println("Error occurred while writing the bet.");
+                    System.out.println("Error occurred while recording the investment.");
                 }
             }
         } catch (IOException | CsvException e) {
-            System.out.println("Error occurred while reading the database.");
+            System.out.println("Error occurred while reading from the database.");
         }
     }
 
@@ -192,7 +192,7 @@ public class Stock extends APIData {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error while reading the database.");
+            System.out.println("Error while reading from the database.");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

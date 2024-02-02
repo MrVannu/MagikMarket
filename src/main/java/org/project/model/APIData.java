@@ -96,7 +96,6 @@ public class APIData{
         }
 
         // If a value couldn't be obtained, return the default value
-        System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
 
@@ -120,7 +119,6 @@ public class APIData{
         }
 
         // If a value couldn't be obtained, return the default value
-        System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
 
@@ -142,8 +140,6 @@ public class APIData{
             throw new RuntimeException(e);
         }
 
-        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito
-        System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
 

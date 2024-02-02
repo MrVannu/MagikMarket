@@ -280,12 +280,8 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
                         // Extract symbol and average daily volume (formatted) from JSON response
                         String stringSymbol = testObj.extractSymbolOfCompany();
                         String averageDailyVolumeFmt = testObj.extractAverageDailyVolume3MonthFmt();
-                        // Output data to console
-                        System.out.println("DATA:"+averageDailyVolumeFmt);
-                        // If string value is not empty then parse with the right format
                         double averageDailyVolume = 0.0;
                         if(!averageDailyVolumeFmt.isEmpty()) averageDailyVolume = testObj.parseFormattedValue(averageDailyVolumeFmt);
-                        else System.out.println("Empty averageDailyVolumeFmt!");
 
                         // Define the bar chart and enter the manipulated data
                         barChartSeries.getData().add(
@@ -460,13 +456,9 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
                                 // New label value
                                 userRegistered.setUserCredit(newAmount);
                                 moneyLabel.setText(String.valueOf(newAmount));
-                                //System.out.println("User input: " + newAmount);
-
-                                // Close
                                 popup.close();
                             }
                         } catch (NumberFormatException k) {
-                            //System.out.println("Input non valid: " + nativeData);
                             newCredit.setText(""); // Clean out
                         }
                     } else {

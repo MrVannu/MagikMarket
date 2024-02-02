@@ -13,7 +13,6 @@ import javafx.geometry.Insets;
 import javafx.scene.text.Font;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.project.controllers.CheckInternetConnection;
 import org.project.controllers.LoginController;
 import org.project.model.User;
 import org.project.util.AlertField;
@@ -113,16 +112,18 @@ public class Main extends Application {
         // Button -> login
         Button loginButton = new Button("Login");
         loginButton.setOnAction(e -> {
-            if (!CheckInternetConnection.isInternetReachable()) {
-                String errorNoConnectionBody = """
-                You are not currently connected to the Internet.
 
-                 Please connect to a network to use this application!""";
-
-                String errorNoConnectionTitle = "CONNECTION ERROR";
-
-                AlertField.showErrorAlert(errorNoConnectionTitle, errorNoConnectionBody);
-            } else {
+            // Beta features --> to be implemented in the future (problems with MacOs)
+//            if (!CheckInternetConnection.isInternetReachable()) {
+//                String errorNoConnectionBody = """
+//                You are not currently connected to the Internet.
+//
+//                 Please connect to a network to use this application!""";
+//
+//                String errorNoConnectionTitle = "CONNECTION ERROR";
+//
+//                AlertField.showErrorAlert(errorNoConnectionTitle, errorNoConnectionBody);
+//            } else {
                 // Show the loading dialog
                 LoadingDialog.showLoadingAlert();
 
@@ -152,7 +153,7 @@ public class Main extends Application {
                         });
                     }
                 });
-            }
+//            }
         });
 
         // Button -> Register

@@ -374,7 +374,7 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
             // Define a SplitPane for inserting PieChart and InvestmentBox
             SplitPane investmentAndPieSplitPane = new SplitPane();
             investmentAndPieSplitPane.getItems().addAll(hBoxUserTransactionHistoryList,pieChart); //investmentBox,
-            investmentAndPieSplitPane.setDividerPositions(0.7);
+            investmentAndPieSplitPane.setDividerPositions(0.735);
             // Make the child nodes unresizable
             SplitPane.setResizableWithParent(hBoxUserTransactionHistoryList, false);
             SplitPane.setResizableWithParent(pieChart, false);

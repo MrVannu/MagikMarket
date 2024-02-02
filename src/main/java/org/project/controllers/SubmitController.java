@@ -283,6 +283,8 @@ public class SubmitController extends Stock { //Invest button + method to invest
             windowSellBox.setSpacing(10);
             windowSellBox.setAlignment(Pos.CENTER);
 
+            if(radio25.isSelected() || radio50.isSelected() || radio75.isSelected() || radio100.isSelected()) specificValueField.setDisable(true);
+
             //Handle submitSellAmount button
             submitSellAmount.setOnAction(e -> {
                 double nrOfStock = getSumAndPieces(userRegistered.getUsername(), symbol);
@@ -294,19 +296,36 @@ public class SubmitController extends Stock { //Invest button + method to invest
 
                 double selectedPercentage = 0.00;
                 try {
-                    if (radio25.isSelected()) selectedPercentage = 25.0;
-                    else if (radio50.isSelected()) selectedPercentage = 50.0;
-                    else if (radio75.isSelected()) selectedPercentage = 75.0;
-                    else if (radio100.isSelected()) selectedPercentage = 100.0;
+                    if (radio25.isSelected()){
+                        selectedPercentage = 25.0;
+                        specificValueField.setDisable(true);
+                        specificValueField.setText("");
+                    }
+                    else if (radio50.isSelected()){
+                        selectedPercentage = 50.0;
+                        specificValueField.setDisable(true);
+                        specificValueField.setText("");
+                    }
+                    else if (radio75.isSelected()){
+                        selectedPercentage = 75.0;
+                        specificValueField.setDisable(true);
+                        specificValueField.setText("");
+                    }
+                    else if (radio100.isSelected()){
+                        selectedPercentage = 100.0;
+                        specificValueField.setDisable(true);
+                        specificValueField.setText("");
+                    }
 
                     double finalGain;
 
-                    if (selectedPercentage > 0) {
-                        // Use percentage value
+                    if (selectedPercentage > 0) { // Use percentage value
+
                         double percentageValue = nrOfStock * (selectedPercentage / 100.0);
                         finalGain = percentageValue * Double.parseDouble(regMarkPriceL.getText());
-                    } else {
-                        // Use manually entered value
+                    } else { // Use manually entered value
+
+                        specificValueField.setDisable(false);
                         double manualValue = Double.parseDouble(specificValueField.getText());
                         finalGain = manualValue * Double.parseDouble(regMarkPriceL.getText());
                     }
@@ -361,32 +380,6 @@ public class SubmitController extends Stock { //Invest button + method to invest
         buyAndSellBox.setSpacing(10);
         return buyAndSellBox;
     }
-    public void showStocks(User userRegistered, HBox list){
-        List<List<String>> theList = getSavedStocks(userRegistered.getUsername());
-        GridPane gridPane = new GridPane();
-        gridPane.setHgap(10); // Horizontal space between columns
-        list.getChildren().clear();
-
-        int rowIndex = 0;
-        for (List<String> outEl : theList) {
-            int columnIndex = 0;
-            outEl.set(0,"");
-            for (String innerEl : outEl) {
-                Text text = new Text(innerEl);
-                gridPane.add(text, columnIndex, rowIndex);
-                columnIndex++;
-            }
-            rowIndex++;
-        }
-        // LIST.REVERT to be implemented by luca :)
-
-
-        list.getChildren().add(gridPane);
-
-
-    }
-
-    public Button getBet() { return bet; }
 
     public HBox getCheckBoxInsideHBox() {
         return checkBoxInsideHBox;

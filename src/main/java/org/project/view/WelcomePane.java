@@ -1,5 +1,4 @@
 package org.project.view;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;

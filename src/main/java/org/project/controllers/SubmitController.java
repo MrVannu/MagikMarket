@@ -3,12 +3,11 @@ package org.project.controllers;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -20,6 +19,7 @@ import org.project.util.AlertField;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SubmitController extends Stock { //Invest button + method to invest
 
@@ -28,8 +28,7 @@ public class SubmitController extends Stock { //Invest button + method to invest
     private final Button buy = new Button("Buy"); // Define buy button
     private final Button sell = new Button("Sell"); // Define sell button
 
-    public SubmitController(User userRegistered, Stage primaryStage, ArrayList<Stock> stocksCheckedOn,
-                            HBox list, String symbol, Label moneyLabel,
+    public SubmitController(User userRegistered, Stage primaryStage, ArrayList<Stock> stocksCheckedOn, HBox list, String symbol, Label moneyLabel,
                             CheckBox checkBox) {
         super();
         bet.getStyleClass().add("my-button");
@@ -49,9 +48,9 @@ public class SubmitController extends Stock { //Invest button + method to invest
             // Create UI elements for the custom popup (invest button)
             Label instruction = new Label("Set the bet amount");
             TextField betField = new TextField();
-            Button submitInvestedAmount = new Button("Submit");
+            Button submitBetAmount = new Button("Submit");
             Button closeBetPopup = new Button("Close");
-            HBox buttonsBetBox = new HBox(submitInvestedAmount, closeBetPopup);
+            HBox buttonsBetBox = new HBox(submitBetAmount, closeBetPopup);
             buttonsBetBox.setSpacing(30);
 
             // Define Box with elements for the popup (invest button)
@@ -64,11 +63,11 @@ public class SubmitController extends Stock { //Invest button + method to invest
             HBox miniBox = new HBox();
             miniBox.setAlignment(Pos.CENTER);
 
-            // Handle submitInvestedAmount button
-            submitInvestedAmount.setOnAction(e->{
+            //Handle submitBetAmount button
+            submitBetAmount.setOnAction(e->{
                 if(!betField.getText().isEmpty()) { // If the field is not empty
                     try{
-                      // Attempt to parse the text as a double. If parsing is successful, it's a valid number
+                        // Attempt to parse the text as a double. If parsing is successful, it's a valid number
                         Double.parseDouble(betField.getText());
 
                         //Decreases the user's amount of money in the GUI label
@@ -77,13 +76,18 @@ public class SubmitController extends Stock { //Invest button + method to invest
                         DecimalFormat decimalFormat = new DecimalFormat("#.00");
                         moneyLabel.setText(decimalFormat.format(userRegistered.getUserCredit()));
 
+
+
                         betField.clear();
                         betPopup.close();
 
+
                         miniBox.getChildren().add(new Label());
                         miniBox.getChildren().add(new Label());
 
+
                         list.getChildren().add(new Label(symbol+" amount bet on"+", "+betField.getText()));
+
 
                         stocksCheckedOn.forEach(stock -> {
                             if(stock.getName().equals(symbol)) {
@@ -109,7 +113,9 @@ public class SubmitController extends Stock { //Invest button + method to invest
             });
 
             // Handle closeBetPopup button
-            closeBetPopup.setOnAction(e-> betPopup.close());
+            closeBetPopup.setOnAction(e->{
+                betPopup.close();
+            });
 
             // Create a scene for the custom popup
             Scene betPopupScene = new Scene(windowBetBox);
@@ -121,244 +127,228 @@ public class SubmitController extends Stock { //Invest button + method to invest
         });// Close bet button handle code segment
 
 
-            // Handle the "Buy" button action here
-            buy.setOnAction(event -> {
-                // Create a custom popup using a Stage (invest button)
-                Stage buyPopup = new Stage();
-                buyPopup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
-                buyPopup.initOwner(primaryStage); // Set primaryStage as the parent of popup
-                buyPopup.setTitle("Buy Input");
-                buyPopup.setWidth(400);
-                buyPopup.setHeight(200);
+        // Handle the "Buy" button action here
+        buy.setOnAction(event -> {
+            // Create a custom popup using a Stage (invest button)
+            Stage buyPopup = new Stage();
+            buyPopup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
+            buyPopup.initOwner(primaryStage); // Set primaryStage as the parent of popup
+            buyPopup.setTitle("Buy Input");
+            buyPopup.setWidth(400);
+            buyPopup.setHeight(200);
 
-                // Create UI elements for the custom popup (invest button)
-                Label instruction = new Label("Insert the amount you would like to buy for the selected stock");
-                instruction.setFont(Font.font("Helvetica", FontWeight.NORMAL, 14));
-                TextField buyField = new TextField();
-                Button submitBuyAmount = new Button("Submit");
-                Button closeBuyPopup = new Button("Close");
-                HBox buttonsBuyBox = new HBox(submitBuyAmount, closeBuyPopup);
-                buttonsBuyBox.setSpacing(30);
+            // Create UI elements for the custom popup (invest button)
+            Label instruction = new Label("Stock you would like to buy");
+            TextField buyField = new TextField();
+            Button submitBuyAmount = new Button("Submit");
+            Button closeBuyPopup = new Button("Close");
+            HBox buttonsBuyBox = new HBox(submitBuyAmount, closeBuyPopup);
+            buttonsBuyBox.setSpacing(30);
 
-                // Define Box with elements for the popup (invest button)
-                VBox windowBuyBox = new VBox(instruction, buyField, buttonsBuyBox);
-                windowBuyBox.setPadding(new Insets(10));
-                windowBuyBox.setSpacing(10);
-                windowBuyBox.setAlignment(Pos.CENTER);
+            // Define Box with elements for the popup (invest button)
+            VBox windowBuyBox = new VBox(instruction, buyField, buttonsBuyBox);
+            windowBuyBox.setPadding(new Insets(10));
+            windowBuyBox.setSpacing(10);
+            windowBuyBox.setAlignment(Pos.CENTER);
 
-                //Handle submitBuyAmount button
-                submitBuyAmount.setOnAction(e->{
-                    if(!buyField.getText().isEmpty()) { // If the field is not empty
-                        try{
-                            // Attempt to parse the text as a double. If parsing is successful, it's a valid number
-                            Double.parseDouble(buyField.getText());
+            //Handle submitBuyAmount button
+            submitBuyAmount.setOnAction(e->{
+                if(!buyField.getText().isEmpty()) { // If the field is not empty
+                    try{
+                        // Attempt to parse the text as a double. If parsing is successful, it's a valid number
+                        Double.parseDouble(buyField.getText());
 
-                            //Decreases the user's amount of money in the GUI label
-                            userRegistered.setUserCredit(Double.parseDouble(userRegistered.getUserCredit()) - Double.parseDouble(buyField.getText()));
-                            //Update the money label
-
-
-                            APIData apiResponseObj = new APIData();
-                            apiResponseObj.fetchData(symbol);
-                            saveStocks(userRegistered.getUsername(),symbol,apiResponseObj.regularMarketDayHigh(),
-                                    apiResponseObj.regularMarketDayLow(),apiResponseObj.regularMarketDayOpen(),
-                                    apiResponseObj.regularMarketPreviousClose(),Double.parseDouble(buyField.getText())*(-1),
-                                    apiResponseObj.regularMarketPrice()*(-1));
+                        //Decreases the user's amount of money in the GUI label
+                        userRegistered.setUserCredit(Double.parseDouble(userRegistered.getUserCredit()) - Double.parseDouble(buyField.getText()));
+                        //Update the money label
 
 
-                            buyField.clear();
-                            buyPopup.close();
+                        APIData apiResponseObj = new APIData();
+                        apiResponseObj.fetchData(symbol);
+                        saveStocks(userRegistered.getUsername(),symbol,apiResponseObj.regularMarketDayHigh(),
+                                apiResponseObj.regularMarketDayLow(),apiResponseObj.regularMarketDayOpen(),
+                                apiResponseObj.regularMarketPreviousClose(),Double.parseDouble(buyField.getText())*(-1),
+                                apiResponseObj.regularMarketPrice()*(-1));
 
-                            stocksCheckedOn.forEach(stock -> {
-                                if(stock.getName().equals(symbol)) {
-                                    stock.setInvestedOn(true);
-                                    stock.saveStocks(userRegistered.getUsername(), stock.getName(),
-                                            stock.getRegularMarketDayHigh(), stock.getRegularMarketDayLow(),
-                                            stock.getRegularMarketOpen(), stock.getMarkerPreviousClose(),
-                                            stock.getAmountBetted(),stock.getRegularMarketPrice());
-                                }
-                            });
+                        List<List<String>> theList = getSavedStocks(userRegistered.getUsername());
+                        GridPane gridPane = new GridPane();
+                        gridPane.setHgap(10); // Horizontal space between columns
+                        list.getChildren().clear();
+
+                        int rowIndex = 0;
+                        for (List<String> outEl : theList) {
+                            int columnIndex = 0;
+                            outEl.set(0,"");
+                            for (String innerEl : outEl) {
+                                Text text = new Text(innerEl);
+                                gridPane.add(text, columnIndex, rowIndex);
+                                columnIndex++;
+                            }
+                            rowIndex++;
                         }
-                        catch(NumberFormatException er){
-                            // Parsing failed, the text is not a valid number
-                            // Handle the case where the input is not a number
-                            AlertField.showErrorAlert("Invalid input", "Please enter a valid number.");
-                            System.out.println("Invalid input. Please enter a valid number.");
-                        }
-                    } else {
-                        // The field is empty
-                        AlertField.showErrorAlert("Invalid input", "Please enter a bet amount.");
-                        System.out.println("Field is empty. Please enter a bet amount.");
+
+
+                        list.getChildren().add(gridPane);
+
+                        buyField.clear();
+                        buyPopup.close();
+
+                        stocksCheckedOn.forEach(stock -> {
+                            if(stock.getName().equals(symbol)) {
+                                stock.setInvestedOn(true);
+                                stock.saveStocks(userRegistered.getUsername(), stock.getName(),
+                                        stock.getRegularMarketDayHigh(), stock.getRegularMarketDayLow(),
+                                        stock.getRegularMarketOpen(), stock.getMarkerPreviousClose(),
+                                        stock.getAmountBetted(),stock.getRegularMarketPrice());
+                            }
+                        });
                     }
-                });
+                    catch(NumberFormatException er){
+                        // Parsing failed, the text is not a valid number
+                        // Handle the case where the input is not a number
+                        AlertField.showErrorAlert("Invalid input", "Please enter a valid number.");
+                        System.out.println("Invalid input. Please enter a valid number.");
+                    }
+                } else {
+                    // The field is empty
+                    AlertField.showErrorAlert("Invalid input", "Please enter a bet amount.");
+                    System.out.println("Field is empty. Please enter a bet amount.");
+                }
+            });
 
-                // Handle closeBetPopup button
-                closeBuyPopup.setOnAction(e-> buyPopup.close());
+            // Handle closeBetPopup button
+            closeBuyPopup.setOnAction(e->{
+                buyPopup.close();
+            });
 
-                // Create a scene for the custom popup
-                Scene betPopupScene = new Scene(windowBuyBox);
-                buyPopup.setScene(betPopupScene);
+            // Create a scene for the custom popup
+            Scene betPopupScene = new Scene(windowBuyBox);
+            buyPopup.setScene(betPopupScene);
 
-                // Show the custom popup
-                buyPopup.showAndWait();
+            // Show the custom popup
+            buyPopup.showAndWait();
 
-            });// Close buy button handle code segment
+        });// Close buy button handle code segment
 
 
 
         // Handle the "Sell" button action here
         sell.setOnAction(event -> {
-                    // Create a custom popup using a Stage (invest button)
-                    Stage sellPopup = new Stage();
-                    sellPopup.setWidth(700);
-                    sellPopup.setHeight(300);
-                    sellPopup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
-                    sellPopup.initOwner(primaryStage); // Set primaryStage as the parent of popup
-                    sellPopup.setTitle("Sell Input");
+            // Create a custom popup using a Stage (invest button)
+            Stage sellPopup = new Stage();
+            sellPopup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
+            sellPopup.initOwner(primaryStage); // Set primaryStage as the parent of popup
+            sellPopup.setTitle("Sell Input");
+            sellPopup.setWidth(400);
+            sellPopup.setHeight(200);
 
-                    // Create UI elements for the custom popup (invest button)
-                    Button submitSellAmount = new Button("Submit");
-                    Button closeSellPopup = new Button("Close");
-                    HBox buttonsSellBox = new HBox(submitSellAmount, closeSellPopup);
-                    buttonsSellBox.setSpacing(30);
-
-                    Label instructions = new Label("Select the percentage you would like to sell, or insert the amount of stock you would like to sell.");
-                    instructions.setFont(Font.font("Helvetica", FontWeight.NORMAL, 14));
-                    Label regMarkPriceL = new Label();
-                    APIData regPriceAPI = new APIData();
-                    regPriceAPI.fetchData(symbol);
-                    regMarkPriceL.setText("Current market price of "+ symbol+ " is → " + regPriceAPI.regularMarketPrice());
-
-                    Text regMrkPriceText = new Text("Current market price of " + symbol + " is → ");
-                    regMrkPriceText.setFont(Font.font("Helvetica", FontWeight.NORMAL, 14));
-                    Text regMrkPriceValue = new Text(String.valueOf(regPriceAPI.regularMarketPrice()));
-                    regMrkPriceValue.setFont(Font.font("Helvetica", FontWeight.BOLD, 16));
-                    regMrkPriceValue.setFill(Color.ORANGE);
-
-                    HBox regMrkPriceTextAndValueBox = new HBox(regMrkPriceText,regMrkPriceValue);
-                    regMrkPriceTextAndValueBox.setAlignment(Pos.CENTER);
-
-                    // Create radio buttons for percentage options
-                    RadioButton radio25 = new RadioButton("25%");
-                    RadioButton radio50 = new RadioButton("50%");
-                    RadioButton radio75 = new RadioButton("75%");
-                    RadioButton radio100 = new RadioButton("100%");
-                    radio25.setFont(Font.font("Helvetica", FontWeight.NORMAL, 14));
-                    radio50.setFont(Font.font("Helvetica", FontWeight.NORMAL, 14));
-                    radio75.setFont(Font.font("Helvetica", FontWeight.NORMAL, 14));
-                    radio100.setFont(Font.font("Helvetica", FontWeight.NORMAL, 14));
+            // Create UI elements for the custom popup (invest button)
+            Button submitSellAmount = new Button("Submit");
+            Button closeSellPopul = new Button("Close");
+            HBox buttonsSellBox = new HBox(submitSellAmount, closeSellPopul);
+            buttonsSellBox.setSpacing(30);
 
 
-                    // Create a ToggleGroup to ensure only one radio button is selected at a time
-                    ToggleGroup toggleGroup = new ToggleGroup();
-                    radio25.setToggleGroup(toggleGroup);
-                    radio50.setToggleGroup(toggleGroup);
-                    radio75.setToggleGroup(toggleGroup);
-                    radio100.setToggleGroup(toggleGroup);
+            Label instructions = new Label("Select the percentage you would like to sell, or insert the amount of stock you would like to sell");
+            Label regMarkPriceL = new Label();
+            APIData regPriceAPI = new APIData();
+            regPriceAPI.fetchData(symbol);
+            regMarkPriceL.setText(String.valueOf(regPriceAPI.regularMarketPrice()));
 
-                    // Create a TextField for entering a specific value
-                    TextField specificValueField = new TextField();
-                    specificValueField.setPromptText("Enter value");
+            // Create radio buttons for percentage options
+            RadioButton radio25 = new RadioButton("25%");
+            RadioButton radio50 = new RadioButton("50%");
+            RadioButton radio75 = new RadioButton("75%");
+            RadioButton radio100 = new RadioButton("100%");
 
-                    // Create the layout for the popup
-                    HBox radioButtonsBox = new HBox(10);
-                    radioButtonsBox.setAlignment(Pos.CENTER);
-                    radioButtonsBox.setPadding(new Insets(10));
-                    radioButtonsBox.getChildren().addAll(radio25, radio50, radio75, radio100);
+            // Create a ToggleGroup to ensure only one radio button is selected at a time
+            ToggleGroup toggleGroup = new ToggleGroup();
+            radio25.setToggleGroup(toggleGroup);
+            radio50.setToggleGroup(toggleGroup);
+            radio75.setToggleGroup(toggleGroup);
+            radio100.setToggleGroup(toggleGroup);
 
-                    // Define Box with elements for the popup (invest button)
-                    VBox windowSellBox = new VBox(instructions, regMrkPriceTextAndValueBox, radioButtonsBox, specificValueField, buttonsSellBox);
-                    windowSellBox.setPadding(new Insets(10));
-                    windowSellBox.setSpacing(10);
-                    windowSellBox.setPrefSize(400,800);
-                    windowSellBox.setAlignment(Pos.CENTER);
+            // Create a TextField for entering a specific value
+            TextField specificValueField = new TextField();
+            specificValueField.setPromptText("Enter value");
 
-                    // Handle submitSellAmount button
-                    submitSellAmount.setOnAction(e -> {
-                        double nrOfStock = getSumAndPieces(userRegistered.getUsername(), symbol); // Get the number of stocks a specific user has for a specific stock (passed as symbol)
+            // Create the layout for the popup
+            HBox radioButtonsBox = new HBox(10);
+            radioButtonsBox.setPadding(new Insets(10));
+            radioButtonsBox.getChildren().addAll(radio25, radio50, radio75, radio100);
 
-                        if(nrOfStock == 0){
+            // Define Box with elements for the popup (invest button)
+            VBox windowSellBox = new VBox(instructions, regMarkPriceL, radioButtonsBox, specificValueField, buttonsSellBox);
+            windowSellBox.setPadding(new Insets(10));
+            windowSellBox.setSpacing(10);
+            windowSellBox.setAlignment(Pos.CENTER);
 
+            //Handle submitSellAmount button
+            submitSellAmount.setOnAction(e -> {
+                double nrOfStock = getSumAndPieces(userRegistered.getUsername(), symbol);
 
+                if(nrOfStock == 0){
+                    //System.out.println("NO STOCKS OWNED BY THE CURRENT USER");
+                    throw new InsufficientCreditException();
+                }
 
-                            // ALERT TO INSERT
+                double selectedPercentage = 0.00;
+                try {
+                    if (radio25.isSelected()) selectedPercentage = 25.0;
+                    else if (radio50.isSelected()) selectedPercentage = 50.0;
+                    else if (radio75.isSelected()) selectedPercentage = 75.0;
+                    else if (radio100.isSelected()) selectedPercentage = 100.0;
 
+                    double finalGain;
 
+                    if (selectedPercentage > 0) {
+                        // Use percentage value
+                        double percentageValue = nrOfStock * (selectedPercentage / 100.0);
+                        finalGain = percentageValue * Double.parseDouble(regMarkPriceL.getText());
+                    } else {
+                        // Use manually entered value
+                        double manualValue = Double.parseDouble(specificValueField.getText());
+                        finalGain = manualValue * Double.parseDouble(regMarkPriceL.getText());
+                    }
 
+                    double newUserCredit = Double.parseDouble(userRegistered.getUserCredit()) + finalGain;
 
-                            System.out.println("NO STOCKS OWNED BY THE CURRENT USER");
-                            throw new InsufficientCreditException();
-                        }
+                    DecimalFormat decimalFormat = new DecimalFormat("#.00");
+                    moneyLabel.setText(decimalFormat.format(newUserCredit));
 
-                        double selectedPercentage = 0.00;
-                        try {
-                            if (radio25.isSelected()){
-                                selectedPercentage = 25.0;
-                                specificValueField.setDisable(true);
-                            }
-                            else if (radio50.isSelected()){
-                                selectedPercentage = 50.0;
-                                specificValueField.setDisable(true);
-                            }
-                            else if (radio75.isSelected()){
-                                selectedPercentage = 75.0;
-                                specificValueField.setDisable(true);
-                            }
-                            else if (radio100.isSelected()){
-                                selectedPercentage = 100.0;
-                                specificValueField.setDisable(true);
-                            }
+                    userRegistered.setUserCredit(newUserCredit);
 
-                            double finalGain;
+                    specificValueField.clear();
+                    sellPopup.close();
 
-                            if (selectedPercentage > 0) {
-                                // Use percentage value
-                                double percentageValue = nrOfStock * (selectedPercentage / 100.0);
-                                finalGain = percentageValue * Double.parseDouble(regMarkPriceL.getText());
-                            } else {
-                                specificValueField.setDisable(false);
-                                // Use manually entered value
-                                double manualValue = Double.parseDouble(specificValueField.getText());
-                                finalGain = manualValue * Double.parseDouble(regMarkPriceL.getText());
-                            }
+                    // Save stock information to the database
+                    saveStocks(userRegistered.getUsername(), symbol, regPriceAPI.regularMarketDayHigh(),
+                            regPriceAPI.regularMarketDayLow(), regPriceAPI.regularMarketDayOpen(),
+                            regPriceAPI.regularMarketPreviousClose(), (-1) * finalGain, regPriceAPI.regularMarketPrice());
+                }
+                catch (NumberFormatException ex) {
+                    System.err.println("Invalid input value. Please enter a valid number.");
+                }
 
-                            double newUserCredit = Double.parseDouble(userRegistered.getUserCredit()) + finalGain;
-
-                            DecimalFormat decimalFormat = new DecimalFormat("#.00");
-                            moneyLabel.setText(decimalFormat.format(newUserCredit));
-
-                            userRegistered.setUserCredit(newUserCredit);
-
-                            specificValueField.clear();
-                            sellPopup.close();
-
-                            // Save stock information to the database with negative amount of money "gained"
-                            saveStocks(userRegistered.getUsername(), symbol, regPriceAPI.regularMarketDayHigh(),
-                                    regPriceAPI.regularMarketDayLow(), regPriceAPI.regularMarketDayOpen(),
-                                    regPriceAPI.regularMarketPreviousClose(), (-1) * finalGain, regPriceAPI.regularMarketPrice());
-                        }
-                        catch (NumberFormatException ex) {
-                            System.err.println("Invalid input value. Please enter a valid number.");
-                        }
-
-                    });
+            });
 
 
 
 
 
             // Handle closeBetPopup button
-                    closeSellPopup.setOnAction(e-> sellPopup.close());
+            closeSellPopul.setOnAction(e->{
+                sellPopup.close();
+            });
 
-                    // Create a scene for the custom popup
-                    Scene sellSectionScene = new Scene(windowSellBox);
+            // Create a scene for the custom popup
+            Scene betPopupScene = new Scene(windowSellBox);
+            sellPopup.setScene(betPopupScene);
 
-                    sellPopup.setScene(sellSectionScene);
+            // Show the custom popup
+            sellPopup.showAndWait(); // Use showAndWait to wait for user interaction before continuing
 
-                    // Show the custom popup
-                    sellPopup.showAndWait(); // Use showAndWait to wait for user interaction before continuing
-
-                });
+        });
 
         // Add the checkBoxes into the HBox
         checkBoxInsideHBox.getChildren().addAll(checkBox);
@@ -371,7 +361,30 @@ public class SubmitController extends Stock { //Invest button + method to invest
         buyAndSellBox.setSpacing(10);
         return buyAndSellBox;
     }
+    public void showStocks(User userRegistered, HBox list){
+        List<List<String>> theList = getSavedStocks(userRegistered.getUsername());
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10); // Horizontal space between columns
+        list.getChildren().clear();
 
+        int rowIndex = 0;
+        for (List<String> outEl : theList) {
+            int columnIndex = 0;
+            outEl.set(0,"");
+            for (String innerEl : outEl) {
+                Text text = new Text(innerEl);
+                gridPane.add(text, columnIndex, rowIndex);
+                columnIndex++;
+            }
+            rowIndex++;
+        }
+        // LIST.REVERT to be implemented by luca :)
+
+
+        list.getChildren().add(gridPane);
+
+
+    }
 
     public Button getBet() { return bet; }
 

@@ -167,13 +167,6 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
                             }
                         }
 
-//                        try {
-//                            // Placeholders for testing
-////                            updateDataHistory(1, 3.0, 8.0, 11.0, "name", 1.8,21.0,17.5,1.0, "name1", "name2");
-//                        } catch (IOException ex) {
-//                            throw new RuntimeException(ex);
-//                        }
-
 
                         // Define the lineChart with all the data
                         // Create a new series for this checkBox
@@ -322,9 +315,6 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
             SplitPane investmentAndPieSplitPane = new SplitPane();
             investmentAndPieSplitPane.getItems().addAll(hBoxUserTransactionHistoryList,pieChart); //investmentBox,
             investmentAndPieSplitPane.setDividerPositions(0.735);
-            // Make the child nodes unresizable
-            SplitPane.setResizableWithParent(hBoxUserTransactionHistoryList, false);
-            SplitPane.setResizableWithParent(pieChart, false);
 
             // Add the line chart to the bottomRightPane
             bottomRightPane.getChildren().addAll(investmentAndPieSplitPane);

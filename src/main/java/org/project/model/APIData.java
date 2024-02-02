@@ -76,52 +76,6 @@ public class APIData{
         }
     }
 
-    public double postMarketChangePercent() {
-        double defaultValue = 101.0; // Default value
-
-        try {
-            if(data != null) {
-                JsonNode toRead = mapper.readTree(data.toString());
-                JsonNode postMarketChangePercentNode = toRead.get("postMarketChangePercent");
-
-                // Check if postMarketChangePercentNode is not null and could not be parsed in double
-                if (postMarketChangePercentNode != null && postMarketChangePercentNode.isDouble()) {
-                    return postMarketChangePercentNode.asDouble();
-                } else {
-                    System.out.println("Value not available or invalid: postMarketChangePercent");
-                }
-            }
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        // If a value couldn't be obtained, return the default value
-        return defaultValue;
-    }
-
-    public double regularMarketChangePercent() {
-        double defaultValue = 101.0; // Default value
-
-        try {
-            if(data != null) {
-                JsonNode toRead = mapper.readTree(data.toString());
-                JsonNode regularMarketChangePercentNode = toRead.get("regularMarketChangePercent");
-
-                // Check if regularMarketChangePercentNode is not null, and it can be pared with double
-                if (regularMarketChangePercentNode != null && regularMarketChangePercentNode.isDouble()) {
-                    return regularMarketChangePercentNode.asDouble();
-                } else {
-                    System.out.println("Value not available or invalid: regularMarketChangePercent");
-                }
-            }
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        // If a value couldn't be obtained, return the default value
-        return defaultValue;
-    }
-
     public double preMarketChange() {
         double defaultValue = 101.0; // Default value
 
@@ -140,6 +94,8 @@ public class APIData{
             throw new RuntimeException(e);
         }
 
+        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito
+        System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
 
@@ -362,58 +318,105 @@ public class APIData{
     }
 
 
-    // For future improvements to the platform - WIP
-    public int maxAge() {
-        int defaultValue = 101; // Default value
-
-        try {
-            if (data != null) {
-                JsonNode toRead = mapper.readTree(data.toString());
-                JsonNode maxAgeNode = toRead.get("maxAge");
-
-                // Check if maxAgeNode is null and if it could be converted into int
-                if (maxAgeNode != null && maxAgeNode.isInt()) {
-                    return maxAgeNode.asInt();
-                } else {
-                    System.out.println("Value not available or invalid: maxAge");
-                }
-            } else {
-                System.out.println("Data is null.");
-            }
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        //If it was not possible to obtain a value, return the default value
-        System.out.println("Using default value: " + defaultValue);
-        return defaultValue;
-    }
-
-    // For future improvements to the platform - WIP
-    public String extractCurrencySymbol() {
-        String defaultValue = "101"; // Defined value
-
-        try {
-            if(data != null) {
-                JsonNode toRead = mapper.readTree(data.toString());
-                JsonNode currencySymbolNode = toRead.get("currencySymbol");
-
-                // Check if currencySymbolNode is not null and if currecySymbolNode contains a string
-                if (currencySymbolNode != null && currencySymbolNode.isTextual()) {
-                    return currencySymbolNode.asText();
-                } else {
-                    System.out.println("Value not available or invalid: currencySymbol");
-                }
-            }
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        // If it wasn't possible to obtain a value, return the default value "N/A"
-        System.out.println("Using default value: " + defaultValue);
-        return defaultValue;
-    }
-
+    // Beta features --> to be implemented in the future
+//    public int maxAge() {
+//        int defaultValue = 101; // Default value
+//
+//        try {
+//            if (data != null) {
+//                JsonNode toRead = mapper.readTree(data.toString());
+//                JsonNode maxAgeNode = toRead.get("maxAge");
+//
+//                // Check if maxAgeNode is null and if it could be converted into int
+//                if (maxAgeNode != null && maxAgeNode.isInt()) {
+//                    return maxAgeNode.asInt();
+//                } else {
+//                    System.out.println("Value not available or invalid: maxAge");
+//                }
+//            } else {
+//                System.out.println("Data is null.");
+//            }
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        //If it was not possible to obtain a value, return the default value
+//        System.out.println("Using default value: " + defaultValue);
+//        return defaultValue;
+//    }
+//
+//    // For future improvements to the platform - WIP
+//    public String extractCurrencySymbol() {
+//        String defaultValue = "101"; // Defined value
+//
+//        try {
+//            if(data != null) {
+//                JsonNode toRead = mapper.readTree(data.toString());
+//                JsonNode currencySymbolNode = toRead.get("currencySymbol");
+//
+//                // Check if currencySymbolNode is not null and if currecySymbolNode contains a string
+//                if (currencySymbolNode != null && currencySymbolNode.isTextual()) {
+//                    return currencySymbolNode.asText();
+//                } else {
+//                    System.out.println("Value not available or invalid: currencySymbol");
+//                }
+//            }
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        // If it wasn't possible to obtain a value, return the default value "N/A"
+//        System.out.println("Using default value: " + defaultValue);
+//        return defaultValue;
+//    }
+//
+//    public double postMarketChangePercent() {
+//        double defaultValue = 101.0; // Default value
+//
+//        try {
+//            if(data != null) {
+//                JsonNode toRead = mapper.readTree(data.toString());
+//                JsonNode postMarketChangePercentNode = toRead.get("postMarketChangePercent");
+//
+//                // Check if postMarketChangePercentNode is not null and could not be parsed in double
+//                if (postMarketChangePercentNode != null && postMarketChangePercentNode.isDouble()) {
+//                    return postMarketChangePercentNode.asDouble();
+//                } else {
+//                    System.out.println("Value not available or invalid: postMarketChangePercent");
+//                }
+//            }
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        // If a value couldn't be obtained, return the default value
+//        System.out.println("Using default value: " + defaultValue);
+//        return defaultValue;
+//    }
+//
+//    public double regularMarketChangePercent() {
+//        double defaultValue = 101.0; // Default value
+//
+//        try {
+//            if(data != null) {
+//                JsonNode toRead = mapper.readTree(data.toString());
+//                JsonNode regularMarketChangePercentNode = toRead.get("regularMarketChangePercent");
+//
+//                // Check if regularMarketChangePercentNode is not null, and it can be pared with double
+//                if (regularMarketChangePercentNode != null && regularMarketChangePercentNode.isDouble()) {
+//                    return regularMarketChangePercentNode.asDouble();
+//                } else {
+//                    System.out.println("Value not available or invalid: regularMarketChangePercent");
+//                }
+//            }
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        // If a value couldn't be obtained, return the default value
+//        System.out.println("Using default value: " + defaultValue);
+//        return defaultValue;
+//    }
 
 }
 

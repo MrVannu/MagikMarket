@@ -165,23 +165,6 @@ public class SubmitController extends Stock { //Invest button + method to invest
                                     apiResponseObj.regularMarketPreviousClose(),Double.parseDouble(buyField.getText())*(-1),
                                     apiResponseObj.regularMarketPrice()*(-1));
 
-//                            List<List<String>> theList = getSavedStocks(userRegistered.getUsername());
-//                            GridPane gridPane = new GridPane();
-//                            gridPane.setHgap(10); // Horizontal space between columns
-//                            list.getChildren().clear();
-//
-//                            int rowIndex = 0;
-//                            for (List<String> outEl : theList) {
-//                                int columnIndex = 0;
-//                                outEl.set(0,"");
-//                                for (String innerEl : outEl) {
-//                                    Text text = new Text(innerEl);
-//                                    gridPane.add(text, columnIndex, rowIndex);
-//                                    columnIndex++;
-//                                }
-//                                rowIndex++;
-//                            }
-//                            list.getChildren().add(gridPane);
 
                             buyField.clear();
                             buyPopup.close();

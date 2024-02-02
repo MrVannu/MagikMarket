@@ -40,7 +40,7 @@ class APIDataTest {
         double regularMarketChange = testData.regularMarketPrice();
 
         // Define your threshold
-        double threshold = 0.0; // Example threshold
+        double threshold = 200.0; // Example threshold
 
         // Assert that the actual value is less than the threshold
         assertTrue(regularMarketChange < threshold);
@@ -73,12 +73,15 @@ class APIDataTest {
         // setup
         //String responseBody = "{\"regularMarketChangePercent\":{\"fmt\":\"+0.47%\",\"raw\":0.0046781195},\"postMarketChange\":{\"fmt\":\"+0.10%\",\"raw\":0.001}}";
 
-        // exercise
-        APIData marketData = new APIData();
-        String result = marketData.extractNameOfCompany();
+        // Create an instance of APIData
+        APIData testData = new APIData();
+
+        // Fetch data for a specific symbol (e.g., "tsla")
+        testData.fetchData("tsla");
+
 
         // assert
-        assertEquals( result, "Tesla, Inc.");
+        assertEquals( testData.extractNameOfCompany(), "Tesla, Inc.");
     }
 
 

@@ -33,7 +33,6 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
     Scene WelcomeScene;
     private static final int MAX_SELECTED_CHECKBOXES = 4;
     private short dataToUpdateIndex = 0;
-    private final ArrayList<String> symbolsOfStock = new ArrayList<>();
     private final APIData testObj  = new APIData();
 
     //DATA HISTORY MANAGEMENT
@@ -99,7 +98,7 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
 
         // Define a list of checkBoxes
         List<CheckBox> checkBoxesArrayList = new ArrayList<>();
-        List<Button> investmentButtonsArrayList = new ArrayList<>();
+        ArrayList<String> symbolsOfStock = new ArrayList<>();
         symbolsOfStock.add("amc");
         symbolsOfStock.add("x");
         symbolsOfStock.add("tsla");
@@ -128,16 +127,16 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
         // Create line chart
         LineChart<Number, Number> lineChart= LineChartGenerator.createLineChart("Choose a company");
 
-        // Create GridPane to substitute boxBox and betButtonsBox for layout of the checkboxes and the bet buttons
-        GridPane checkAndBetGpane = new GridPane();
-        checkAndBetGpane.setHgap(10);
-        checkAndBetGpane.setVgap(10);
-        checkAndBetGpane.setPadding(new Insets(10));
-        // Define counter used in the foreach
+        // Create GridPane to show into a grid the ceckBoxes and relative sell and buy buttons
+        GridPane checkBoxesGridPane = new GridPane();
+        checkBoxesGridPane.setHgap(10);
+        checkBoxesGridPane.setVgap(10);
+        checkBoxesGridPane.setPadding(new Insets(10));
+        // Define counter used when inserting checkBoxes into gridPane
         int numOfBoxes = 0;
 
-        // Create a HBox to contain both VBoxes
-        HBox lowerLeftBox = new HBox(checkAndBetGpane);
+        // Create a HBox to contain gridPane with checkBoxes
+        HBox lowerLeftBox = new HBox(checkBoxesGridPane);
         lowerLeftBox.setAlignment(Pos.CENTER);
         lowerLeftBox.setSpacing(20);
 
@@ -173,9 +172,9 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
         HBox investmentBox = new HBox();
         investmentBox.setAlignment(Pos.CENTER);
 
-        // Define HBox for hBoxList of stocks
-        HBox hBoxList = new HBox();
-        hBoxList.setAlignment(Pos.CENTER);
+        // Define HBox to contain a list of the user's transaction history of the stocks
+        HBox hBoxUserTransactionHistoryList = new HBox();
+        hBoxUserTransactionHistoryList.setAlignment(Pos.CENTER);
 
         // Create pie chart
         PieChart pieChart = new PieChart();
@@ -256,7 +255,7 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
                         stocksCheckedOn.add(stock);
 
                         // Create a new PieChart.Data object
-                        PieChart.Data newData = new PieChart.Data( symbol, stock.getVolume() );
+                        PieChart.Data newData = new PieChart.Data(symbol, stock.getVolume());
 
                         // Update the pie chart with the modified data
                         pieChart.getData().add(newData);
@@ -304,101 +303,102 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
                     lineChart.setTitle("");
 
                 }
-            }); // Closing checkBox action
+            }); // Close checkBox action
 
-            // Define instance of SubmitControl
-            SubmitController submitController = new SubmitController(userRegistered, primaryStage, stocksCheckedOn, hBoxList, symbol, moneyLabel, checkBox);
-
-            // Add the bet button into the ArrayList
-            investmentButtonsArrayList.add(submitController.getBet());
+            // Define instance of SubmitControl and pass all parameters
+            SubmitController submitController = new SubmitController(userRegistered, primaryStage, stocksCheckedOn, hBoxUserTransactionHistoryList, symbol, moneyLabel, checkBox);
 
             // Add the checkBox into the ArrayList
             checkBoxesArrayList.add(checkBox);
 
-            //Using the foreach to increment the counter to insert the checkboxes and buttons
-            checkAndBetGpane.add(submitController.getCheckBoxInsideHBox(), 0, numOfBoxes);
-            checkAndBetGpane.add(submitController.getBuyAndSell(), 1, numOfBoxes);
+            //Using the foreach to increment the counter to insert the checkboxes and buy + sell buttons
+            checkBoxesGridPane.add(submitController.getCheckBoxInsideHBox(), 0, numOfBoxes);
+            checkBoxesGridPane.add(submitController.getBuyAndSell(), 1, numOfBoxes);
             numOfBoxes++;
-        }
 
-        // Add the checkBox + betButton into the layout
+        } // Close for each
+
+        // Insert lineChart into layout
+        rightVerticalSplitPane.getItems().addAll(lineChart);
+
+        // Add the checkBoxes to layout
         leftPaneBox.getChildren().addAll(lowerLeftBox);
-        // Let previsionBox occupy all the space inside the VBox it is inserted
-        VBox.setVgrow(lowerLeftBox, Priority.ALWAYS);
-
-        // Define object of the prevision class to show UI components of the prevision
-        PrevisionController previsionController = new PrevisionController(stocksCheckedOn);
-
-        // Define switchPane object of the hBoxList
-        SwitchPane switchPane = new SwitchPane();
-        switchPane.showOtherView(userRegistered, hBoxList);
-        // Define switch button
-        Button switchHistory = new Button("Switch history");
-        switchHistory.setOnAction(e->{
-            if(switchPane.toggle)
-                switchPane.showStocks(userRegistered, hBoxList);
-            else
-                switchPane.showOtherView(userRegistered, hBoxList);
-        });
+        VBox.setVgrow(lowerLeftBox, Priority.ALWAYS); // Let lowerLeftBox occupy all the space inside the VBox
 
 
-        // To set both the buttons of the same width
-        switchHistory.setMaxWidth(100);
+        /*
+         * Section with logic and layout code for the Prevision and Switch History buttons.
+         * This section handles the functionality related to switching to the prediction view and switching
+         * between different user's transaction historical views.
+         */
+            // Define instance of the prevision class to show UI components of prevision
+            PrevisionController previsionController = new PrevisionController(stocksCheckedOn);
 
-        // Define the VBox in the lower left part of the UI containing the previsionButton and switchHistoryButton
-        VBox previsionAndSwitchButton = new VBox(previsionController.getPrevisionHBox(), switchHistory);
-        previsionAndSwitchButton.setSpacing(10);
-        previsionAndSwitchButton.setAlignment(Pos.CENTER);
-        previsionAndSwitchButton.setPadding(new Insets(0, 0, 50,0)); // Padding to move the button higher
+            // Define switchPane instance to get formatted data to show into layout
+            SwitchPane switchPane = new SwitchPane();
+            switchPane.showOtherView(userRegistered, hBoxUserTransactionHistoryList);
+            // Define switch button to switch between the user's transaction historical views
+            Button switchHistory = new Button("Switch history");
+            switchHistory.setOnAction(e->{
+                if(switchPane.toggle)
+                    switchPane.showStocks(userRegistered, hBoxUserTransactionHistoryList);
+                else
+                    switchPane.showOtherView(userRegistered, hBoxUserTransactionHistoryList);
+            });
+            // Set both the buttons of the same width
+            switchHistory.setMaxWidth(100);
 
-        // Add the Box with prevision button to the leftPaneBox (it is below the checkboxes)
-        leftPaneBox.getChildren().addAll(previsionAndSwitchButton);
-        leftPaneBox.setSpacing(10);
+            // Define the VBox in the lower left part of the UI containing the previsionButton and switchHistoryButton
+            VBox previsionAndSwitchButton = new VBox(previsionController.getPrevisionHBox(), switchHistory);
+            previsionAndSwitchButton.setSpacing(10);
+            previsionAndSwitchButton.setAlignment(Pos.CENTER);
+            previsionAndSwitchButton.setPadding(new Insets(0, 0, 50,0)); // Padding to move the button higher
 
-        // Set title to pie chart
-        pieChart.setTitle("Avg. 3 Month Volume");
+            // Add the Box with prevision button to the leftPaneBox (it is below the checkboxes)
+            leftPaneBox.getChildren().addAll(previsionAndSwitchButton);
+            leftPaneBox.setSpacing(10);
 
-        // Layout
-        // Define a box to insert all the charts
-        VBox chartsBox = new VBox(10);
-        chartsBox.getChildren().addAll(lineChart);
 
-        // Add the list of data that the user bet on, and stuff like that, to the layout
-        investmentBox.getChildren().add(hBoxList);
+        /*
+         * Section with logic and layout code for the .
+         */
+            // Set title to pie chart
+            pieChart.setTitle("Avg. 3 Month Volume");
 
-        // Define a SplitPane for inserting PieChart and InvestmentBox
-        SplitPane investmentAndPieSplitPane = new SplitPane();
-        investmentAndPieSplitPane.getItems().addAll(investmentBox,pieChart); //investmentBox,
-        investmentAndPieSplitPane.setDividerPositions(0.7);
 
-        rightVerticalSplitPane.getItems().addAll(chartsBox);
 
-        // Add the barChart to the chartsBox
-        chartsBox.getChildren().addAll();
+            // Add the list of data that the user bet on, and stuff like that, to the layout
+            investmentBox.getChildren().add(hBoxUserTransactionHistoryList);
 
-        // Add the line chart to the bottomRightPane
-        bottomRightPane.getChildren().addAll(investmentAndPieSplitPane);
+            // Define a SplitPane for inserting PieChart and InvestmentBox
+            SplitPane investmentAndPieSplitPane = new SplitPane();
+            investmentAndPieSplitPane.getItems().addAll(hBoxUserTransactionHistoryList,pieChart); //investmentBox,
+            investmentAndPieSplitPane.setDividerPositions(0.7);
+            // Make the child nodes unresizable
+            SplitPane.setResizableWithParent(hBoxUserTransactionHistoryList, false);
+            SplitPane.setResizableWithParent(pieChart, false);
+
+            // Add the line chart to the bottomRightPane
+            bottomRightPane.getChildren().addAll(investmentAndPieSplitPane);
+
+
+
 
         // Define the menu bar in the top of the mainPain
         MenuBar menuBar = new MenuBar();// Create a menu bar
+
+        // Create instruction string
+        String instructions = """
+                This application is a simulation designed to provide insights into the real stock market. Users can buy and sell stocks, and the home page offers a comprehensive overview of their transactions. By selecting up to four stocks from the checkboxes, users can closely monitor their chosen investments.\s
+                Every user begins with a default amount of $1,000, which can be modified in the edit menu. The invested amount directly affects the user's available funds. The simulation reflects the outcomes of these investments, indicating whether predictions were correct.\s
+                 Clicking the 'Prevision' button introduces random data changes to the chart, simulating market fluctuations. A decrease in the chart results in a loss, while an increase indicates a profit.\s
+                 The Pie chart provides insights into the market volume of a selected stock, while the line chart illustrates the stock's performance over time. This data is crucial for understanding the liquidity and trading activity of the stock, aiding users in making informed investment decisions.""";
 
         // Create a "Info" menu
         Menu infoMenu = new Menu("Info");
         // Create menu items for the "File" menu
         MenuItem instructionsItem = new MenuItem("Instructions");
-        instructionsItem.setOnAction(e-> AlertField.showSuccessAlert("Information","This is a simulation of an " +
-                "application that can help you having a look at the real market. You can invest some " +
-                "money in some Stocks. You can have a look at the Stocks by selecting from the " +
-                "checkboxes the Stocks you are interested on. You can select maximum 4 Stocks" +
-                "You have an amount of money that is, by default, 1,000 (you can modify it form the edit" +
-                "menu). As much as you invest, the amount of money will decrease. There will be " +
-                "a simulation that will show you if your prediction was correct or not." +
-                "When clicking the Prevision button some random data change the chart. This is a way" +
-                "to simulate some kind of changes. When the chart has decreased you loose money. When the" +
-                "chart has increased you win money." +
-                "The bar chart will help you having a look at the market volume of a selected Stock. This data " +
-                "is very important as it provides insights into the liquidity and trading activity of the " +
-                "stock, which can be valuable for making informed investment decisions."));
+        instructionsItem.setOnAction(e-> AlertField.showSuccessAlert("Information",instructions));
         MenuItem exitItem = new MenuItem("Exit");
         // Exit the application if you click the exit item
         exitItem.setOnAction(e -> {
@@ -500,96 +500,103 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
         // Add menus to the menu bar
         menuBar.getMenus().addAll(infoMenu, editMenu, options);
 
-        // Define the parent Scene and Panes
-        // Define the main SplitPane that contains the left and right panes
-        SplitPane splitPane = new SplitPane();
-        splitPane.getItems().addAll(leftPaneBox, rightPaneBox);
-        splitPane.setDividerPositions(0.2, 0.6); // Configure SplitPane dimension
-
-        // Define the first pane that will contain the main splitPane and the menuBar. It will contain everything
-        BorderPane mainPane = new BorderPane(splitPane);
-        mainPane.setTop(menuBar);
-
-        // Instantiate the whole scene and define its dimension
-        WelcomeScene = new Scene(mainPane, 1900, 900); // <---- Dimension of the WelcomePane
-        WelcomeScene.getStylesheets().add("styles.css"); // Reference to the CSS file
-
-        // Define elements and HBox for the topRightPane
-        // Define username label to show username from the DB
-        Label username = new Label(userRegistered.getUsername());
-        username.setTextFill(Color.rgb(255, 164, 94));
-
-        // Define the text of the username
-        Label textUsername = new Label("Username: ");
-        textUsername.setFont(Font.font("Helvetica", FontWeight.BOLD, 12));
-        textUsername.setTextFill(Color.rgb(92, 49, 144));
-
-        // Create an ImageView for the user image
-        ImageView imgView = new ImageView();
-        imgView.setFitWidth(30); // Dimension of the image
-        imgView.setFitHeight(30); // Dimension of the image
-
-        // Create a FileChooser so that the user can insert an image
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp")
-        );
-
-        // Create a button to trigger the file selection and an image view
-        Image userImage = new Image("file:src/main/resources/userImg.png");
-        ImageView userView = new ImageView(userImage);
-        userView.setFitWidth(24); // Set the desired width for the image
-        userView.setFitHeight(24); // Set the desired height for the image
-
-        // Section for updating the image
-        Button selectImageButton = new Button();
-        selectImageButton.setGraphic(userView);
-        selectImageButton.setOnAction(e -> {
-            File selectedFile = fileChooser.showOpenDialog(primaryStage);
-            if (selectedFile != null) {
-                // Load the selected image and display it in the ImageView
-                Image image = new Image(selectedFile.toURI().toString());
-                imgView.setImage(image);
-            }
-        });
-
-        // Create a layout for the UI
-        HBox profilePic = new HBox(imgView, selectImageButton);
-        profilePic.setAlignment(Pos.CENTER);
-        profilePic.setSpacing(10);
-
-        Label amountLabel = new Label("Your amount: ");
-        amountLabel.setFont(Font.font("Helvetica", FontWeight.BOLD, 12));
-        amountLabel.setTextFill(Color.rgb(92, 49, 144));
 
 
-        // Layout to visualize the money
-        HBox moneyBox = new HBox(amountLabel, moneyLabel);
-        moneyBox.setAlignment(Pos.CENTER);
+        /*
+         * Main Scene Definition:
+         * - mainSplitPane: SplitPane containing left and right panes
+         * - mainPane: BorderPane with mainSplitPane and menuBar
+         * - WelcomeScene: Scene with mainPane and dimension of the scene
+         */
+            SplitPane mainSplitPane = new SplitPane();
+            mainSplitPane.getItems().addAll(leftPaneBox, rightPaneBox);
+            mainSplitPane.setDividerPositions(0.15, 0.6); // Configure SplitPane dimension
 
-        Separator separator1 = new Separator();
-        separator1.setOrientation(Orientation.VERTICAL);
-        separator1.setPrefHeight(20);
-            Separator separator2 = new Separator();
-            separator2.setOrientation(Orientation.VERTICAL);
-            separator2.setPrefHeight(20);
-                Separator separator3 = new Separator();
-                separator3.setOrientation(Orientation.VERTICAL);
-                separator3.setPrefHeight(20);
+            BorderPane mainPane = new BorderPane(mainSplitPane);
+            mainPane.setTop(menuBar);
 
-        // Add all the elements into the tobBox
-        topBox.getChildren().addAll(profilePic, separator1, textUsername, username, separator2, moneyBox);
+            WelcomeScene = new Scene(mainPane, 1900, 900); // <---- Dimension of the WelcomeScene
+            WelcomeScene.getStylesheets().add("styles.css"); // Reference to the CSS file
 
-        // Add the topBot into the StackPane
-        topRightPane.getChildren().addAll(topBox);
 
+
+        /*
+         * Top Right Pane Elements:
+         * - User information display: Username label and image with style
+         * - Image selection functionality with FileChooser to insert image
+         * - UI layout for profile picture and image insert/update button
+         * - Display of user's available amount
+         * - Separators for visual separation
+         * - Final insert of the elements into topRightPane
+         */
+            Label username = new Label(userRegistered.getUsername());
+            username.setTextFill(Color.rgb(255, 164, 94));
+
+            Label textUsername = new Label("Username: ");
+            textUsername.setFont(Font.font("Helvetica", FontWeight.BOLD, 12));
+            textUsername.setTextFill(Color.rgb(92, 49, 144));
+
+            ImageView imgView = new ImageView();
+            imgView.setFitWidth(30); // Width of the image
+            imgView.setFitHeight(30); // Height of the image
+
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp")
+            );
+
+            Image userImage = new Image("file:src/main/resources/userImg.png");
+            ImageView userView = new ImageView(userImage);
+            userView.setFitWidth(24); // Set the desired width for the image
+            userView.setFitHeight(24); // Set the desired height for the image
+
+            Button selectImageButton = new Button();
+            selectImageButton.setGraphic(userView);
+            selectImageButton.setOnAction(e -> {
+                File selectedFile = fileChooser.showOpenDialog(primaryStage);
+                if (selectedFile != null) {
+                    // Load the selected image and display it in the ImageView
+                    Image image = new Image(selectedFile.toURI().toString());
+                    imgView.setImage(image);
+                }
+            });
+
+            // Define elements for the UI
+            HBox profilePic = new HBox(imgView, selectImageButton);
+            profilePic.setAlignment(Pos.CENTER);
+            profilePic.setSpacing(10);
+
+            Label amountLabel = new Label("Your amount: ");
+            amountLabel.setFont(Font.font("Helvetica", FontWeight.BOLD, 12));
+            amountLabel.setTextFill(Color.rgb(92, 49, 144));
+
+            HBox moneyBox = new HBox(amountLabel, moneyLabel);
+            moneyBox.setAlignment(Pos.CENTER);
+
+            Separator separator1 = new Separator();
+            separator1.setOrientation(Orientation.VERTICAL);
+            separator1.setPrefHeight(20);
+                Separator separator2 = new Separator();
+                separator2.setOrientation(Orientation.VERTICAL);
+                separator2.setPrefHeight(20);
+                    Separator separator3 = new Separator();
+                    separator3.setOrientation(Orientation.VERTICAL);
+                    separator3.setPrefHeight(20);
+
+            topBox.getChildren().addAll(profilePic, separator1, textUsername, username, separator2, moneyBox);
+            topRightPane.getChildren().addAll(topBox);
+
+
+
+
+        // Section to define alert triggered when closing the application
         primaryStage.setOnCloseRequest(event -> {
             event.consume();
 
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Exit the application");
             alert.setHeaderText("Are you sure you want to close the current session?");
-            alert.setContentText("Your data are already saved! \n\n\n Click on \"Leave\" to exit");
+            alert.setContentText("Your data are already saved! \n\n\n Click on \"Ok\" to exit");
 
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {

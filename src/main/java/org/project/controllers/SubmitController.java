@@ -49,9 +49,9 @@ public class SubmitController extends Stock { //Invest button + method to invest
             // Create UI elements for the custom popup (invest button)
             Label instruction = new Label("Set the bet amount");
             TextField betField = new TextField();
-            Button submitBetAmount = new Button("Submit");
+            Button submitInvestedAmount = new Button("Submit");
             Button closeBetPopup = new Button("Close");
-            HBox buttonsBetBox = new HBox(submitBetAmount, closeBetPopup);
+            HBox buttonsBetBox = new HBox(submitInvestedAmount, closeBetPopup);
             buttonsBetBox.setSpacing(30);
 
             // Define Box with elements for the popup (invest button)
@@ -64,8 +64,8 @@ public class SubmitController extends Stock { //Invest button + method to invest
             HBox miniBox = new HBox();
             miniBox.setAlignment(Pos.CENTER);
 
-            //Handle submitBetAmount button
-            submitBetAmount.setOnAction(e->{
+            // Handle submitInvestedAmount button
+            submitInvestedAmount.setOnAction(e->{
                 if(!betField.getText().isEmpty()) { // If the field is not empty
                     try{
                       // Attempt to parse the text as a double. If parsing is successful, it's a valid number
@@ -290,7 +290,7 @@ public class SubmitController extends Stock { //Invest button + method to invest
                     windowSellBox.setPrefSize(400,800);
                     windowSellBox.setAlignment(Pos.CENTER);
 
-                    //Handle submitSellAmount button
+                    // Handle submitSellAmount button
                     submitSellAmount.setOnAction(e -> {
                         double nrOfStock = getSumAndPieces(userRegistered.getUsername(), symbol);
 

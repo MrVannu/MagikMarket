@@ -1,5 +1,6 @@
 package org.project;
 
+import javafx.application.Platform;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -17,9 +18,9 @@ import org.project.controllers.LoginController;
 import org.project.model.User;
 import org.project.util.AlertField;
 import org.project.view.WelcomePane;
-
 import java.io.*;
-
+import java.util.concurrent.CompletableFuture;
+import org.project.util.LoadingDialog;
 
 public class Main extends Application {
         
@@ -113,36 +114,49 @@ public class Main extends Application {
         Button loginButton = new Button("Login");
         loginButton.setOnAction(e -> {
             if (!CheckInternetConnection.isInternetReachable()) {
-                String errorNoConnectionBody = "You are not currently connected to the Internet." +
-                        "\n\n Please connect to a network to use this application!";
+                String errorNoConnectionBody = """
+                You are not currently connected to the Internet.
+
+                 Please connect to a network to use this application!""";
 
                 String errorNoConnectionTitle = "CONNECTION ERROR";
 
                 AlertField.showErrorAlert(errorNoConnectionTitle, errorNoConnectionBody);
-            }
+            } else {
+                // Show the loading dialog
+                LoadingDialog.showLoadingAlert(primaryStage);
 
+                String username = usernameFieldLogin.getText();
+                String password = passwordFieldLogin.getText();
 
-            String username = usernameFieldLogin.getText();
-            String password = passwordFieldLogin.getText();
+                // Perform the authentication task asynchronously
+                CompletableFuture.runAsync(() -> {
+                    if (loginController.usernameExists(username, loginController.getPathUserDB()) &&
+                            loginController.usernameValidator(username) &&
+                            loginController.passwordCorresponds(username, password, loginController.getPathUserDB())) {
 
-            // Validating credentials
-            if(loginController.usernameExists(username, loginController.getPathUserDB()) && loginController.usernameValidator(username)
-                    && loginController.passwordCorresponds(username, password, loginController.getPathUserDB())) {
+                        // Update UI on the JavaFX Application Thread
+                        Platform.runLater(() -> {
+                            loginController.setUserRegistered(new User(username));
+                            WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, loginController.getUserRegistered());
 
-                loginController.setUserRegistered(new User(username));
-                WelcomePane welcomePane = new WelcomePane(primaryStage, LoginScene, loginController.getUserRegistered());
+                            primaryStage.setTitle("Start App");
+                            primaryStage.setScene(welcomePane.getScene());
 
-                primaryStage.setTitle("Start App");
-                primaryStage.setScene(welcomePane.getScene());
-
-                AlertField.resetField(usernameFieldLogin,passwordFieldLogin);
-            }
-            else {
-                // The user does not exist
-                AlertField.showErrorAlert("Authentication error", "User not found or incorrect credentials.");
-                AlertField.invalidField(usernameFieldLogin, passwordFieldLogin);
+                            AlertField.resetField(usernameFieldLogin, passwordFieldLogin);
+                        });
+                    } else {
+                        // The user does not exist
+                        Platform.runLater(() -> {
+                            AlertField.showErrorAlert("Authentication error", "User not found or incorrect credentials.");
+                            AlertField.invalidField(usernameFieldLogin, passwordFieldLogin);
+                        });
+                    }
+                });
             }
         });
+
+
 
         // Button -> Register
         Button switchScenesRegister = new Button("Sign in");

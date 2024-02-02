@@ -1,5 +1,4 @@
 package org.project.view;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -29,8 +28,6 @@ import org.project.model.Stock;
 import org.project.model.User;
 import org.project.util.AlertField;
 import org.project.util.LineChartGenerator;
-
-import java.awt.*;
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -40,66 +37,7 @@ import java.util.List;
 public class WelcomePane extends APIData { // Extends APIData to use data from the API
     Scene WelcomeScene;
     private static final int MAX_SELECTED_CHECKBOXES = 4;
-    private short dataToUpdateIndex = 0;
     private final APIData testObj  = new APIData();
-
-    //DATA HISTORY MANAGEMENT
-    public void updateDataHistory(
-            int maxAge,
-            double postMarketChangePercent,
-            double regularMarketChangePercent,
-            double preMarketChange,
-            String extractNameOfCompany,
-            double regularMarketOpen,
-            double regularMarketDayHigh,
-            double regularMarketDayLow,
-            double regularMarketPreviousClose,
-            String symbolOfCompany,
-            String extractCurrencySymbol
-    ) throws IOException
-    {
-        // Build the String to be written on DB
-        String toWrite = maxAge + ", " +
-                postMarketChangePercent + ", " +
-                regularMarketChangePercent + ", " +
-                preMarketChange + ", " +
-                extractNameOfCompany + ", " +
-                regularMarketOpen + ", " +
-                regularMarketDayHigh + ", " +
-                regularMarketDayLow + ", " +
-                regularMarketPreviousClose + ", " +
-                symbolOfCompany + ", " +
-                extractCurrencySymbol;
-
-
-        // Read all lines from the file
-        List<String> lines = new ArrayList<>();
-        // Path to DB for data history
-        String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";
-        try (BufferedReader reader = new BufferedReader(new FileReader(pathDataHistoryDB))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                lines.add(line);
-            }
-        }
-
-        // Pad the list with empty lines up to 100 elements
-        while (lines.size() < 200) {
-            lines.add("");
-        }
-
-        // Update the data at the specified index
-        lines.set(dataToUpdateIndex, toWrite);
-        // Write the modified lines back to the file
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathDataHistoryDB))) {
-            for (String line : lines) {
-                writer.write(line + "\n");
-            }
-        }
-
-        ++dataToUpdateIndex; // Increment the counter of the most remote index
-        if(dataToUpdateIndex>=200) dataToUpdateIndex=0;
-    }
 
     public WelcomePane(Stage primaryStage, Scene LoginScene, User userRegistered){
         super();

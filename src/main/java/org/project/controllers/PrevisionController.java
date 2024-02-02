@@ -51,68 +51,8 @@ public class PrevisionController {
     // Define box to insert prevision button and animation
     private HBox previsionHBox = new HBox(previsionButton);
 
-    public ArrayList<Double> generateNextPrevision(String nameToScanFor, LoginController loginController){
-        List<String> openRates = new ArrayList<>();
-        List<String> closingRates = new ArrayList<>();
-        List<String> highestRates = new ArrayList<>();
-        List<String> lowestRates = new ArrayList<>();
-        ArrayList<Double> returnValues = new ArrayList<>();
-
-        try (CSVReader reader = new CSVReader(new FileReader(loginController.getPathUserDB()))) {
-            String[] nextLine;
-
-            while ((nextLine = reader.readNext()) != null) {
-                // Check whether the name is the wanted one
-                if (!nextLine[4].isEmpty() && nextLine[4].equals(nameToScanFor)) {  // "4" is the position of the name of  company into the db
-                    if(!nextLine[5].isEmpty() && !nextLine[5].equals("101")) openRates.add(nextLine[5]); // Gets opening value
-                    if(!nextLine[8].isEmpty() && !nextLine[8].equals("101")) closingRates.add(nextLine[8]); // Gets closing value
-                    if(!nextLine[6].isEmpty() && !nextLine[6].equals("101")) highestRates.add(nextLine[6]); // Gets closing value
-                    if(!nextLine[7].isEmpty() && !nextLine[7].equals("101")) lowestRates.add(nextLine[7]); // Gets closing value
-                }
-            }
-
-            Random random = new Random();
-            int precisionRange = (random.nextInt(101))+4; // Generates a random integer
-
-            short counterOpeningValues = 0;
-            short counterClosingValues = 0;
-            short counterHighestValues = 0;
-            short counterLowestValues = 0;
-
-            double openValuesAverage = 0.0;
-            double closeValuesAverage = 0.0;
-            double highestValuesAverage = 0.0;
-            double lowestValuesAverage = 0.0;
-
-            for (int k = 0; k <= precisionRange; k++) {
-                if (k < openRates.size() && k < closingRates.size() && k < highestRates.size() && k < lowestRates.size()) {
-                    openValuesAverage += Double.parseDouble(openRates.get(k));
-                    closeValuesAverage += Double.parseDouble(closingRates.get(k));
-                    highestValuesAverage += Double.parseDouble(highestRates.get(k));
-                    lowestValuesAverage += Double.parseDouble(lowestRates.get(k));
-
-                    counterOpeningValues++;
-                    counterClosingValues++;
-                    counterHighestValues++;
-                    counterLowestValues++;
-                }
-                else if(k > openRates.size()) --precisionRange;
-            }
-
-            returnValues.add(0, openValuesAverage/counterOpeningValues);
-            returnValues.add(1, highestValuesAverage/counterHighestValues);
-            returnValues.add(2, lowestValuesAverage/counterLowestValues);
-            returnValues.add(3, closeValuesAverage/counterClosingValues);
-
-            return returnValues;
-
-        } catch (IOException | CsvValidationException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public PrevisionController(ArrayList<Stock> stocksCheckedOn){
-            previsionButton.setGraphic(previsionContentHBox); // Insert img inside button
+        previsionButton.setGraphic(previsionContentHBox); // Insert img inside button
         ImageView arrowButtonView = new ImageView(arrowButtonImage);
         arrowButtonView.setFitHeight(10);
             arrowButtonView.setFitWidth(15);

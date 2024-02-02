@@ -1,15 +1,16 @@
 package org.project.view;
 
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import org.project.model.APIData;
 import org.project.model.Stock;
 import org.project.model.User;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +68,8 @@ public class SwitchPane extends Stock {
         gridPane.add(dateOfTransaction,7,0);
         gridPane.add(pieceOfStockGotten,8,0);
 
+        gridPane.setPadding(new Insets(17));
+
         // Define a decimal format object to format the numbers of the grid pane
         DecimalFormat decimalFormat = new DecimalFormat("#.####");
 
@@ -86,7 +89,12 @@ public class SwitchPane extends Stock {
             rowIndex++;
         }
 
-        list.getChildren().add(gridPane);
+        // Define
+        ScrollPane scP = new ScrollPane(gridPane);
+        scP.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
+        scP.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+        list.getChildren().add(scP);
         this.toggle = !this.toggle;
     }
 
@@ -213,6 +221,11 @@ public class SwitchPane extends Stock {
         for (int i = 0; i < nameLabels.length; i++) {
             addStockInfoToGrid(gridPane, nameLabels[i], priceLabels[i], piecesLabels[i], averageLabels[i], i);
         }
+
+//        // Define a decimal format object to format the numbers of the grid pane
+//        DecimalFormat decimalFormat = new DecimalFormat("#.####");
+//        double number = Double.parseDouble();
+//        text.setText(decimalFormat.format(number));
 
         // Define refresh button
         Button refresh = new Button("\u27F3"); // This unicode is ⟳

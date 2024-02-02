@@ -5,6 +5,9 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.application.Application;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.FontWeight;
@@ -13,7 +16,6 @@ import javafx.geometry.Insets;
 import javafx.scene.text.Font;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.project.controllers.CheckInternetConnection;
 import org.project.controllers.LoginController;
 import org.project.model.User;
 import org.project.util.AlertField;
@@ -28,6 +30,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         //User userRegistered = new User();
         LoginController loginController = new LoginController();
+
 
         // Defining the panes
         GridPane layoutLogin = new GridPane();
@@ -113,16 +116,18 @@ public class Main extends Application {
         // Button -> login
         Button loginButton = new Button("Login");
         loginButton.setOnAction(e -> {
-            if (!CheckInternetConnection.isInternetReachable()) {
-                String errorNoConnectionBody = """
-                You are not currently connected to the Internet.
 
-                 Please connect to a network to use this application!""";
-
-                String errorNoConnectionTitle = "CONNECTION ERROR";
-
-                AlertField.showErrorAlert(errorNoConnectionTitle, errorNoConnectionBody);
-            } else {
+            // Beta features --> to be implemented in the future (problems with MacOs)
+//            if (!CheckInternetConnection.isInternetReachable()) {
+//                String errorNoConnectionBody = """
+//                You are not currently connected to the Internet.
+//
+//                 Please connect to a network to use this application!""";
+//
+//                String errorNoConnectionTitle = "CONNECTION ERROR";
+//
+//                AlertField.showErrorAlert(errorNoConnectionTitle, errorNoConnectionBody);
+//            } else {
                 // Show the loading dialog
                 LoadingDialog.showLoadingAlert();
 
@@ -152,7 +157,7 @@ public class Main extends Application {
                         });
                     }
                 });
-            }
+//            }
         });
 
         // Button -> Register

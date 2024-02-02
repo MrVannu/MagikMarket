@@ -5,6 +5,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -25,71 +31,13 @@ import org.project.util.LineChartGenerator;
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.List;
 
 
 public class WelcomePane extends APIData { // Extends APIData to use data from the API
     Scene WelcomeScene;
     private static final int MAX_SELECTED_CHECKBOXES = 4;
-    private short dataToUpdateIndex = 0;
     private final APIData testObj  = new APIData();
-
-    //DATA HISTORY MANAGEMENT
-    public void updateDataHistory(
-            int maxAge,
-            double postMarketChangePercent,
-            double regularMarketChangePercent,
-            double preMarketChange,
-            String extractNameOfCompany,
-            double regularMarketOpen,
-            double regularMarketDayHigh,
-            double regularMarketDayLow,
-            double regularMarketPreviousClose,
-            String symbolOfCompany,
-            String extractCurrencySymbol
-    ) throws IOException
-    {
-        // Build the String to be written on DB
-        String toWrite = maxAge + ", " +
-                postMarketChangePercent + ", " +
-                regularMarketChangePercent + ", " +
-                preMarketChange + ", " +
-                extractNameOfCompany + ", " +
-                regularMarketOpen + ", " +
-                regularMarketDayHigh + ", " +
-                regularMarketDayLow + ", " +
-                regularMarketPreviousClose + ", " +
-                symbolOfCompany + ", " +
-                extractCurrencySymbol;
-
-
-        // Read all lines from the file
-        List<String> lines = new ArrayList<>();
-        // Path to DB for data history
-        String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";
-        try (BufferedReader reader = new BufferedReader(new FileReader(pathDataHistoryDB))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                lines.add(line);
-            }
-        }
-
-        // Pad the list with empty lines up to 200 elements
-        while (lines.size() < 200) {
-            lines.add("");
-        }
-
-        // Update the data at the specified index
-        lines.set(dataToUpdateIndex, toWrite);
-        // Write the modified lines back to the file
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathDataHistoryDB))) {
-            for (String line : lines) {
-                writer.write(line + "\n");
-            }
-        }
-
-        ++dataToUpdateIndex; // Increment the counter of the most remote index
-        if(dataToUpdateIndex>=200) dataToUpdateIndex=0;
-    }
 
     public WelcomePane(Stage primaryStage, Scene LoginScene, User userRegistered){
         super();
@@ -334,14 +282,17 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
 
             // Define switchPane instance to get formatted data to show into layout
             SwitchPane switchPane = new SwitchPane();
-            switchPane.showOtherView(userRegistered, hBoxUserTransactionHistoryList);
+            switchPane.showStocks(userRegistered, hBoxUserTransactionHistoryList);
             // Define switch button to switch between the user's transaction historical views
             Button switchHistory = new Button("Switch history");
             switchHistory.setOnAction(e->{
-                if(switchPane.toggle)
-                    switchPane.showStocks(userRegistered, hBoxUserTransactionHistoryList);
-                else
+                if(switchPane.toggle) {
                     switchPane.showOtherView(userRegistered, hBoxUserTransactionHistoryList);
+
+                }
+                else {
+                    switchPane.showStocks(userRegistered, hBoxUserTransactionHistoryList);
+                }
             });
             // Set both the buttons of the same width
             switchHistory.setMaxWidth(100);
@@ -370,7 +321,7 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
             // Define a SplitPane for inserting PieChart and InvestmentBox
             SplitPane investmentAndPieSplitPane = new SplitPane();
             investmentAndPieSplitPane.getItems().addAll(hBoxUserTransactionHistoryList,pieChart); //investmentBox,
-            investmentAndPieSplitPane.setDividerPositions(0.7);
+            investmentAndPieSplitPane.setDividerPositions(0.735);
             // Make the child nodes unresizable
             SplitPane.setResizableWithParent(hBoxUserTransactionHistoryList, false);
             SplitPane.setResizableWithParent(pieChart, false);

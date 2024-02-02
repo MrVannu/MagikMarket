@@ -248,7 +248,7 @@ public class SwitchPane extends Stock {
         gridPane.add(refresh, 4, 0);
 
         // Refresh button -> updates the labels' value
-        refresh.setOnAction(e -> {
+        //refresh.setOnAction(e -> {
             ExecutorService executorServiceObj = Executors.newFixedThreadPool(9); // Number of stocks
 
             List<Future<?>> futures = new ArrayList<>();
@@ -280,7 +280,40 @@ public class SwitchPane extends Stock {
             catch (InterruptedException | ExecutionException exception) {
                 exception.printStackTrace();
             }
-        });
+        //});
+        refresh.setOnAction(e -> {
+            ExecutorService executorServiceObj2 = Executors.newFixedThreadPool(9); // Number of stocks
+
+            List<Future<?>> futures2 = new ArrayList<>();
+
+            String[] symbols2 = {"AMC", "X", "TSLA", "KVUE", "NIO", "F", "GOOGL", "ENL.BE"};
+
+            for (int i = 0; i < symbols.length; i++) {
+                final int index = i;
+                Future<?> future = executorServiceObj2.submit(() -> {
+                    Platform.runLater(() -> {
+                        fetchUpdatesRealTimeBoard(apiDataObject, symbols[index],
+                                priceLabels[index + 1], piecesLabels[index + 1], averageLabels[index + 1],
+                                userRegistered.getUsername());
+                    });
+                });
+
+                futures2.add(future);
+            }
+
+            executorServiceObj2.shutdown();
+
+
+            // Wait for all threads finish their execution
+            try {
+                for (Future<?> future : futures2) {
+                    future.get();
+                }
+            }
+            catch (InterruptedException | ExecutionException exception) {
+                exception.printStackTrace();
+            }
+            });
 
 
 

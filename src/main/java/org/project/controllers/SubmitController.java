@@ -3,8 +3,12 @@ package org.project.controllers;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -16,7 +20,6 @@ import org.project.model.APIData;
 import org.project.model.Stock;
 import org.project.model.User;
 import org.project.util.AlertField;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,19 +27,20 @@ import java.util.List;
 public class SubmitController extends Stock { //Invest button + method to invest
 
     private final HBox checkBoxInsideHBox = new HBox(10);
-    private final Button bet = new Button("Invest"); // Define bet button
     private final Button buy = new Button("Buy"); // Define buy button
     private final Button sell = new Button("Sell"); // Define sell button
 
     public SubmitController(User userRegistered, Stage primaryStage, ArrayList<Stock> stocksCheckedOn, HBox list, String symbol, Label moneyLabel,
                             CheckBox checkBox) {
         super();
-        bet.getStyleClass().add("my-button");
+        // Define invest button
+        Button invest = new Button("Invest");
+        invest.getStyleClass().add("my-button");
         buy.getStyleClass().add("button-buy");
         sell.getStyleClass().add("button-sell");
 
         // Handle the "Bet" button action here
-        bet.setOnAction(event -> {
+        invest.setOnAction(event -> {
             // Create a custom popup using a Stage (invest button)
             Stage betPopup = new Stage();
             betPopup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
@@ -46,7 +50,7 @@ public class SubmitController extends Stock { //Invest button + method to invest
             betPopup.setHeight(200);
 
             // Create UI elements for the custom popup (invest button)
-            Label instruction = new Label("Set the bet amount");
+            Label instruction = new Label("Set the invest amount");
             TextField betField = new TextField();
             Button submitBetAmount = new Button("Submit");
             Button closeBetPopup = new Button("Close");
@@ -86,7 +90,7 @@ public class SubmitController extends Stock { //Invest button + method to invest
                         miniBox.getChildren().add(new Label());
 
 
-                        list.getChildren().add(new Label(symbol+" amount bet on"+", "+betField.getText()));
+                        list.getChildren().add(new Label(symbol+" amount invest on"+", "+betField.getText()));
 
 
                         stocksCheckedOn.forEach(stock -> {
@@ -95,7 +99,7 @@ public class SubmitController extends Stock { //Invest button + method to invest
                                 stock.saveStocks(userRegistered.getUsername(), stock.getName(),
                                         stock.getRegularMarketDayHigh(), stock.getRegularMarketDayLow(),
                                         stock.getRegularMarketOpen(), stock.getMarkerPreviousClose(),
-                                        stock.getAmountBetted(), stock.getRegularMarketPrice());
+                                        stock.getAmountInvested(), stock.getRegularMarketPrice());
                             }
                         });
                     }
@@ -107,15 +111,13 @@ public class SubmitController extends Stock { //Invest button + method to invest
                     }
                 } else {
                     // The field is empty
-                    AlertField.showErrorAlert("Invalid input", "Please enter a bet amount.");
-                    System.out.println("Field is empty. Please enter an amount.");
+                    AlertField.showErrorAlert("Invalid input", "Please enter a invest amount.");
+                    System.out.println("Field is empty. Please enter a invest amount.");
                 }
             });
 
             // Handle closeBetPopup button
-            closeBetPopup.setOnAction(e->{
-                betPopup.close();
-            });
+            closeBetPopup.setOnAction(e-> betPopup.close());
 
             // Create a scene for the custom popup
             Scene betPopupScene = new Scene(windowBetBox);
@@ -124,7 +126,7 @@ public class SubmitController extends Stock { //Invest button + method to invest
             // Show the custom popup
             betPopup.showAndWait(); // Use showAndWait to wait for user interaction before continuing
 
-        });// Close bet button handle code segment
+        });// Close invest button handle code segment
 
 
         // Handle the "Buy" button action here
@@ -199,7 +201,7 @@ public class SubmitController extends Stock { //Invest button + method to invest
                                 stock.saveStocks(userRegistered.getUsername(), stock.getName(),
                                         stock.getRegularMarketDayHigh(), stock.getRegularMarketDayLow(),
                                         stock.getRegularMarketOpen(), stock.getMarkerPreviousClose(),
-                                        stock.getAmountBetted(),stock.getRegularMarketPrice());
+                                        stock.getAmountInvested(),stock.getRegularMarketPrice());
                             }
                         });
                     }
@@ -211,15 +213,13 @@ public class SubmitController extends Stock { //Invest button + method to invest
                     }
                 } else {
                     // The field is empty
-                    AlertField.showErrorAlert("Invalid input", "Please enter a bet amount.");
-                    System.out.println("Field is empty. Please enter a bet amount.");
+                    AlertField.showErrorAlert("Invalid input", "Please enter a invest amount.");
+                    System.out.println("Field is empty. Please enter a invest amount.");
                 }
             });
 
             // Handle closeBetPopup button
-            closeBuyPopup.setOnAction(e->{
-                buyPopup.close();
-            });
+            closeBuyPopup.setOnAction(e-> buyPopup.close());
 
             // Create a scene for the custom popup
             Scene betPopupScene = new Scene(windowBuyBox);
@@ -283,6 +283,8 @@ public class SubmitController extends Stock { //Invest button + method to invest
             windowSellBox.setSpacing(10);
             windowSellBox.setAlignment(Pos.CENTER);
 
+            if(radio25.isSelected() || radio50.isSelected() || radio75.isSelected() || radio100.isSelected()) specificValueField.setDisable(true);
+
             //Handle submitSellAmount button
             submitSellAmount.setOnAction(e -> {
                 double nrOfStock = getSumAndPieces(userRegistered.getUsername(), symbol);
@@ -293,19 +295,36 @@ public class SubmitController extends Stock { //Invest button + method to invest
 
                 double selectedPercentage = 0.00;
                 try {
-                    if (radio25.isSelected()) selectedPercentage = 25.0;
-                    else if (radio50.isSelected()) selectedPercentage = 50.0;
-                    else if (radio75.isSelected()) selectedPercentage = 75.0;
-                    else if (radio100.isSelected()) selectedPercentage = 100.0;
+                    if (radio25.isSelected()){
+                        selectedPercentage = 25.0;
+                        specificValueField.setDisable(true);
+                        specificValueField.setText("");
+                    }
+                    else if (radio50.isSelected()){
+                        selectedPercentage = 50.0;
+                        specificValueField.setDisable(true);
+                        specificValueField.setText("");
+                    }
+                    else if (radio75.isSelected()){
+                        selectedPercentage = 75.0;
+                        specificValueField.setDisable(true);
+                        specificValueField.setText("");
+                    }
+                    else if (radio100.isSelected()){
+                        selectedPercentage = 100.0;
+                        specificValueField.setDisable(true);
+                        specificValueField.setText("");
+                    }
 
                     double finalGain;
 
-                    if (selectedPercentage > 0) {
-                        // Use percentage value
+                    if (selectedPercentage > 0) { // Use percentage value
+
                         double percentageValue = nrOfStock * (selectedPercentage / 100.0);
                         finalGain = percentageValue * Double.parseDouble(regMarkPriceL.getText());
-                    } else {
-                        // Use manually entered value
+                    } else { // Use manually entered value
+
+                        specificValueField.setDisable(false);
                         double manualValue = Double.parseDouble(specificValueField.getText());
                         finalGain = manualValue * Double.parseDouble(regMarkPriceL.getText());
                     }
@@ -332,13 +351,8 @@ public class SubmitController extends Stock { //Invest button + method to invest
             });
 
 
-
-
-
             // Handle closeBetPopup button
-            closeSellPopul.setOnAction(e->{
-                sellPopup.close();
-            });
+            closeSellPopul.setOnAction(e-> sellPopup.close());
 
             // Create a scene for the custom popup
             Scene betPopupScene = new Scene(windowSellBox);
@@ -360,32 +374,6 @@ public class SubmitController extends Stock { //Invest button + method to invest
         buyAndSellBox.setSpacing(10);
         return buyAndSellBox;
     }
-    public void showStocks(User userRegistered, HBox list){
-        List<List<String>> theList = getSavedStocks(userRegistered.getUsername());
-        GridPane gridPane = new GridPane();
-        gridPane.setHgap(10); // Horizontal space between columns
-        list.getChildren().clear();
-
-        int rowIndex = 0;
-        for (List<String> outEl : theList) {
-            int columnIndex = 0;
-            outEl.set(0,"");
-            for (String innerEl : outEl) {
-                Text text = new Text(innerEl);
-                gridPane.add(text, columnIndex, rowIndex);
-                columnIndex++;
-            }
-            rowIndex++;
-        }
-        // LIST.REVERT to be implemented by luca :)
-
-
-        list.getChildren().add(gridPane);
-
-
-    }
-
-    public Button getBet() { return bet; }
 
     public HBox getCheckBoxInsideHBox() {
         return checkBoxInsideHBox;

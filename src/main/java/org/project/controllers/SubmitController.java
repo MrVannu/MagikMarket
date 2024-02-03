@@ -77,6 +77,7 @@ public class SubmitController extends Stock { //Invest button + method to invest
                         /* In this section a gridPane is created with all the buy movements of the user. Then it is set
                          * into the layout.
                          */
+                        moneyLabel.setText(String.valueOf(Double.parseDouble(moneyLabel.getText()) - Double.parseDouble(buyField.getText())));
                         APIData apiResponseObj = new APIData();
                         apiResponseObj.fetchData(symbol);
                         saveStocks(userRegistered.getUsername(),symbol,apiResponseObj.regularMarketDayHigh(),

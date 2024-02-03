@@ -286,6 +286,7 @@ public class SwitchPane extends Stock {
 
             List<Future<?>> futures2 = new ArrayList<>();
 
+
             for (int i = 0; i < symbols.length; i++) {
                 final int index = i;
                 Future<?> future = executorServiceObj2.submit(() -> {

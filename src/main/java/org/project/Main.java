@@ -28,6 +28,8 @@ public class Main extends Application {
         
     @Override
     public void start(Stage primaryStage) {
+
+        primaryStage.setMaximized(true);
         //User userRegistered = new User();
         LoginController loginController = new LoginController();
 

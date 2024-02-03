@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.time.ZoneId;
@@ -157,8 +158,7 @@ public class Stock extends APIData {
             List<String[]> allData = reader.readAll();
             for (String[] row : allData) {
                 if (row[0].equals(username)) {
-                    List<String> rowData = new ArrayList<>();
-                    Collections.addAll(rowData, row);
+                    List<String> rowData = new ArrayList<>(Arrays.asList(row).subList(1, row.length));
                     userStocks.add(rowData);
                 }
             }
@@ -170,6 +170,7 @@ public class Stock extends APIData {
 
         return userStocks;
     }
+
 
     public double getSumAndPieces(String username, String symbol) {
         List<List<String>> result = getSavedStocks(username);

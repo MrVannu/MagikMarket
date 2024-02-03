@@ -117,7 +117,7 @@ public class Main extends Application {
         Button loginButton = new Button("Login");
         loginButton.setOnAction(e -> {
 
-            // Beta features --> to be implemented in the future (problems with MacOs)
+            // Beta features --> to be implemented in the future (problems with macOS)
             //
             // This snippet of code ensures the user is connected to the Internet as the
             // working dynamics of the application are based on the data fetched from the stock

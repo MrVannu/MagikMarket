@@ -84,7 +84,6 @@ public class SwitchPane extends Stock {
                     double number = Double.parseDouble(innerEl);
                     text.setText(decimalFormat.format(number));
                 }
-
                 gridPane.add(text, columnIndex, rowIndex);
                 columnIndex++;
             }

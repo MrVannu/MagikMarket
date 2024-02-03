@@ -20,8 +20,6 @@ import org.project.controllers.LoginController;
 import org.project.model.User;
 import org.project.util.AlertField;
 import org.project.view.WelcomePane;
-
-import java.awt.*;
 import java.io.*;
 import java.util.concurrent.CompletableFuture;
 import org.project.util.LoadingDialog;

@@ -14,7 +14,7 @@ MagikMarket is an educational API-based application designed to provide users wi
 
 - **Stock Prediction:** The application offers predictive analysis to assist users in making informed investment decisions. Predictions are randomized but predicting algorithms can be implemented.
 
-- **Interactive Charts:** Visual representations such as line charts and pie charts are incorporated to help users analyze stock performance and market trends easily.
+- **Interactive Charts:** Visual representations such as line charts and pie charts are incorporated to help users analyze stock performance and market trends easily. Users have the flexibility to select a maximum of four stocks for visualization.
 
 ## Technologies Used
 

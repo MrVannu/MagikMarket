@@ -94,7 +94,6 @@ public class SwitchPane extends Stock {
         // Define
         ScrollPane scP = new ScrollPane(gridPane);
         scP.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
-        scP.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         list.getChildren().add(scP);
         this.toggle = !this.toggle;

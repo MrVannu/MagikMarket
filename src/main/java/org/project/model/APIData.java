@@ -134,9 +134,8 @@ public class APIData{
 
                 // Check if regualrMarketOpenNode is not null
                 if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
-                    double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
 
-                    return fmtValue;
+                    return regularMarketOpenNode.get("fmt").asDouble();
                 } else {
                     System.out.println("Value not available or invalid: regularMarketDayHigh");
                 }
@@ -160,9 +159,8 @@ public class APIData{
 
                 // Check if regularMarketOpenNode is not null
                 if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
-                    double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
 
-                    return fmtValue;
+                    return regularMarketOpenNode.get("fmt").asDouble();
                 } else {
                     System.out.println("Value not available or invalid: regularMarketOpen");
                 }
@@ -185,8 +183,7 @@ public class APIData{
 
                 // Check if regularMarketOpenNode is not null
                 if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
-                    double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
-                    return fmtValue;
+                    return regularMarketOpenNode.get("fmt").asDouble();
                 } else {
                     System.out.println("Value not available or invalid: regularMarketDayLow");
                 }
@@ -209,9 +206,8 @@ public class APIData{
 
                 // Check if regularMarketOpenNode is not null
                 if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
-                    double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
 
-                    return fmtValue;
+                    return regularMarketOpenNode.get("fmt").asDouble();
                 } else {
                     System.out.println("Value not available or invalid: regularMarketPreviousClose");
                 }
@@ -233,8 +229,7 @@ public class APIData{
 
                 // Check if regularMarketOpenNode is not null
                 if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
-                    double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
-                    return fmtValue;
+                    return regularMarketOpenNode.get("fmt").asDouble();
                 } else {
                     System.out.println("Value not available or invalid: regularMarketPrice");
                 }

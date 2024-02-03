@@ -67,7 +67,7 @@ MagikMarket provides a user-friendly interface with the following features:
 
 ## License
 
-MagikMarket is developed for educational purposes and is provided under the MIT License. You are free to use, modify, and distribute the application according to the terms of the license.
+MagikMarket is developed for educational purposes. You are free to use, modify, and distribute the application according to the terms of the license.
 
 ## Contributors
 

@@ -79,7 +79,7 @@ public class Stock extends APIData {
     public void setRegularMarketDayLow(double regularMarketDayLow) {
         this.regularMarketDayLow = regularMarketDayLow;
     }
-    public void setInvestedOn(boolean investedOn) {
+    public void setInvestedOn() {
     }
     public String getName() {
         return name;
@@ -169,7 +169,6 @@ public class Stock extends APIData {
 
         return userStocks;
     }
-
 
     public double getSumAndPieces(String username, String symbol) {
         List<List<String>> result = getSavedStocks(username);

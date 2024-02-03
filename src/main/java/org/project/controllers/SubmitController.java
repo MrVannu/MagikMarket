@@ -109,7 +109,7 @@ public class SubmitController extends Stock { //Invest button + method to invest
 
                         stocksCheckedOn.forEach(stock -> {
                             if(stock.getName().equals(symbol)) {
-                                stock.setInvestedOn(true);
+                                stock.setInvestedOn();
                                 stock.saveStocks(userRegistered.getUsername(), stock.getName(),
                                         stock.getRegularMarketDayHigh(), stock.getRegularMarketDayLow(),
                                         stock.getRegularMarketOpen(), stock.getMarkerPreviousClose(),

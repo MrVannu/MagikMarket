@@ -1,3 +1,5 @@
+package controllerTest;
+
 import org.junit.jupiter.api.Test;
 import org.project.controllers.PrevisionController;
 import org.project.model.Stock;

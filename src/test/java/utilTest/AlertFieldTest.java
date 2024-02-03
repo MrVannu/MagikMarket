@@ -1,3 +1,5 @@
+package utilTest;
+
 import javafx.scene.control.Alert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

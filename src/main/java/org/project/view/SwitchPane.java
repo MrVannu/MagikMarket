@@ -84,6 +84,18 @@ public class SwitchPane extends Stock {
                     double number = Double.parseDouble(innerEl);
                     text.setText(decimalFormat.format(number));
                 }
+
+                if(columnIndex == 5){
+                    if(Double.parseDouble(outEl.get(7))<0){
+                        double number = (-1)*Double.parseDouble(innerEl);
+                        text.setText(decimalFormat.format(number));
+                    }else{
+                        double number = Double.parseDouble(innerEl);
+                        text.setText(decimalFormat.format(number));
+                    }
+                }
+
+
                 gridPane.add(text, columnIndex, rowIndex);
                 columnIndex++;
             }
@@ -161,7 +173,7 @@ public class SwitchPane extends Stock {
         currentPrice.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
         Label piecesOwned = new Label("PIECES OWNED");
         piecesOwned.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
-        Label averageBuyPrice = new Label("AVERAGE BUY PRICE");
+        Label averageBuyPrice = new Label("AVERAGE GAIN");
         averageBuyPrice.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
 
         Label AMC_name = new Label("AMC");

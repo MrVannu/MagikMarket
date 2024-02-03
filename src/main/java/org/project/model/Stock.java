@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -80,7 +79,7 @@ public class Stock extends APIData {
     public void setRegularMarketDayLow(double regularMarketDayLow) {
         this.regularMarketDayLow = regularMarketDayLow;
     }
-    public void setInvestedOn(boolean investedOn) {
+    public void setInvestedOn() {
     }
     public String getName() {
         return name;
@@ -170,7 +169,6 @@ public class Stock extends APIData {
 
         return userStocks;
     }
-
 
     public double getSumAndPieces(String username, String symbol) {
         List<List<String>> result = getSavedStocks(username);

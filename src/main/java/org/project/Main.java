@@ -20,6 +20,8 @@ import org.project.controllers.LoginController;
 import org.project.model.User;
 import org.project.util.AlertField;
 import org.project.view.WelcomePane;
+
+import java.awt.*;
 import java.io.*;
 import java.util.concurrent.CompletableFuture;
 import org.project.util.LoadingDialog;
@@ -209,6 +211,7 @@ public class Main extends Application {
         // Options of window
         primaryStage.setTitle("Login Form");
         primaryStage.setScene(LoginScene);
+
         primaryStage.show();
 
         // Actions of the buttons
@@ -233,7 +236,6 @@ public class Main extends Application {
             if(!(loginController.globalValidator(username, password, hashedPassword, email))){
 
                 // If the registration was not successful then it will follow one of the 3 cases below
-                System.out.println("Authentication failed");
                 if(loginController.getCheckField(0)){ // If the username already exists then the field is red
                     AlertField.showErrorAlert("Username error","Username not inserted or use another username.");
                     AlertField.invalidField(usernameFieldRegister);

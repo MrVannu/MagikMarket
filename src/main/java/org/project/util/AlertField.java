@@ -4,7 +4,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 
 public class AlertField {
-    // Method to show an error alert
+    /*
+    * AlertField is a utility class to help the developer
+    * */
     public static void showErrorAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);

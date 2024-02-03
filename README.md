@@ -1,5 +1,5 @@
 # MagikMarket
-The MagikMarket project
+
 
 # Online Marketplace Project
 The MagikMarket is an educational web-based application designed to provide users with a realistic and risk-free environment to learn about investing in stocks and gain valuable insights into the dynamics of the stock market. This project allows users to simulate stock trading without using real money, making it an ideal tool for beginners, students, or anyone interested in understanding how the stock market works.

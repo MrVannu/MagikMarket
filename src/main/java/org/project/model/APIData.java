@@ -70,7 +70,7 @@ public class APIData{
 
             } else {
                 data = new JSONObject(response.body());
-                System.out.println("RESPONSE is: " + response.body());
+
                 extractNameOfCompany();
             }
         } catch (IOException | InterruptedException | JSONException e) {
@@ -97,7 +97,7 @@ public class APIData{
         }
 
         // Se non è stato possibile ottenere un valore, restituisci il valore predefinito
-        System.out.println("Using default value: " + defaultValue);
+
         return defaultValue;
     }
 
@@ -120,7 +120,7 @@ public class APIData{
             throw new RuntimeException(e);
         }
 
-        System.out.println(value);
+
         return value;
     }
 
@@ -135,7 +135,7 @@ public class APIData{
                 // Check if regualrMarketOpenNode is not null
                 if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
                     double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
-                    System.out.println("Value in fmt format: " + fmtValue);
+
                     return fmtValue;
                 } else {
                     System.out.println("Value not available or invalid: regularMarketDayHigh");
@@ -146,7 +146,7 @@ public class APIData{
         }
 
         // If it wasn't possible to obtain a value, return the default value
-        System.out.println("Using default value: " + defaultValue);
+
         return defaultValue;
     }
 
@@ -161,7 +161,7 @@ public class APIData{
                 // Check if regularMarketOpenNode is not null
                 if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
                     double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
-                    System.out.println("Value in fmt format: " + fmtValue);
+
                     return fmtValue;
                 } else {
                     System.out.println("Value not available or invalid: regularMarketOpen");
@@ -172,7 +172,6 @@ public class APIData{
         }
 
         // If it wasn't possible to obtain a value, return the default value
-        System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
 
@@ -187,7 +186,6 @@ public class APIData{
                 // Check if regularMarketOpenNode is not null
                 if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
                     double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
-                    System.out.println("Value in fmt format: " + fmtValue);
                     return fmtValue;
                 } else {
                     System.out.println("Value not available or invalid: regularMarketDayLow");
@@ -198,7 +196,6 @@ public class APIData{
         }
 
         // If it wasn't possible to obtain a value, return the default value
-        System.out.println("Using default value: " + defaultValue);
         return defaultValue;
     }
 
@@ -213,7 +210,7 @@ public class APIData{
                 // Check if regularMarketOpenNode is not null
                 if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
                     double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
-                    System.out.println("Value in fmt format: " + fmtValue);
+
                     return fmtValue;
                 } else {
                     System.out.println("Value not available or invalid: regularMarketPreviousClose");
@@ -237,7 +234,6 @@ public class APIData{
                 // Check if regularMarketOpenNode is not null
                 if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
                     double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
-                    System.out.println("Value in fmt format: " + fmtValue);
                     return fmtValue;
                 } else {
                     System.out.println("Value not available or invalid: regularMarketPrice");
@@ -248,7 +244,7 @@ public class APIData{
         }
 
         // If it wasn't possible to obtain a value, return the default value
-        System.out.println("Using default value: " + defaultValue);
+
         return defaultValue;
     }
 
@@ -259,7 +255,7 @@ public class APIData{
             if(data != null) {
                 JsonNode toRead = mapper.readTree(data.toString());
                 JsonNode symbolNode = toRead.get("symbol");
-                //System.out.println(symbolNode);
+
 
                 // Check if symbolNode is not null and if symbolNode has a string
                 if (symbolNode != null && symbolNode.isTextual()) {
@@ -273,7 +269,7 @@ public class APIData{
         }
 
         // If it wasn't possible to obtain a value, return the default value
-        System.out.println("Using default value: " + defaultValue);
+
         return defaultValue;
     }
 
@@ -302,7 +298,7 @@ public class APIData{
         }
 
         // If it wasn't possible to obtain a value, return the default message
-        System.out.println("Using default value: " + defaultValue);
+
         return defaultValue;
     }
 

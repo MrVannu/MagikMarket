@@ -95,7 +95,6 @@ public class PrevisionController {
                     stockChangeString+= (addedValue>0? "↗   \n": "↘   \n");
 
 
-                    System.out.println("before MOD"+stock.getRegularMarketOpen()+stock.getMarketPreviousClose());
 
                     //Modifier to modify the stocks to be implemented
                     stock.setRegularMarketOpen(stock.getRegularMarketOpen()*MODIFIER_STOCK);
@@ -119,7 +118,6 @@ public class PrevisionController {
                             new XYChart.Data<>(6,  stock.getMarkerPreviousClose())
                     );
                     lineChartPrevision.getData().add(newSeries);
-                    System.out.println(stock.getName());
 
                 }
                 Button closePrevisionPopup = new Button("Close");

@@ -232,11 +232,9 @@ public class SubmitController extends Stock { //Invest button + method to invest
                     double finalGain;
 
                     if (selectedPercentage > 0) { // Use percentage value
-
                         double percentageValue = nrOfStock * (selectedPercentage / 100.0);
                         finalGain = percentageValue * Double.parseDouble(regMarkPriceL.getText());
                     } else { // Use manually entered value
-
                         specificValueField.setDisable(false);
                         double manualValue = Double.parseDouble(specificValueField.getText());
                         finalGain = manualValue * Double.parseDouble(regMarkPriceL.getText());

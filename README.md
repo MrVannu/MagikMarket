@@ -6,6 +6,8 @@ Developed by Enri Sulejmani, Luca Vannuccini, and Alessandro Sellani.
 
 MagikMarket is an educational API-based application designed to provide users with a realistic and risk-free environment to learn about investing in stocks and gain valuable insights into the dynamics of the stock market. This project allows users to simulate stock trading without using real money, making it an ideal tool for beginners, students, or anyone interested in understanding how the stock market works.
 
+Link to the tutorial video: https://youtu.be/9qTNd8eBl7I
+
 ## Features
 
 - **User Registration and Login:** Users can securely register and log in to the application using encrypted passwords.
@@ -63,10 +65,35 @@ MagikMarket provides a user-friendly interface with the following features:
 
 - **Transaction History:** Users can view their transaction history to track their investment activities and monitor performance over time.
 
-## Detailed instructions
+## Detailed overview and instructions
 
-Hereafter a detailed instruction of the usage of the GUI is defined:
-At the very beginning the user has the possibility to login or register. When registering the user must insert a username (of max 15 characters)
+Below is a comprehensive overview of the application, detailing its functionalities:
+
+User Authentication:
+The initial interaction involves user login or registration. During registration, users are required to input a username 
+(maximum 15 characters), a password (maximum 15 characters), and a valid email. The email must adhere to the standard email
+format (example@host.com). Upon successful registration, users can proceed to log in, and a successful login directs them to the application's home page.
+
+Data Visualization:
+To begin utilizing the app, users can select one or more checkboxes (up to a maximum of 4) to populate charts and view information
+related to the selected stocks. Clicking the "Prevision" button generates a new window displaying a forecast for the selected checkboxes. 
+These features primarily serve educational purposes.
+
+Interactive Transactions:
+In the interactive segment of the project, users can buy or sell specific stocks, always considering their available funds. 
+Upon executing transactions and pressing the "Switch Pane" button, relevant data is presented. The initial view displays a history 
+of all user transactions, while the second view offers additional insights, including the current market price of each stock, the 
+quantity owned by the user, and the average gain for each stock. Green values indicate an uptrend in the value of a specific stock. 
+Grey values signify a stable market price with no significant changes, while red values denote a decrease in the stock's price.
+
+Menu Bar and Settings:
+At the top of the application, users find a menu bar providing instructions on application usage. Additionally, users can modify 
+their available funds and log out of the current session.
+
+User Customization:
+Users have the option to personalize their account by loading an image. This feature is accessible by clicking the button next 
+to the username displayed at the application's top.
+
 
 ## License
 

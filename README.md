@@ -57,13 +57,16 @@ MagikMarket provides a user-friendly interface with the following features:
 
 - **Customization:** Users have the option to customize their profiles, including their initial investment amount and profile image.
 
-- **Instructions:** Detailed instructions are provided within the application to guide users on how to navigate and utilize its features effectively.
-
 - **Stock Management:** Users can browse and select stocks from the available listing, view detailed information, and make transactions.
 
 - **Prediction Tools:** The application offers predictive analysis tools to assist users in making investment decisions based on historical data and market trends.
 
 - **Transaction History:** Users can view their transaction history to track their investment activities and monitor performance over time.
+
+## Detailed instructions
+
+Hereafter a detailed instruction of the usage of the GUI is defined:
+At the very beginning the user has the possibility to login or register. When registering the user must insert a username (of max 15 characters)
 
 ## License
 

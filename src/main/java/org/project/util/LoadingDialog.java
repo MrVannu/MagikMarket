@@ -56,16 +56,14 @@ public class LoadingDialog {
         loadingAlert.show();
         fadeTransition.play();
 
-        loadingTask.thenRunAsync(() -> {
-            Platform.runLater(() -> {
-                fadeTransition.setOnFinished(event -> {
-                    loadingAlert.setResult(ButtonType.CANCEL);
-                    loadingAlert.close();
-                });
-                fadeTransition.setRate(-1.0);
-                fadeTransition.play();
+        loadingTask.thenRunAsync(() -> Platform.runLater(() -> {
+            fadeTransition.setOnFinished(event -> {
+                loadingAlert.setResult(ButtonType.CANCEL);
+                loadingAlert.close();
             });
-        });
+            fadeTransition.setRate(-1.0);
+            fadeTransition.play();
+        }));
     }
 
     private static void centerOnScreen(Stage stage) {

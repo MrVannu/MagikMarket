@@ -86,7 +86,7 @@ public class APIData{
                     JsonNode toRead = mapper.readTree(data.toString());
                     JsonNode preMarketChangeNode = toRead.get("preMarketChange");
 
-                    // Controlla se preMarketChangeNode non è null e può essere convertito in un double
+                    // Check if preMarketChangeNode is not null
                     if (preMarketChangeNode != null && preMarketChangeNode.isDouble()) {
                         return preMarketChangeNode.asDouble();
                     }
@@ -95,8 +95,6 @@ public class APIData{
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-
-        // Se non è stato possibile ottenere un valore, restituisci il valore predefinito
 
         return defaultValue;
     }
@@ -132,11 +130,10 @@ public class APIData{
                 JsonNode toRead = mapper.readTree(data.toString());
                 JsonNode regularMarketOpenNode = toRead.get("regularMarketDayHigh");
 
-                // Check if regualrMarketOpenNode is not null
+                // Check if regularMarketOpenNode is not null
                 if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
-                    double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
 
-                    return fmtValue;
+                    return regularMarketOpenNode.get("fmt").asDouble();
                 } else {
                     System.out.println("Value not available or invalid: regularMarketDayHigh");
                 }
@@ -160,9 +157,8 @@ public class APIData{
 
                 // Check if regularMarketOpenNode is not null
                 if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
-                    double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
 
-                    return fmtValue;
+                    return regularMarketOpenNode.get("fmt").asDouble();
                 } else {
                     System.out.println("Value not available or invalid: regularMarketOpen");
                 }
@@ -185,8 +181,7 @@ public class APIData{
 
                 // Check if regularMarketOpenNode is not null
                 if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
-                    double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
-                    return fmtValue;
+                    return regularMarketOpenNode.get("fmt").asDouble();
                 } else {
                     System.out.println("Value not available or invalid: regularMarketDayLow");
                 }
@@ -209,9 +204,8 @@ public class APIData{
 
                 // Check if regularMarketOpenNode is not null
                 if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
-                    double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
 
-                    return fmtValue;
+                    return regularMarketOpenNode.get("fmt").asDouble();
                 } else {
                     System.out.println("Value not available or invalid: regularMarketPreviousClose");
                 }
@@ -233,8 +227,7 @@ public class APIData{
 
                 // Check if regularMarketOpenNode is not null
                 if (regularMarketOpenNode != null) { //&& regularMarketOpenNode.isDouble()
-                    double fmtValue = regularMarketOpenNode.get("fmt").asDouble();
-                    return fmtValue;
+                    return regularMarketOpenNode.get("fmt").asDouble();
                 } else {
                     System.out.println("Value not available or invalid: regularMarketPrice");
                 }
@@ -356,7 +349,7 @@ public class APIData{
 //                JsonNode toRead = mapper.readTree(data.toString());
 //                JsonNode currencySymbolNode = toRead.get("currencySymbol");
 //
-//                // Check if currencySymbolNode is not null and if currecySymbolNode contains a string
+//                // Check if currencySymbolNode is not null and if currencySymbolNode contains a string
 //                if (currencySymbolNode != null && currencySymbolNode.isTextual()) {
 //                    return currencySymbolNode.asText();
 //                } else {

@@ -259,11 +259,9 @@ public class SwitchPane extends Stock {
 
             for (int i = 0; i < symbols.length; i++) {
                 final int index = i;
-                Future<?> future = executorServiceObj.submit(() -> Platform.runLater(() -> {
-                    fetchUpdatesRealTimeBoard(apiDataObject, symbols[index],
-                            priceLabels[index + 1], piecesLabels[index + 1], averageLabels[index + 1],
-                            userRegistered.getUsername());
-                }));
+                Future<?> future = executorServiceObj.submit(() -> Platform.runLater(() -> fetchUpdatesRealTimeBoard(apiDataObject, symbols[index],
+                        priceLabels[index + 1], piecesLabels[index + 1], averageLabels[index + 1],
+                        userRegistered.getUsername())));
 
                 futures.add(future);
             }
@@ -288,13 +286,9 @@ public class SwitchPane extends Stock {
 
             for (int i = 0; i < symbols.length; i++) {
                 final int index = i;
-                Future<?> future = executorServiceObj2.submit(() -> {
-                    Platform.runLater(() -> {
-                        fetchUpdatesRealTimeBoard(apiDataObject, symbols[index],
-                                priceLabels[index + 1], piecesLabels[index + 1], averageLabels[index + 1],
-                                userRegistered.getUsername());
-                    });
-                });
+                Future<?> future = executorServiceObj2.submit(() -> Platform.runLater(() -> fetchUpdatesRealTimeBoard(apiDataObject, symbols[index],
+                        priceLabels[index + 1], piecesLabels[index + 1], averageLabels[index + 1],
+                        userRegistered.getUsername())));
 
                 futures2.add(future);
             }

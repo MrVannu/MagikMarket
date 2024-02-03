@@ -77,7 +77,7 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
         // Create line chart with title
         LineChart<Number, Number> lineChart= LineChartGenerator.createLineChart("Choose a company");
 
-        // Create GridPane to show into a grid the ceckBoxes and relative sell and buy buttons
+        // Create GridPane to show into a grid the checkBoxes and relative sell and buy buttons
         GridPane checkBoxesGridPane = new GridPane();
         checkBoxesGridPane.setHgap(10);
         checkBoxesGridPane.setVgap(10);
@@ -172,7 +172,7 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
                         // Create a new series for this checkBox
                         XYChart.Series<Number, Number> lineChartSeries = new XYChart.Series<>();
 
-                        // Define caption; if testObj is null then placeHolderString as name, otherwise SymbolOfCompany as name of the serie
+                        // Define caption; if testObj is null then placeHolderString as name, otherwise SymbolOfCompany as name of the series
                         lineChartSeries.setName((testObj.extractSymbolOfCompany()));
 
 

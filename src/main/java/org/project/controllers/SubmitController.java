@@ -48,7 +48,7 @@ public class SubmitController extends Stock { //Invest button + method to invest
             buyPopup.setWidth(600);
             buyPopup.setHeight(300);
 
-            // Create UI elements for the custom popup and set corresponding layour
+            // Create UI elements for the custom popup and set corresponding layout
             Label instruction = new Label("insert the amount of stock you would like to buy: ");
             TextField buyField = new TextField();
             buyField.setMaxWidth(200);
@@ -156,8 +156,8 @@ public class SubmitController extends Stock { //Invest button + method to invest
 
             // Create UI elements for the custom popup and define corresponding layout
             Button submitSellAmount = new Button("Submit");
-            Button closeSellPopul = new Button("Close");
-            HBox buttonsSellBox = new HBox(submitSellAmount, closeSellPopul);
+            Button closeSellPopup = new Button("Close");
+            HBox buttonsSellBox = new HBox(submitSellAmount, closeSellPopup);
             buttonsSellBox.setSpacing(30);
             Label instructions = new Label("Select the percentage you would like to sell, or insert the amount of stock you would like to sell");
             Label regMarkPriceL = new Label();
@@ -263,7 +263,7 @@ public class SubmitController extends Stock { //Invest button + method to invest
             });
 
             // Handle closeBetPopup button
-            closeSellPopul.setOnAction(e-> sellPopup.close());
+            closeSellPopup.setOnAction(e-> sellPopup.close());
 
             // Create a scene for the custom popup and show it
             Scene betPopupScene = new Scene(windowSellBox);

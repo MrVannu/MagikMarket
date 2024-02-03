@@ -4,7 +4,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ButtonBar.ButtonData;
-import java.util.Optional;
 
 public class AmountNotAllowedException extends RuntimeException {
     public AmountNotAllowedException() {
@@ -19,7 +18,7 @@ public class AmountNotAllowedException extends RuntimeException {
 
             ButtonType okButton = new ButtonType("Got it!", ButtonData.OK_DONE);
             alert.getButtonTypes().setAll(okButton);
-            Optional<ButtonType> result = alert.showAndWait();
+        alert.showAndWait();
     }
 
 }

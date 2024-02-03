@@ -26,11 +26,6 @@ public class PrevisionController {
     public Button previsionButton = new Button();
 
 
-    // Define Prevision button and its layout
-    // Define image for the button
-    private final Image arrowButtonImage = new Image("file:src/main/resources/arrow.png");
-
-
     // Define button name
     String previsionForStockChange = "   Prevision   ";
 
@@ -46,6 +41,9 @@ public class PrevisionController {
 
     public PrevisionController(ArrayList<Stock> stocksCheckedOn){
         previsionButton.setGraphic(previsionContentHBox); // Insert img inside button
+        // Define Prevision button and its layout
+        // Define image for the button
+        Image arrowButtonImage = new Image("file:src/main/resources/arrow.png");
         ImageView arrowButtonView = new ImageView(arrowButtonImage);
         arrowButtonView.setFitHeight(10);
             arrowButtonView.setFitWidth(15);

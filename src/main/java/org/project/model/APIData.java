@@ -319,6 +319,12 @@ public class APIData{
 
 
     // Beta features --> to be implemented in the future
+    //
+    // The following methods were used int the first version of this application.
+    // By the time it has been significantly improved and some data became obsolete.
+    // The choice of keeping them is due to the fact they could be very useful for some
+    // future implementation of new features.
+    //
 //    public int maxAge() {
 //        int defaultValue = 101; // Default value
 //

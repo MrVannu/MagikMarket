@@ -519,6 +519,7 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
         /*
          *Section to define alert triggered when closing the application
          */
+
             primaryStage.setOnCloseRequest(event -> {
                 event.consume();
 
@@ -565,7 +566,5 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
     public Scene getScene(){
         return WelcomeScene;
     }
-
-
 
 }

@@ -14,8 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LoginController implements Authentication {
-    private final String pathDataHistoryDB = "src/main/resources/dataHistoryDB.csv";  // Path to DB for data history
-    private User userRegistered = new User("");;
+    private User userRegistered = new User("");
     private boolean[] checkField;
 
 
@@ -93,7 +92,7 @@ public class LoginController implements Authentication {
             while ((nextLine = reader.readNext()) != null) {
                 if (nextLine.length > 0) break;  // Breaks if the line is empty (end of file)
             }
-        } catch (Exception e) {  // Exception occured while reading
+        } catch (Exception e) {  // Exception occurred while reading
             System.out.println("Exception occurred");
         }
 

@@ -3,8 +3,6 @@ package org.project.model;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
-import org.project.model.APIData;
-
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,16 +19,10 @@ public class Stock extends APIData {
     private double regularMarketDayLow;
     private double regularMarketOpen;
     private double marketPreviousClose;
-
     private double regularMarketPrice;
-
     private double volume;
     private String symbol;
     private String name;
-    private double amountInvested = 0.0;
-    private boolean investedOn = false;
-
-
 
 
     public Stock(String symbol, String name, double regularMarketOpen, double regularMarketDayHigh, double regularMarketDayLow, double marketPreviousClose, String volume, double regularMarketPrice){
@@ -44,7 +36,7 @@ public class Stock extends APIData {
         this.regularMarketPrice = regularMarketPrice;
     }
 
-    public Stock(String symbol, double regularMarketOpen, double regularMarketDayHigh, double regularMarketDayLow, double marketPreviousClose, double amountBet){
+    public Stock(String symbol, double regularMarketOpen, double regularMarketDayHigh, double regularMarketDayLow, double marketPreviousClose){
         this.symbol= symbol;
         this.regularMarketOpen = regularMarketOpen;
         this.regularMarketDayHigh = regularMarketDayHigh;
@@ -54,16 +46,8 @@ public class Stock extends APIData {
 
     public Stock() {}
 
-    public String getSymbol() {
-        return symbol;
-    }
-
     public double getAmountInvested() {
-        return amountInvested;
-    }
-
-    public void setSymbol(String sym) {
-        this.symbol = symbol;
+        return 0.0;
     }
 
     public double getMarkerPreviousClose() {
@@ -83,13 +67,6 @@ public class Stock extends APIData {
     }
 
     public double getRegularMarketPrice(){ return regularMarketPrice;}
-    public boolean isInvestedOn() {
-        return investedOn;
-    }
-
-    public void setAmountInvested(double amountBet) {
-        this.amountInvested= amountBet;
-    }
 
     public void setMarketPreviousClose(double marketPreviousClose) {
         this.marketPreviousClose = marketPreviousClose;
@@ -103,16 +80,9 @@ public class Stock extends APIData {
         this.regularMarketDayLow = regularMarketDayLow;
     }
     public void setInvestedOn(boolean investedOn) {
-        this.investedOn = investedOn;
-    }
-    public void setMarkerPreviousClose(double markerPreviousClose) {
-        this.marketPreviousClose = markerPreviousClose;
     }
     public String getName() {
         return name;
-    }
-    public void setName(String id) {
-        this.name = id;
     }
     public double getRegularMarketDayLow() {
         return regularMarketDayLow;
@@ -178,6 +148,7 @@ public class Stock extends APIData {
     }
 
 
+
     // Retrieve the saved stocks which the user invested in + details
     public List<List<String>> getSavedStocks(String username) {
         List<List<String>> userStocks = new ArrayList<>();
@@ -200,8 +171,6 @@ public class Stock extends APIData {
         return userStocks;
     }
 
-
-
     public double getSumAndPieces(String username, String symbol) {
         List<List<String>> result = getSavedStocks(username);
         double sumOfPieces = 0;
@@ -212,7 +181,6 @@ public class Stock extends APIData {
 
         return sumOfPieces;
     }
-
 
     public double getAverageOfPurchased(String username, String symbol) {
         List<List<String>> result = getSavedStocks(username);

@@ -25,8 +25,8 @@ public class AlertField {
     // Set invalid field by changing css
     public static void invalidField(TextField... field){
         for(TextField f : field){
-            f.setStyle("-fx-border-color: red; -fx-border-width: 2px; -fx-border-radius: 5px;");
             f.setText("");
+            f.setStyle("-fx-border-color: red; -fx-border-width: 2px; -fx-border-radius: 5px;");
         }
     }
 

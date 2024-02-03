@@ -231,12 +231,12 @@ public class SwitchPane extends Stock {
         }
 
 //        // Define a decimal format object to format the numbers of the grid pane
-//        DecimalFormat decimalFormat = new DecimalFormat("#.####");
+//        DecimalFormat decimalFormatObj = new DecimalFormat("#.####");
 //        double number = Double.parseDouble();
-//        text.setText(decimalFormat.format(number));
+//        text.setText(decimalFormatObj.format(number));
 
         // Define refresh button
-        Button refresh = new Button("\u27F3"); // This unicode is ⟳
+        Button refresh = new Button("⟳"); // Refresh symbol
         refresh.setStyle(
                 "-fx-font-size: 1.5em; "+
                         "-fx-text-fill: #ffffff; "+
@@ -257,13 +257,11 @@ public class SwitchPane extends Stock {
 
             for (int i = 0; i < symbols.length; i++) {
                 final int index = i;
-                Future<?> future = executorServiceObj.submit(() -> {
-                    Platform.runLater(() -> {
-                        fetchUpdatesRealTimeBoard(apiDataObject, symbols[index],
-                                priceLabels[index + 1], piecesLabels[index + 1], averageLabels[index + 1],
-                                userRegistered.getUsername());
-                    });
-                });
+                Future<?> future = executorServiceObj.submit(() -> Platform.runLater(() -> {
+                    fetchUpdatesRealTimeBoard(apiDataObject, symbols[index],
+                            priceLabels[index + 1], piecesLabels[index + 1], averageLabels[index + 1],
+                            userRegistered.getUsername());
+                }));
 
                 futures.add(future);
             }
@@ -285,8 +283,6 @@ public class SwitchPane extends Stock {
             ExecutorService executorServiceObj2 = Executors.newFixedThreadPool(9); // Number of stocks
 
             List<Future<?>> futures2 = new ArrayList<>();
-
-            String[] symbols2 = {"AMC", "X", "TSLA", "KVUE", "NIO", "F", "GOOGL", "ENL.BE"};
 
             for (int i = 0; i < symbols.length; i++) {
                 final int index = i;

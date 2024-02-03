@@ -1,7 +1,5 @@
 package org.project.controllers;
 
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvValidationException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,15 +14,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.project.controllers.LoginController;
 import org.project.model.Stock;
 import org.project.util.LineChartGenerator;
-
-import java.io.FileReader;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class PrevisionController {
@@ -35,7 +28,7 @@ public class PrevisionController {
 
     // Define Prevision button and its layout
     // Define image for the button
-    private final Image arrowButtonImage = new Image("file:src/main/resources/frecciale.png");
+    private final Image arrowButtonImage = new Image("file:src/main/resources/arrow.png");
 
 
     // Define button name
@@ -49,7 +42,7 @@ public class PrevisionController {
     }
 
     // Define box to insert prevision button and animation
-    private HBox previsionHBox = new HBox(previsionButton);
+    private final HBox previsionHBox = new HBox(previsionButton);
 
     public PrevisionController(ArrayList<Stock> stocksCheckedOn){
         previsionButton.setGraphic(previsionContentHBox); // Insert img inside button
@@ -93,22 +86,22 @@ public class PrevisionController {
 
                     Random rnd = new Random();
                     DecimalFormat decimalFormat = new DecimalFormat("0.00");
-                    final double MODIFIERSTOCK= (rnd.nextDouble(21)+1)-10;
-                    stockChangeString+= stock.getName()+" --->  "+ decimalFormat.format(MODIFIERSTOCK)+"%";
+                    final double MODIFIER_STOCK= (rnd.nextDouble(21)+1)-10;
+                    stockChangeString+= stock.getName()+" --->  "+ decimalFormat.format(MODIFIER_STOCK)+"%";
                     double previousValue= stock.getMarkerPreviousClose();
-                    double addedValue = ((stock.getMarketPreviousClose()+MODIFIERSTOCK)-(previousValue));
+                    double addedValue = ((stock.getMarketPreviousClose()+MODIFIER_STOCK)-(previousValue));
 
-                    //Adding arrow depending if lose or gain
+                    // Adding arrow basing on the fact the user balance is positive or negative
                     stockChangeString+= (addedValue>0? "↗   \n": "↘   \n");
 
 
                     System.out.println("before MOD"+stock.getRegularMarketOpen()+stock.getMarketPreviousClose());
 
                     //Modifier to modify the stocks to be implemented
-                    stock.setRegularMarketOpen(stock.getRegularMarketOpen()*MODIFIERSTOCK);
-                    stock.setRegularMarketDayHigh(stock.getRegularMarketDayHigh()*MODIFIERSTOCK);
-                    stock.setRegularMarketDayLow(stock.getRegularMarketDayLow()*MODIFIERSTOCK);
-                    stock.setMarketPreviousClose(stock.getMarketPreviousClose()*MODIFIERSTOCK);
+                    stock.setRegularMarketOpen(stock.getRegularMarketOpen()*MODIFIER_STOCK);
+                    stock.setRegularMarketDayHigh(stock.getRegularMarketDayHigh()*MODIFIER_STOCK);
+                    stock.setRegularMarketDayLow(stock.getRegularMarketDayLow()*MODIFIER_STOCK);
+                    stock.setMarketPreviousClose(stock.getMarketPreviousClose()*MODIFIER_STOCK);
 
 
 
@@ -140,12 +133,10 @@ public class PrevisionController {
                     windowBetBox.setPadding(new Insets(10));
                     windowBetBox.setSpacing(10);
                     windowBetBox.setAlignment(Pos.CENTER);
-                }catch (NullPointerException f){}
+                }catch (NullPointerException ignored){}
 
                 // Handle close button inside the popup
-                closePrevisionPopup.setOnAction(ex->{
-                    previsionStage.close();
-                });
+                closePrevisionPopup.setOnAction(ex-> previsionStage.close());
 
 
                 // Create a scene for the custom popup

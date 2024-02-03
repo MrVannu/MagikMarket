@@ -33,115 +33,25 @@ public class SubmitController extends Stock { //Invest button + method to invest
     public SubmitController(User userRegistered, Stage primaryStage, ArrayList<Stock> stocksCheckedOn, HBox list, String symbol, Label moneyLabel,
                             CheckBox checkBox) {
         super();
-        // Define invest button
-        Button invest = new Button("Invest");
-        invest.getStyleClass().add("my-button");
+
+        // Define buttons
         buy.getStyleClass().add("button-buy");
         sell.getStyleClass().add("button-sell");
 
-        // Handle the "Bet" button action here
-        invest.setOnAction(event -> {
-            // Create a custom popup using a Stage (invest button)
-            Stage betPopup = new Stage();
-            betPopup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
-            betPopup.initOwner(primaryStage); // Set primaryStage as the parent of popup
-            betPopup.setTitle("Bet Input");
-            betPopup.setWidth(400);
-            betPopup.setHeight(200);
-
-            // Create UI elements for the custom popup (invest button)
-            Label instruction = new Label("Set the invest amount");
-            TextField betField = new TextField();
-            Button submitBetAmount = new Button("Submit");
-            Button closeBetPopup = new Button("Close");
-            HBox buttonsBetBox = new HBox(submitBetAmount, closeBetPopup);
-            buttonsBetBox.setSpacing(30);
-
-            // Define Box with elements for the popup (invest button)
-            VBox windowBetBox = new VBox(instruction, betField, buttonsBetBox);
-            windowBetBox.setPadding(new Insets(10));
-            windowBetBox.setSpacing(10);
-            windowBetBox.setAlignment(Pos.CENTER);
-
-            // Define mini Box where to show the stock invested on
-            HBox miniBox = new HBox();
-            miniBox.setAlignment(Pos.CENTER);
-
-            //Handle submitBetAmount button
-            submitBetAmount.setOnAction(e->{
-                if(!betField.getText().isEmpty()) { // If the field is not empty
-                    try{
-                        // Attempt to parse the text as a double. If parsing is successful, it's a valid number
-                        Double.parseDouble(betField.getText());
-
-                        //Decreases the user's amount of money in the GUI label
-                        userRegistered.setUserCredit(Double.parseDouble(userRegistered.getUserCredit()) - Double.parseDouble(betField.getText()));
-                        //Update the money label
-                        DecimalFormat decimalFormat = new DecimalFormat("#.00");
-                        moneyLabel.setText(decimalFormat.format(userRegistered.getUserCredit()));
-
-
-
-                        betField.clear();
-                        betPopup.close();
-
-
-                        miniBox.getChildren().add(new Label());
-                        miniBox.getChildren().add(new Label());
-
-
-                        list.getChildren().add(new Label(symbol+" amount invest on"+", "+betField.getText()));
-
-
-                        stocksCheckedOn.forEach(stock -> {
-                            if(stock.getName().equals(symbol)) {
-                                stock.setInvestedOn(true);
-                                stock.saveStocks(userRegistered.getUsername(), stock.getName(),
-                                        stock.getRegularMarketDayHigh(), stock.getRegularMarketDayLow(),
-                                        stock.getRegularMarketOpen(), stock.getMarkerPreviousClose(),
-                                        stock.getAmountInvested(), stock.getRegularMarketPrice());
-                            }
-                        });
-                    }
-                    catch(NumberFormatException er){
-                        // Parsing failed, the text is not a valid number
-                        // Handle the case where the input is not a number
-                        AlertField.showErrorAlert("Invalid input", "Please enter a valid number.");
-                        System.out.println("Invalid input. Please enter a valid number.");
-                    }
-                } else {
-                    // The field is empty
-                    AlertField.showErrorAlert("Invalid input", "Please enter a invest amount.");
-                    System.out.println("Field is empty. Please enter a invest amount.");
-                }
-            });
-
-            // Handle closeBetPopup button
-            closeBetPopup.setOnAction(e-> betPopup.close());
-
-            // Create a scene for the custom popup
-            Scene betPopupScene = new Scene(windowBetBox);
-            betPopup.setScene(betPopupScene);
-
-            // Show the custom popup
-            betPopup.showAndWait(); // Use showAndWait to wait for user interaction before continuing
-
-        });// Close invest button handle code segment
-
-
         // Handle the "Buy" button action here
         buy.setOnAction(event -> {
-            // Create a custom popup using a Stage (invest button)
+            // Create a custom popup using a Stage
             Stage buyPopup = new Stage();
             buyPopup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
             buyPopup.initOwner(primaryStage); // Set primaryStage as the parent of popup
             buyPopup.setTitle("Buy Input");
-            buyPopup.setWidth(400);
-            buyPopup.setHeight(200);
+            buyPopup.setWidth(600);
+            buyPopup.setHeight(300);
 
-            // Create UI elements for the custom popup (invest button)
-            Label instruction = new Label("Stock you would like to buy");
+            // Create UI elements for the custom popup and set corresponding layour
+            Label instruction = new Label("insert the amount of stock you would like to buy: ");
             TextField buyField = new TextField();
+            buyField.setMaxWidth(200);
             Button submitBuyAmount = new Button("Submit");
             Button closeBuyPopup = new Button("Close");
             HBox buttonsBuyBox = new HBox(submitBuyAmount, closeBuyPopup);
@@ -164,7 +74,9 @@ public class SubmitController extends Stock { //Invest button + method to invest
                         userRegistered.setUserCredit(Double.parseDouble(userRegistered.getUserCredit()) - Double.parseDouble(buyField.getText()));
                         //Update the money label
 
-
+                        /* In this section a gridPane is created with all the buy movements of the user. Then it is set
+                         * into the layout.
+                         */
                         APIData apiResponseObj = new APIData();
                         apiResponseObj.fetchData(symbol);
                         saveStocks(userRegistered.getUsername(),symbol,apiResponseObj.regularMarketDayHigh(),
@@ -239,18 +151,18 @@ public class SubmitController extends Stock { //Invest button + method to invest
             sellPopup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
             sellPopup.initOwner(primaryStage); // Set primaryStage as the parent of popup
             sellPopup.setTitle("Sell Input");
-            sellPopup.setWidth(400);
-            sellPopup.setHeight(200);
+            sellPopup.setWidth(600);
+            sellPopup.setHeight(300);
 
-            // Create UI elements for the custom popup (invest button)
+            // Create UI elements for the custom popup and define corresponding layout
             Button submitSellAmount = new Button("Submit");
             Button closeSellPopul = new Button("Close");
             HBox buttonsSellBox = new HBox(submitSellAmount, closeSellPopul);
             buttonsSellBox.setSpacing(30);
-
-
             Label instructions = new Label("Select the percentage you would like to sell, or insert the amount of stock you would like to sell");
             Label regMarkPriceL = new Label();
+
+            // Define object to get current regularMarketPrice of corresponding Stock to be shown for the user
             APIData regPriceAPI = new APIData();
             regPriceAPI.fetchData(symbol);
             regMarkPriceL.setText(String.valueOf(regPriceAPI.regularMarketPrice()));
@@ -277,7 +189,7 @@ public class SubmitController extends Stock { //Invest button + method to invest
             radioButtonsBox.setPadding(new Insets(10));
             radioButtonsBox.getChildren().addAll(radio25, radio50, radio75, radio100);
 
-            // Define Box with elements for the popup (invest button)
+            // Define Box with elements for the popup
             VBox windowSellBox = new VBox(instructions, regMarkPriceL, radioButtonsBox, specificValueField, buttonsSellBox);
             windowSellBox.setPadding(new Insets(10));
             windowSellBox.setSpacing(10);
@@ -285,7 +197,7 @@ public class SubmitController extends Stock { //Invest button + method to invest
 
             if(radio25.isSelected() || radio50.isSelected() || radio75.isSelected() || radio100.isSelected()) specificValueField.setDisable(true);
 
-            //Handle submitSellAmount button
+            // Handle submitSellAmount button
             submitSellAmount.setOnAction(e -> {
                 double nrOfStock = getSumAndPieces(userRegistered.getUsername(), symbol);
 
@@ -350,15 +262,12 @@ public class SubmitController extends Stock { //Invest button + method to invest
 
             });
 
-
             // Handle closeBetPopup button
             closeSellPopul.setOnAction(e-> sellPopup.close());
 
-            // Create a scene for the custom popup
+            // Create a scene for the custom popup and show it
             Scene betPopupScene = new Scene(windowSellBox);
             sellPopup.setScene(betPopupScene);
-
-            // Show the custom popup
             sellPopup.showAndWait(); // Use showAndWait to wait for user interaction before continuing
 
         });

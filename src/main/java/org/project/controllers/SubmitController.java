@@ -12,6 +12,9 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -49,16 +52,28 @@ public class SubmitController extends Stock { //Invest button + method to invest
             buyPopup.setHeight(300);
 
             // Create UI elements for the custom popup and set corresponding layout
-            Label instruction = new Label("insert the amount of stock you would like to buy: ");
+
+            VBox verticalBuyBoxWithInstructions = new VBox(); // VBox with instructions and buyField
+            verticalBuyBoxWithInstructions.setAlignment(Pos.CENTER);
+            Text buyInstructions = new Text("Insert the amount of stock you would like to buy: ");
+            buyInstructions.setStyle("-fx-font-family: 'Helvetica'; -fx-font-weight: bold;");
+
             TextField buyField = new TextField();
-            buyField.setMaxWidth(200);
+            buyField.setPromptText("Enter value here");
+
             Button submitBuyAmount = new Button("Submit");
             Button closeBuyPopup = new Button("Close");
-            HBox buttonsBuyBox = new HBox(submitBuyAmount, closeBuyPopup);
+            HBox buttonsBuyBox = new HBox(submitBuyAmount, closeBuyPopup); // HBox with all buttons
             buttonsBuyBox.setSpacing(30);
 
-            // Define Box with elements for the popup (invest button)
-            VBox windowBuyBox = new VBox(instruction, buyField, buttonsBuyBox);
+            verticalBuyBoxWithInstructions.getChildren().addAll(buyInstructions, buyField);
+            verticalBuyBoxWithInstructions.setSpacing(10);
+            VBox buyBoxWithAllComponents = new VBox(verticalBuyBoxWithInstructions, buttonsBuyBox); //VBox with all UI components
+
+            buyBoxWithAllComponents.setSpacing(10);
+
+            // Define Box with elements for the popup
+            VBox windowBuyBox = new VBox(buyBoxWithAllComponents);
             windowBuyBox.setPadding(new Insets(10));
             windowBuyBox.setSpacing(10);
             windowBuyBox.setAlignment(Pos.CENTER);
@@ -134,7 +149,7 @@ public class SubmitController extends Stock { //Invest button + method to invest
             sellPopup.initModality(Modality.APPLICATION_MODAL); // Block user interaction with other windows
             sellPopup.initOwner(primaryStage); // Set primaryStage as the parent of popup
             sellPopup.setTitle("Sell Input");
-            sellPopup.setWidth(600);
+            sellPopup.setWidth(700);
             sellPopup.setHeight(300);
 
             // Create UI elements for the custom popup and define corresponding layout
@@ -142,13 +157,24 @@ public class SubmitController extends Stock { //Invest button + method to invest
             Button closeSellPopup = new Button("Close");
             HBox buttonsSellBox = new HBox(submitSellAmount, closeSellPopup);
             buttonsSellBox.setSpacing(30);
-            Label instructions = new Label("Select the percentage you would like to sell, or insert the amount of stock you would like to sell");
+
+            Label sellInstructions = new Label("Select the percentage you would like to sell, or insert the amount of stock you would like to sell.");
+            sellInstructions.setFont(Font.font("Helvetica", FontWeight.NORMAL, 14));
+
             Label regMarkPriceL = new Label();
 
             // Define object to get current regularMarketPrice of corresponding Stock to be shown for the user
             APIData regPriceAPI = new APIData();
             regPriceAPI.fetchData(symbol);
             regMarkPriceL.setText(String.valueOf(regPriceAPI.regularMarketPrice()));
+
+            Text regMrkPriceText = new Text("Current market price of " + "\"" + symbol +"\"" + " is → ");
+            regMrkPriceText.setFont(Font.font("Helvetica", FontWeight.NORMAL, 14));
+            Text regMrkPriceValue = new Text(String.valueOf(regPriceAPI.regularMarketPrice()));
+            regMrkPriceValue.setFont(Font.font("Helvetica", FontWeight.BOLD, 16));
+            regMrkPriceValue.setFill(Color.ORANGE);
+            HBox regMrkPriceTextAndValueBox = new HBox(regMrkPriceText,regMrkPriceValue);
+            regMrkPriceTextAndValueBox.setAlignment(Pos.CENTER);
 
             // Create radio buttons for percentage options
             RadioButton radio25 = new RadioButton("25%");
@@ -165,15 +191,16 @@ public class SubmitController extends Stock { //Invest button + method to invest
 
             // Create a TextField for entering a specific value
             TextField specificValueField = new TextField();
-            specificValueField.setPromptText("Enter value");
+            specificValueField.setPromptText("Enter value here");
 
             // Create the layout for the popup
             HBox radioButtonsBox = new HBox(10);
             radioButtonsBox.setPadding(new Insets(10));
+            radioButtonsBox.setAlignment(Pos.CENTER);
             radioButtonsBox.getChildren().addAll(radio25, radio50, radio75, radio100);
 
             // Define Box with elements for the popup
-            VBox windowSellBox = new VBox(instructions, regMarkPriceL, radioButtonsBox, specificValueField, buttonsSellBox);
+            VBox windowSellBox = new VBox(sellInstructions, regMrkPriceTextAndValueBox, radioButtonsBox, specificValueField, buttonsSellBox);
             windowSellBox.setPadding(new Insets(10));
             windowSellBox.setSpacing(10);
             windowSellBox.setAlignment(Pos.CENTER);

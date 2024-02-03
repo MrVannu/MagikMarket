@@ -14,3 +14,4 @@
 "test2Username","hashedPassword","user@example.com","150.0"
 "test3Username","hashedPassword","user@example.com","100.0"
 "o","$2a$10$/s40U73hQKrquwuTUtkmbOIvu8aZpKp130gAEDHR4FinbD54zYfiC","o@o.it","1060.3"
+"user","$2a$10$Ysos0.KFjMPEgaXQoJ3e..vNba5SURZ6458k.dPqIiC0pgIn3nRWa","user@gmail.com","1010.0"

@@ -20,7 +20,6 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.project.view.SwitchPane;
 import org.project.controllers.PrevisionController;
 import org.project.controllers.SubmitController;
 import org.project.exceptions.AmountNotAllowedException;
@@ -278,7 +277,7 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
             SwitchPane switchPane = new SwitchPane();
             switchPane.showStocks(userRegistered, hBoxUserTransactionHistoryList);
             // Define switch button to switch between the user's transaction historical views
-            Button switchHistory = new Button("Switch history");
+            Button switchHistory = new Button("Switch pane");
             switchHistory.setOnAction(e->{
                 if(switchPane.toggle) {
                     switchPane.showOtherView(userRegistered, hBoxUserTransactionHistoryList);
@@ -335,15 +334,16 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
             // Create instruction string
             String instructions = """
                     This application is a simulation designed to provide insights into the real stock market. Users can buy and sell stocks, and the home page offers a comprehensive overview of their transactions. By selecting up to four stocks from the checkboxes, users can closely monitor their chosen investments.\s
-                    Every user begins with a default amount of $1,000, which can be modified in the edit menu. The invested amount directly affects the user's available funds. The simulation reflects the outcomes of these investments, indicating whether predictions were correct.\s
+                    Every user begins with a default amount of $1,000, which can be modified in the edit menu. The invested amount directly affects the user's available funds. The simulation shows a prediction of the chosen stocks (by choosing the checkbox).\s
                      Clicking the 'Prevision' button introduces random data changes to the chart, simulating market fluctuations. A decrease in the chart results in a loss, while an increase indicates a profit.\s
-                     The Pie chart provides insights into the market volume of a selected stock, while the line chart illustrates the stock's performance over time. This data is crucial for understanding the liquidity and trading activity of the stock, aiding users in making informed investment decisions.""";
+                     The Pie chart provides insights into the market volume of a selected stock, while the line chart illustrates the stock's performance over time. This data is crucial for understanding the liquidity and trading activity of the stock, aiding users in making informed investment decisions.\s
+                     For more details have a look at the ReadMe""";
 
             // Create a "Info" menu
             Menu infoMenu = new Menu("Info");
             // Create menu items for the "File" menu
             MenuItem instructionsItem = new MenuItem("Instructions");
-            instructionsItem.setOnAction(e-> AlertField.showSuccessAlert("Information",instructions));
+            instructionsItem.setOnAction(e-> showInstructionsDialog(instructions));
             MenuItem exitItem = new MenuItem("Exit");
             // Exit the application if you click the exit item
             exitItem.setOnAction(e -> {
@@ -563,6 +563,28 @@ public class WelcomePane extends APIData { // Extends APIData to use data from t
         profilePic.setSpacing(10);
         return profilePic;
     }
+
+    private void showInstructionsDialog(String instructions) {
+        Stage instructionsStage = new Stage();
+        instructionsStage.setTitle("Instructions");
+
+        Label text = new Label(instructions);
+        text.setWrapText(true); // Set wrapText to true for line breaks
+        text.setStyle("-fx-font-family: 'Helvetica'; -fx-font-size: 14; -fx-padding: 10px; -fx-text-alignment: justify;");
+
+        Label title = new Label("Instructions");
+        title.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
+
+        VBox vbox = new VBox(title, text);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setSpacing(20);
+
+        Scene scene = new Scene(vbox, 600, 400);
+        instructionsStage.setScene(scene);
+
+        instructionsStage.show();
+    }
+
 
     public Scene getScene(){
         return WelcomeScene;

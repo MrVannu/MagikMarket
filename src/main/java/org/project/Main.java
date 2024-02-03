@@ -120,6 +120,11 @@ public class Main extends Application {
         loginButton.setOnAction(e -> {
 
             // Beta features --> to be implemented in the future (problems with MacOs)
+            //
+            // This snippet of code ensures the user is connected to the Internet as the
+            // working dynamics of the application are based on the data fetched from the stock
+            // market in real time.
+            //
 //            if (!CheckInternetConnection.isInternetReachable()) {
 //                String errorNoConnectionBody = """
 //                You are not currently connected to the Internet.
@@ -130,6 +135,7 @@ public class Main extends Application {
 //
 //                AlertField.showErrorAlert(errorNoConnectionTitle, errorNoConnectionBody);
 //            } else {
+
                 // Show the loading dialog
                 LoadingDialog.showLoadingAlert();
 
@@ -238,12 +244,12 @@ public class Main extends Application {
                 if(loginController.getCheckField(1)){// If the password is empty then the field is red
                     AlertField.showErrorAlert("Password error","The password you inserted is not allowed or the field is empty.");
                     AlertField.invalidField(passwordFieldRegister);
-                    loginController.setCheckField(false, 1); // Resetting the check to false
+                    loginController.setCheckField(false, 1); // Reset the check to false
                 }
                 if(loginController.getCheckField(2)){// If the email does not match the regex (so is not valid) then the field is red
                     AlertField.showErrorAlert("Email error","The email you inserted is not an email.");
                     AlertField.invalidField(emailFieldRegister);
-                    loginController.setCheckField(false, 2); // Resetting the check to false
+                    loginController.setCheckField(false, 2); // Reset the check to false
                 }
             } else { // If the registration was successful
                 try {

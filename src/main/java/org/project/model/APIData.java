@@ -15,7 +15,6 @@ import java.net.URI;
 
 //Fetch the data + return a list
 public class APIData{
-
     private JSONObject data;
     private final ObjectMapper mapper = new ObjectMapper();
     private short keyID = 0;
@@ -23,7 +22,13 @@ public class APIData{
     /*
     This array is used for alternating the API calls to not reach the
     daily rate (to keep this feature free)
+
+    Recently the developing team decided to pay for an unlimited API key with no call-limit.
+    As a consequence, the following methods looks useless, however known the subscription bought
+    will last until 16th of February, this method could be found paramount after that date as it allows
+    to employ the API call much more many times than the basic rate, which was 35/day only.
     */
+
     private final String[] myKeys = {
             "1d42ba6144msh6f2e48b689d3770p10f476jsn4444c9191d86",  // pos 0
             "f1f087a0edmshe01f814ada01f62p139125jsnbbb280054789",  // pos 1
@@ -32,10 +37,7 @@ public class APIData{
             "9569609b31msh116e10029f476fbp18a940jsnf0a4ff5bfbd7",  // pos 4
     }; // Max number of API calls per day => 35 (max) * 5 (n of keys) = 175 (calls per day)
 
-
-    public APIData() {
-    }
-
+    public APIData() {}
 
 
     //Requesting APIData (live)
@@ -293,9 +295,7 @@ public class APIData{
                     }
 
                     return value;
-                } else {
-                    System.out.println("Value not available or invalid: averageDailyVolume3Month");
-                }
+                } else System.out.println("Value not available or invalid: averageDailyVolume3Month");
             }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -319,6 +319,12 @@ public class APIData{
 
 
     // Beta features --> to be implemented in the future
+    //
+    // The following methods were used int the first version of this application.
+    // By the time it has been significantly improved and some data became obsolete.
+    // The choice of keeping them is due to the fact they could be very useful for some
+    // future implementation of new features.
+    //
 //    public int maxAge() {
 //        int defaultValue = 101; // Default value
 //

@@ -1,3 +1,5 @@
+package modelTest;
+
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import org.junit.jupiter.api.Test;

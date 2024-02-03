@@ -2,7 +2,9 @@ package org.project.controllers;
 
 import java.net.InetAddress;
 
-
+/*
+ * Unused class just
+ */
 public class CheckInternetConnection {
 
     public static boolean isInternetReachable() {

@@ -109,8 +109,8 @@ public class Stock extends APIData {
 
     // Save the stocks which the user invested in including parameters, and the time of the investment
     public void saveStocks(String username, String symbol, double regularMarketDayHigh, double regularMarketDayLow,
-                                   double regularMarketOpen, double marketPreviousClose, double amountBet,
-                                   double regularMarketPrice) {
+                           double regularMarketOpen, double marketPreviousClose, double amountBet,
+                           double regularMarketPrice) {
 
         String numberOfPieces = String.valueOf(amountBet / regularMarketPrice);
 
@@ -175,7 +175,7 @@ public class Stock extends APIData {
         double sumOfPieces = 0;
 
         for (List<String> row : result) {
-            if(row.get(1).equals(symbol)) sumOfPieces += Double.parseDouble(row.get(8));
+            if(row.get(0).equals(symbol)) sumOfPieces += Double.parseDouble(row.get(7));
         }
 
         return sumOfPieces;
@@ -187,9 +187,9 @@ public class Stock extends APIData {
         int counterOfItems = 0;
 
         for (List<String> row : result) {
-            if (row.get(1).equals(symbol.toLowerCase())) {
-                double purchasePrice = Double.parseDouble(row.get(6));
-                double quantity = Double.parseDouble(row.get(8));
+            if (row.get(0).equals(symbol.toLowerCase())) {
+                double purchasePrice = Double.parseDouble(row.get(5));
+                double quantity = Double.parseDouble(row.get(7));
 
                 if (quantity != 0.0) {
                     total += (purchasePrice / quantity);

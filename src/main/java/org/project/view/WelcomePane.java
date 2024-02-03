@@ -20,6 +20,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.project.view.SwitchPane;
 import org.project.controllers.PrevisionController;
 import org.project.controllers.SubmitController;
 import org.project.exceptions.AmountNotAllowedException;

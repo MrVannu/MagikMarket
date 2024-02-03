@@ -250,33 +250,33 @@ public class SwitchPane extends Stock {
 
         // Refresh button -> updates the labels' value
         //refresh.setOnAction(e -> {
-            ExecutorService executorServiceObj = Executors.newFixedThreadPool(9); // Number of stocks
+        ExecutorService executorServiceObj = Executors.newFixedThreadPool(9); // Number of stocks
 
-            List<Future<?>> futures = new ArrayList<>();
+        List<Future<?>> futures = new ArrayList<>();
 
-            String[] symbols = {"AMC", "X", "TSLA", "KVUE", "NIO", "F", "GOOGL", "ENL.BE"};
+        String[] symbols = {"AMC", "X", "TSLA", "KVUE", "NIO", "F", "GOOGL", "ENL.BE"};
 
-            for (int i = 0; i < symbols.length; i++) {
-                final int index = i;
-                Future<?> future = executorServiceObj.submit(() -> Platform.runLater(() -> fetchUpdatesRealTimeBoard(apiDataObject, symbols[index],
-                        priceLabels[index + 1], piecesLabels[index + 1], averageLabels[index + 1],
-                        userRegistered.getUsername())));
+        for (int i = 0; i < symbols.length; i++) {
+            final int index = i;
+            Future<?> future = executorServiceObj.submit(() -> Platform.runLater(() -> fetchUpdatesRealTimeBoard(apiDataObject, symbols[index],
+                    priceLabels[index + 1], piecesLabels[index + 1], averageLabels[index + 1],
+                    userRegistered.getUsername())));
 
-                futures.add(future);
+            futures.add(future);
+        }
+
+        executorServiceObj.shutdown();
+
+
+        // Wait for all threads finish their execution
+        try {
+            for (Future<?> future : futures) {
+                future.get();
             }
-
-            executorServiceObj.shutdown();
-
-
-            // Wait for all threads finish their execution
-            try {
-                for (Future<?> future : futures) {
-                    future.get();
-                }
-            }
-            catch (InterruptedException | ExecutionException exception) {
-                exception.printStackTrace();
-            }
+        }
+        catch (InterruptedException | ExecutionException exception) {
+            exception.printStackTrace();
+        }
         //});
         refresh.setOnAction(e -> {
             ExecutorService executorServiceObj2 = Executors.newFixedThreadPool(9); // Number of stocks
@@ -305,7 +305,7 @@ public class SwitchPane extends Stock {
             catch (InterruptedException | ExecutionException exception) {
                 exception.printStackTrace();
             }
-            });
+        });
 
 
 

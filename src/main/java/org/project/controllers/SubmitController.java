@@ -200,8 +200,11 @@ public class SubmitController extends Stock { //Invest button + method to invest
 
             // Handle submitSellAmount button
             submitSellAmount.setOnAction(e -> {
-                double nrOfStock = getSumAndPieces(userRegistered.getUsername(), symbol);
-
+                //getSumAndPieces(userRegistered.getUsername(), symbol);
+                String piecesOwned = String.valueOf(getSumAndPieces(userRegistered.getUsername(), symbol));
+                System.out.println(piecesOwned);
+                double nrOfStock = Double.parseDouble(piecesOwned);
+                System.out.println(nrOfStock);
                 if(nrOfStock == 0){
                     throw new InsufficientCreditException();
                 }

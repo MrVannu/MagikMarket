@@ -74,7 +74,7 @@ public class StockTest {
         stock.setStockDbPath(tempFile.getAbsolutePath());
 
         //Sample Stocks creation
-        stock.saveStocks("testUser", "AAPL", 200.0, 150.0, 180.0, 190.0, 1000.0, 195.0);
+        stock.saveStocks("testUser", "F", 200.0, 150.0, 180.0, 190.0, 1000.0, 195.0);
         stock.saveStocks("testUser", "TSLA", 200.0, 150.0, 180.0, 190.0, 1000.0, 195.0);
         stock.saveStocks("testUser", "AMC", 200.0, 150.0, 180.0, 190.0, 1000.0, 195.0);
 
@@ -84,16 +84,16 @@ public class StockTest {
         assertEquals(3, sampleStocks.size(), "The number of saved stocks should be 3.");
 
         // Assert the contents of the first saved stock
-        assertEquals("AAPL", sampleStocks.get(0).get(1), "The symbol of the first saved stock should be 'AAPL'.");
-        assertEquals("200.00", sampleStocks.get(0).get(2), "The regularMarketDayHigh of the first saved stock should be 200.0.");
+        assertEquals("F", sampleStocks.get(0).get(0), "The symbol of the first saved stock should be 'F'.");
+        assertEquals("200.00", sampleStocks.get(0).get(1), "The regularMarketDayHigh of the first saved stock should be 200.0.");
 
         // Assert the contents of the second saved stock
-        assertEquals("TSLA", sampleStocks.get(1).get(1), "The symbol of the second saved stock should be 'TSLA'.");
-        assertEquals("150.00", sampleStocks.get(1).get(3), "The regularMarketDayLow of the second saved stock should be 150.0.");
+        assertEquals("TSLA", sampleStocks.get(1).get(0), "The symbol of the second saved stock should be 'TSLA'.");
+        assertEquals("150.00", sampleStocks.get(1).get(2), "The regularMarketDayLow of the second saved stock should be 150.0.");
 
         // Assert the contents of the third saved stock
-        assertEquals("AMC", sampleStocks.get(2).get(1), "The symbol of the third saved stock should be 'AMC'.");
-        assertEquals("180.00", sampleStocks.get(2).get(4), "The regularMarketOpen of the third saved stock should be 180.0.");
+        assertEquals("AMC", sampleStocks.get(2).get(0), "The symbol of the third saved stock should be 'AMC'.");
+        assertEquals("180.00", sampleStocks.get(2).get(3), "The regularMarketOpen of the third saved stock should be 180.0.");
 
         // Assert that attempting to access a non-existent element returns null
         assertThrows(IndexOutOfBoundsException.class, () ->{
